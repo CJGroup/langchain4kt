@@ -1,4 +1,6 @@
 package chat.output
 
-interface Response {
+import chat.message.Message
+
+interface Response: Message {
 }
