@@ -1,13 +1,11 @@
 package chat.message
 
-open class MessageType(private val typeName: String) {
-    override fun toString() = typeName
-}
+interface MessageType
 
-sealed class BuiltinMessageType(typeName: String) : MessageType(typeName) {
-    object Text : BuiltinMessageType("text")
-    object Image : BuiltinMessageType("image")
-    object Video : BuiltinMessageType("video")
-    object Audio : BuiltinMessageType("audio")
-    object FunctionCall : BuiltinMessageType("function_call")
+sealed interface BuiltinMessageType : MessageType {
+    data object Text : BuiltinMessageType
+    data object Image : BuiltinMessageType
+    data object Video : BuiltinMessageType
+    data object Audio : BuiltinMessageType
+    data object FunctionCall : BuiltinMessageType
 }

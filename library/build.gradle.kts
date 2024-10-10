@@ -31,7 +31,7 @@ kotlin {
                 //put your multiplatform dependencies here
             }
         }
-        val commonTest by getting {
+        val jvmTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation("io.ktor:ktor-client-core:$ktor_version")

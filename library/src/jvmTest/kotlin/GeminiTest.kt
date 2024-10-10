@@ -33,10 +33,11 @@ class GeminiApiProvider : IChatApiProvider {
                         ),
                         systemInstruction = GeminiContent(
                             listOf(mutableMapOf("text" to "You are doing great!")),
-                            "user")
+                            "user"
+                        )
                     )
                 )
-            }.body<GeminiResponse>().candidates.let { it.first().content }.let { TestResponse(it.text) }
+            }.body<GeminiResponse>().candidates.first().content.let { TestResponse(it.text) }
         }
 
 }

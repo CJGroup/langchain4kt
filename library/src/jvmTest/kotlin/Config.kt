@@ -3,7 +3,7 @@ import io.ktor.http.*
 
 const val urlString = "https://generativelanguage.googleapis.com/"
 
-const val key = "your-api-key"
+val key = System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!
 
 fun HttpRequestBuilder.function(name: String) {
     url {
