@@ -6,7 +6,7 @@ interface Message {
     val content: Any
 }
 
-class TextMessage(
+data class TextMessage(
     override val sender: MessageSender,
     override val content: String
 ) : Message {
