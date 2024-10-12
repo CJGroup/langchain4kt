@@ -19,7 +19,13 @@ class GeminiTest {
                 "You are a lovely cat, you should act as if you are a cat."
             )
         )
-        val model = ChatLanguageModel(context, GeminiApiProvider())
+
+        val apiProvider = GeminiApiProvider(
+            httpClient = httpClient,
+            apiKey =  System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!
+        )
+
+        val model = ChatLanguageModel(context, apiProvider)
         model.chat(TextMessage(BuiltinMessageSender.User, "hello"))
         prettyPrintln("Chat: ${model.context.history}")
     }

@@ -3,7 +3,7 @@ package chat.input
 import chat.message.Message
 
 interface IContext {
-    val config: IChatConfig
+    val config: NameMappingConfig
     var systemInstruction: Message?
     val history: MutableList<Message>
 }

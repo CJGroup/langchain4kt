@@ -5,15 +5,24 @@ import chat.message.BuiltinMessageSender
 import chat.message.TextMessage
 import chat.output.Response
 import io.github.stream29.streamlin.serialize.transform.Transformer
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 
-class GeminiApiProvider : IChatApiProvider {
+class GeminiApiProvider(
+    val httpClient: HttpClient,
+    val apiKey: String
+) : IChatApiProvider {
     override fun generate(context: IContext): Response =
         runBlocking {
-            httpClient.request(urlString) {
-                generateContent(context.config.getSafeAs<String>("model")!!)
+            httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
+                url {
+                    appendPathSegments("${context.config.getSafeAs<String>("model")!!}:generateContent")
+                    parameters.append("key", apiKey)
+                }
+                contentType(ContentType.Application.Json)
                 setBody(
                     GeminiRequest(
                         contents = context.history.asSequence()
