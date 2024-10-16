@@ -1,7 +1,7 @@
 import chat.IChatApiProvider
-import chat.input.IContext
+import chat.input.Context
 import chat.input.getSafeAs
-import chat.message.BuiltinMessageSender
+import chat.message.MessageSender
 import chat.message.TextMessage
 import chat.output.Response
 import io.github.stream29.streamlin.serialize.transform.Transformer
@@ -14,8 +14,8 @@ import kotlinx.coroutines.runBlocking
 class GeminiApiProvider(
     val httpClient: HttpClient,
     val apiKey: String
-) : IChatApiProvider {
-    override fun generate(context: IContext): Response =
+) : IChatApiProvider<Unit, Unit> {
+    override fun generate(context: Context): Response<*, Unit, Unit> =
         runBlocking {
             httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
                 url {
@@ -46,6 +46,6 @@ class GeminiApiProvider(
                 .first()
                 .content
                 .text
-                .let { Response.of(TextMessage(BuiltinMessageSender.Model,it)) }
+                .let { Response.Success(TextMessage(MessageSender.Model, it),Unit) }
         }
 }

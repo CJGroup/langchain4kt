@@ -1,11 +1,10 @@
 package chat.message
 
-interface MessageType
-
-sealed interface BuiltinMessageType : MessageType {
-    data object Text : BuiltinMessageType
-    data object Image : BuiltinMessageType
-    data object Video : BuiltinMessageType
-    data object Audio : BuiltinMessageType
-    data object FunctionCall : BuiltinMessageType
+sealed interface MessageType {
+    data object Text : MessageType
+    data object Image : MessageType
+    data object Video : MessageType
+    data object Audio : MessageType
+    data object FunctionCall : MessageType
+    data object FunctionCallResult : MessageType
 }

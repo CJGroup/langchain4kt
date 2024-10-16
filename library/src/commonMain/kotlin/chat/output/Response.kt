@@ -2,16 +2,13 @@ package chat.output
 
 import chat.message.Message
 
-interface Response: Message {
-    companion object {
-        fun of(message: Message): Response = MessageResponse(message)
-    }
-}
+sealed interface Response<out Content,out SuccessInfo,out FailInfo> {
+    data class Success<Content, SuccessInfo>(
+        val message: Message<Content>,
+        val successInfo: SuccessInfo
+    ) : Response<Content, SuccessInfo, Nothing>
 
-data class MessageResponse(val message: Message) : Response {
-    override val type by message::type
-    override val sender by message::sender
-    override val content by message::content
+    data class Fail<FailInfo>(
+        val failInfo: FailInfo
+    ) : Response<Nothing, Nothing, FailInfo>
 }
-
-// TODO: Streaming response

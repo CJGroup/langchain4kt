@@ -2,14 +2,8 @@ package chat.input
 
 import chat.message.Message
 
-interface IContext {
-    val config: NameMappingConfig
-    var systemInstruction: Message?
-    val history: MutableList<Message>
-}
-
 data class Context(
-    override val config: ChatConfig = ChatConfig(),
-    override var systemInstruction: Message? = null,
-    override val history: MutableList<Message> = mutableListOf()
-) : IContext
+    val config: ChatConfig = ChatConfig(),
+    var systemInstruction: Message<String>? = null,
+    val history: MutableList<Message<*>> = mutableListOf()
+)

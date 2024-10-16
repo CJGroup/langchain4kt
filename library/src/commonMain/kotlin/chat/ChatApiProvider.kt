@@ -1,8 +1,8 @@
 package chat
 
-import chat.input.IContext
+import chat.input.Context
 import chat.output.Response
 
-interface IChatApiProvider {
-    fun generate(context: IContext): Response
+interface IChatApiProvider<SuccessInfo, FailInfo> {
+    fun generate(context: Context): Response<*, SuccessInfo, FailInfo>
 }

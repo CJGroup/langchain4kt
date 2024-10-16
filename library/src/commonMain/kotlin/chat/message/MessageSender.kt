@@ -1,11 +1,9 @@
 package chat.message
 
-open class MessageSender(private val name: String) {
-    override fun toString() = name
-}
+sealed class MessageSender(private val name: String) {
+    object User : MessageSender("user")
+    object System : MessageSender("system")
+    object Model : MessageSender("model")
 
-sealed class BuiltinMessageSender(name: String) : MessageSender(name) {
-    object User : BuiltinMessageSender("user")
-    object System : BuiltinMessageSender("system")
-    object Model : BuiltinMessageSender("model")
+    override fun toString() = name
 }

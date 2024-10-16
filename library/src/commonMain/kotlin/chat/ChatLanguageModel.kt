@@ -1,22 +1,25 @@
 package chat
 
-import chat.input.IContext
+import chat.input.Context
 import chat.message.Message
 import chat.output.Response
 
-interface IChatLanguageModel {
-    val context: IContext
-    fun chat(message: Message): Response
+interface IChatLanguageModel<SuccessInfo, FailInfo> {
+    val context: Context
+    fun <Content> chat(message: Message<Content>): Response<*, SuccessInfo, FailInfo>
 }
 
-class ChatLanguageModel(
-    override val context: IContext,
-    var apiProvider: IChatApiProvider
-) : IChatLanguageModel {
-    override fun chat(message: Message): Response {
+class ChatLanguageModel<SuccessInfo, FailInfo>(
+    override val context: Context,
+    var apiProvider: IChatApiProvider<SuccessInfo, FailInfo>
+) : IChatLanguageModel<SuccessInfo, FailInfo> {
+    override fun <Content> chat(message: Message<Content>): Response<*, SuccessInfo, FailInfo> {
         context.history.add(message)
         val response = apiProvider.generate(context)
-        context.history.add(response)
+        if (response is Response.Success)
+            context.history.add(response.message)
+        else
+            context.history.removeLast()
         return response
     }
 }
