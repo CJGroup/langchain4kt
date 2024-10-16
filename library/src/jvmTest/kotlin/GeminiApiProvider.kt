@@ -35,7 +35,7 @@ class GeminiApiProvider(
                         generationConfig = Transformer.transform(context.config),
                         systemInstruction = context.systemInstruction?.let {
                             GeminiContent(
-                                listOf(mutableMapOf("text" to it.content.toString())),
+                                listOf(mutableMapOf("text" to it.content)),
                                 it.sender.toString()
                             )
                         },
