@@ -6,6 +6,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
 
 dependencyResolutionManagement {
     repositories {
@@ -15,4 +18,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "langchain4kt-root"
-include(":library")
+include(":core")
+include(":api-google-gemini")

@@ -4,6 +4,7 @@ import chat.input.Context
 import chat.message.MessageSender
 import chat.message.TextMessage
 import io.github.stream29.streamlin.prettyPrintln
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
 class GeminiTest {
@@ -26,7 +27,9 @@ class GeminiTest {
         )
 
         val model = ChatLanguageModel(context, apiProvider)
-        model.chat(TextMessage(MessageSender.User, "hello"))
+        runBlocking {
+            model.chat(TextMessage(MessageSender.User, "hello"))
+        }
         prettyPrintln("Chat: ${model.context.history}")
     }
 }

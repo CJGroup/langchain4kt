@@ -7,7 +7,7 @@ data class Message<Content>(
 ) {
     inline fun <reified T> asMessage() =
         if (content is T) this
-        else throw ClassCastException("Cannot cast content to ${T::class.qualifiedName}")
+        else throw ClassCastException("Cannot cast content to ${T::class.simpleName}")
 
     inline fun <reified T> safeAsMessage() =
         if (content is T) this
