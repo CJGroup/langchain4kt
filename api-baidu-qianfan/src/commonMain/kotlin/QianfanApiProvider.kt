@@ -1,7 +1,7 @@
-import chat.IChatApiProvider
+import chat.ChatApiProvider
 
 class QianfanApiProvider(
 
-): IChatApiProvider<*,*> {
+): ChatApiProvider<*,*> {
 
 }

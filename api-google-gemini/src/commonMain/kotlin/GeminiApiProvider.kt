@@ -1,7 +1,6 @@
-import chat.IChatApiProvider
+import chat.ChatApiProvider
 import chat.input.Context
 import chat.input.getOrThrow
-import chat.input.getSafeAs
 import chat.message.MessageSender
 import chat.message.TextMessage
 import chat.output.Response
@@ -14,7 +13,7 @@ import io.ktor.http.*
 class GeminiApiProvider(
     val httpClient: HttpClient,
     val apiKey: String
-) : IChatApiProvider<Unit, Unit> {
+) : ChatApiProvider<Unit, Unit> {
     override suspend fun generate(context: Context): Response<*, Unit, Unit> =
         httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
             url {

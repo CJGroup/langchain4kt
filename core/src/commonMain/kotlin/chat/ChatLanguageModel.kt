@@ -11,7 +11,7 @@ interface ChatLanguageModel<SuccessInfo, FailInfo> {
 
 class SimpleChatLanguageModel<SuccessInfo, FailInfo>(
     override val context: Context,
-    var apiProvider: IChatApiProvider<SuccessInfo, FailInfo>
+    var apiProvider: ChatApiProvider<SuccessInfo, FailInfo>
 ) : ChatLanguageModel<SuccessInfo, FailInfo> {
     override suspend fun <Content> chat(message: Message<Content>): Response<*, SuccessInfo, FailInfo> {
         context.history.add(message)
