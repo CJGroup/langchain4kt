@@ -1,5 +1,6 @@
 import chat.IChatApiProvider
 import chat.input.Context
+import chat.input.getOrThrow
 import chat.input.getSafeAs
 import chat.message.MessageSender
 import chat.message.TextMessage
@@ -17,7 +18,7 @@ class GeminiApiProvider(
     override suspend fun generate(context: Context): Response<*, Unit, Unit> =
         httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
             url {
-                appendPathSegments("${context.config.getSafeAs<String>("model")!!}:generateContent")
+                appendPathSegments("${context.config.getOrThrow<String>("model")}:generateContent")
                 parameters.append("key", apiKey)
             }
             contentType(ContentType.Application.Json)

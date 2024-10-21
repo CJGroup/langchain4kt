@@ -12,3 +12,6 @@ class ChatConfig(
 }
 
 inline fun <reified T : Any> NameMappingConfig.getSafeAs(key: String): T? = get(key) as? T
+
+inline fun <reified T : Any> NameMappingConfig.getOrThrow(key: String): T =
+    getSafeAs(key) ?: throw NoSuchElementException("Config key $key not found")
