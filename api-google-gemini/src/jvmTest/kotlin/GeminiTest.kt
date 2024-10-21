@@ -1,4 +1,4 @@
-import chat.ChatLanguageModel
+import chat.SimpleChatLanguageModel
 import chat.input.ChatConfig
 import chat.input.Context
 import chat.message.MessageSender
@@ -26,7 +26,7 @@ class GeminiTest {
             apiKey =  System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!
         )
 
-        val model = ChatLanguageModel(context, apiProvider)
+        val model = SimpleChatLanguageModel(context, apiProvider)
         runBlocking {
             model.chat(TextMessage(MessageSender.User, "hello"))
         }

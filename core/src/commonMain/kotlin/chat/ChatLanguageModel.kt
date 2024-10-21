@@ -4,15 +4,15 @@ import chat.input.Context
 import chat.message.Message
 import chat.output.Response
 
-interface IChatLanguageModel<SuccessInfo, FailInfo> {
+interface ChatLanguageModel<SuccessInfo, FailInfo> {
     val context: Context
     suspend fun <Content> chat(message: Message<Content>): Response<*, SuccessInfo, FailInfo>
 }
 
-class ChatLanguageModel<SuccessInfo, FailInfo>(
+class SimpleChatLanguageModel<SuccessInfo, FailInfo>(
     override val context: Context,
     var apiProvider: IChatApiProvider<SuccessInfo, FailInfo>
-) : IChatLanguageModel<SuccessInfo, FailInfo> {
+) : ChatLanguageModel<SuccessInfo, FailInfo> {
     override suspend fun <Content> chat(message: Message<Content>): Response<*, SuccessInfo, FailInfo> {
         context.history.add(message)
         val response = apiProvider.generate(context)
