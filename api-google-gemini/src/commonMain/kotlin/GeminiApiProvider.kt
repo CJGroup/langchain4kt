@@ -15,6 +15,9 @@ class GeminiApiProvider(
     val model: String,
     val apiKey: String
 ) : ChatApiProvider<GeminiResponse, String> {
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
     override suspend fun generate(context: Context): Response<*, GeminiResponse, String> {
         try {
             val httpResponse = httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
@@ -22,7 +25,7 @@ class GeminiApiProvider(
             }
             val bodyAsText = httpResponse.bodyAsText()
             try {
-                val geminiResponse = Json.decodeFromString<GeminiResponse>(bodyAsText)
+                val geminiResponse = json.decodeFromString<GeminiResponse>(bodyAsText)
                 return Response.Success(
                     message = TextMessage(
                         MessageSender.Model,
