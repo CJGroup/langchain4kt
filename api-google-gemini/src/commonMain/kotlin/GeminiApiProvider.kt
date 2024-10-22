@@ -1,10 +1,8 @@
 import chat.ChatApiProvider
 import chat.input.Context
-import chat.input.getOrThrow
 import chat.message.MessageSender
 import chat.message.TextMessage
 import chat.output.Response
-import io.github.stream29.streamlin.serialize.transform.Transformer
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -13,6 +11,8 @@ import kotlinx.serialization.json.Json
 
 class GeminiApiProvider(
     val httpClient: HttpClient,
+    val generationConfig: GenerationConfig,
+    val model: String,
     val apiKey: String
 ) : ChatApiProvider<GeminiResponse, String> {
     override suspend fun generate(context: Context): Response<*, GeminiResponse, String> {
@@ -47,7 +47,7 @@ class GeminiApiProvider(
 
     private fun HttpRequestBuilder.configureRequestBy(context: Context) {
         url {
-            appendPathSegments("${context.config.getOrThrow<String>("model")}:generateContent")
+            appendPathSegments("$model:generateContent")
             parameters.append("key", apiKey)
         }
         contentType(ContentType.Application.Json)
@@ -60,7 +60,7 @@ class GeminiApiProvider(
                             it.sender.toString()
                         )
                     }.toMutableList(),
-                generationConfig = with(Transformer) { fromMap(context.config).toSerializable() },
+                generationConfig = generationConfig,
                 systemInstruction = context.systemInstruction?.let {
                     GeminiContent(
                         listOf(mutableMapOf("text" to it.content)),
