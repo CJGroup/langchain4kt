@@ -28,7 +28,9 @@ class GeminiTest {
 
         val model = SimpleChatLanguageModel(context, apiProvider)
         runBlocking {
-            model.chat(TextMessage(MessageSender.User, "hello"))
+            val response = model.chat(TextMessage(MessageSender.User, "hello"))
+
+            prettyPrintln("Response: $response")
         }
         prettyPrintln("Chat: ${model.context.history}")
     }
