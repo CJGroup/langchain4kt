@@ -17,7 +17,6 @@ kotlin {
                 api(project(":core"))
                 implementation("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-                implementation("io.github.stream29:streamlin:2.4")
             }
         }
         val jvmTest by getting {
