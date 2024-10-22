@@ -22,6 +22,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation("io.github.stream29:streamlin:2.4")
                 implementation("io.ktor:ktor-client-cio:$ktor_version")
                 implementation("io.ktor:ktor-client-logging:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
