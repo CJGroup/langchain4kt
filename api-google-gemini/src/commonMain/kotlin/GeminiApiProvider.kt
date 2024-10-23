@@ -1,5 +1,6 @@
 import chat.ChatApiProvider
 import chat.input.Context
+import chat.message.Message
 import chat.message.MessageSender
 import chat.message.TextMessage
 import chat.output.Response
@@ -20,7 +21,7 @@ class GeminiApiProvider(
         ignoreUnknownKeys = true
     }
 
-    override suspend fun generate(context: Context): Response<*, GeminiResponse, String> {
+    override suspend fun generate(context: Context): Response<Message<*>, GeminiResponse, String> {
         runCatching {
             httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
                 configureRequestBy(context)
@@ -35,7 +36,7 @@ class GeminiApiProvider(
             runCatching {
                 val geminiResponse = json.decodeFromString<GeminiResponse>(bodyAsText)
                 return Response.Success(
-                    message = TextMessage(
+                    content = TextMessage(
                         MessageSender.Model,
                         geminiResponse.candidates
                             .first()
