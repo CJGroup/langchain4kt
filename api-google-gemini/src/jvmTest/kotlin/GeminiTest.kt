@@ -2,6 +2,7 @@ import chat.SimpleChatLanguageModel
 import chat.input.Context
 import chat.message.MessageSender
 import chat.message.TextMessage
+import chat.output.Response
 import io.github.stream29.streamlin.prettyPrintln
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -24,10 +25,12 @@ class GeminiTest {
         )
 
         val model = SimpleChatLanguageModel(context, apiProvider)
-        runBlocking {
-            val response = model.chat(TextMessage(MessageSender.User, "hello"))
-            prettyPrintln("Response: $response")
+        val response = runBlocking {
+            model.chat(TextMessage(MessageSender.User, "hello"))
         }
-        prettyPrintln("Chat: ${model.context.history}")
+        when (response) {
+            is Response.Success -> prettyPrintln("Success: $response")
+            is Response.Failure -> println("Failure: $response")
+        }
     }
 }

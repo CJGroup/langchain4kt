@@ -7,6 +7,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.Json
 
 class GeminiApiProvider(
@@ -18,13 +19,20 @@ class GeminiApiProvider(
     private val json = Json {
         ignoreUnknownKeys = true
     }
+
     override suspend fun generate(context: Context): Response<*, GeminiResponse, String> {
-        try {
-            val httpResponse = httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
+        runCatching {
+            httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
                 configureRequestBy(context)
             }
-            val bodyAsText = httpResponse.bodyAsText()
-            try {
+        }.getOrElse { e ->
+            return Response.Failure(
+                failInfo = e.stackTraceToString()
+            )
+        }.let {
+            it.bodyAsText(fallbackCharset = Charsets.UTF_8)
+        }.also { bodyAsText ->
+            runCatching {
                 val geminiResponse = json.decodeFromString<GeminiResponse>(bodyAsText)
                 return Response.Success(
                     message = TextMessage(
@@ -36,14 +44,10 @@ class GeminiApiProvider(
                     ),
                     successInfo = geminiResponse
                 )
-            } catch (e: Exception) {
-                return Response.Failure(
-                    failInfo = bodyAsText
-                )
             }
-        } catch (e: Exception) {
+        }.also { bodyAsText ->
             return Response.Failure(
-                e.message ?: "Unknown error"
+                failInfo = bodyAsText
             )
         }
     }
