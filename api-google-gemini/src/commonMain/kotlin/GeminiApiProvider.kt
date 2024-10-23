@@ -37,12 +37,12 @@ class GeminiApiProvider(
                     successInfo = geminiResponse
                 )
             } catch (e: Exception) {
-                return Response.Fail(
+                return Response.Failure(
                     failInfo = bodyAsText
                 )
             }
         } catch (e: Exception) {
-            return Response.Fail(
+            return Response.Failure(
                 e.message ?: "Unknown error"
             )
         }
