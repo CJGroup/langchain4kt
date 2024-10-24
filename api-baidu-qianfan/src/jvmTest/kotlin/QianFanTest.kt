@@ -1,8 +1,9 @@
-import chat.SimpleChatLanguageModel
-import chat.input.Context
-import chat.message.MessageSender
-import chat.message.TextMessage
-import chat.output.Response
+import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
+import io.github.stream29.langchain4kt.core.SimpleChatLanguageModel
+import io.github.stream29.langchain4kt.core.input.Context
+import io.github.stream29.langchain4kt.core.message.MessageSender
+import io.github.stream29.langchain4kt.core.message.TextMessage
+import io.github.stream29.langchain4kt.core.output.Response
 import io.github.stream29.streamlin.prettyPrintln
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test

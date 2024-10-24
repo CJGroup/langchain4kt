@@ -1,4 +1,4 @@
-package chat.message
+package io.github.stream29.langchain4kt.core.message
 
 data class Message<Content>(
     val type: MessageType,

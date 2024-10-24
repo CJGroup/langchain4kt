@@ -1,4 +1,4 @@
-package chat.message
+package io.github.stream29.langchain4kt.core.message
 
 sealed interface MessageType {
     data object Text : MessageType

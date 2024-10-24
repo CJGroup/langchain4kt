@@ -1,8 +1,8 @@
-package chat
+package io.github.stream29.langchain4kt.core
 
-import chat.input.Context
-import chat.message.Message
-import chat.output.Response
+import io.github.stream29.langchain4kt.core.input.Context
+import io.github.stream29.langchain4kt.core.message.Message
+import io.github.stream29.langchain4kt.core.output.Response
 
 interface ChatLanguageModel<SuccessInfo, FailInfo> {
     val context: Context

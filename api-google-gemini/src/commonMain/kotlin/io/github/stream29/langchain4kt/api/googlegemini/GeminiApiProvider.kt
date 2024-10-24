@@ -1,9 +1,11 @@
-import chat.ChatApiProvider
-import chat.input.Context
-import chat.message.Message
-import chat.message.MessageSender
-import chat.message.TextMessage
-import chat.output.Response
+package io.github.stream29.langchain4kt.api.googlegemini
+
+import io.github.stream29.langchain4kt.core.ChatApiProvider
+import io.github.stream29.langchain4kt.core.input.Context
+import io.github.stream29.langchain4kt.core.message.Message
+import io.github.stream29.langchain4kt.core.message.MessageSender
+import io.github.stream29.langchain4kt.core.message.TextMessage
+import io.github.stream29.langchain4kt.core.output.Response
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*

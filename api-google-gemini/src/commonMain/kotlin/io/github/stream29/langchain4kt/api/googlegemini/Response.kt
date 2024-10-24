@@ -1,3 +1,5 @@
+package io.github.stream29.langchain4kt.api.googlegemini
+
 import kotlinx.serialization.Serializable
 
 @Serializable

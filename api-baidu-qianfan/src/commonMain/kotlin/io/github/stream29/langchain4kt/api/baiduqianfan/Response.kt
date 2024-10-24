@@ -1,3 +1,5 @@
+package io.github.stream29.langchain4kt.api.baiduqianfan
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
