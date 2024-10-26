@@ -1,6 +1,7 @@
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.`maven-publish`
+import java.net.URI
 
 plugins {
     `maven-publish`
@@ -35,6 +36,17 @@ publishing {
             }
             scm {
                 url.set("https://github.com/CJGroup/langchain4kt")
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = URI("https://maven.pkg.github.com/CJGroup/langchain4kt")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")!!
+                password = System.getenv("GITHUB_TOKEN")!!
             }
         }
     }
