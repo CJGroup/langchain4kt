@@ -20,6 +20,7 @@ class QianfanApiProvider(
     val model: String,
     val apiKey: String,
     val secretKey: String,
+    val generateConfig: GenerateConfig,
 ) : ChatApiProvider<Unit, String> {
     var accessToken: String? = null
     private val json = Json {
@@ -32,17 +33,16 @@ class QianfanApiProvider(
                 is Response.Failure -> return Response.Failure(response.failInfo)
             }
         }
-        val request = QianfanChatRequest(
-            messages = context.history
-                .asSequence()
-                .filter { it.type == MessageType.Text }
-                .map {
-                    QianfanMessage(
-                        it.sender.toQianfanSender(),
-                        it.content.toString()
-                    )
-                }.toList(),
-        )
+        val messages = context.history
+            .asSequence()
+            .filter { it.type == MessageType.Text }
+            .map {
+                QianfanMessage(
+                    it.sender.toQianfanSender(),
+                    it.content.toString()
+                )
+            }.toList()
+        val request = generateConfig.toQianfanChatRequest(messages)
         val body = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)
