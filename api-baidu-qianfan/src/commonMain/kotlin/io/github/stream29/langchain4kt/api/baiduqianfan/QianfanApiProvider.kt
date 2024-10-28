@@ -8,7 +8,6 @@ import io.github.stream29.langchain4kt.core.message.MessageType
 import io.github.stream29.langchain4kt.core.message.TextMessage
 import io.github.stream29.langchain4kt.core.output.Response
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -44,7 +43,7 @@ class QianfanApiProvider(
                 )
             }.toList()
         val request = generateConfig.toQianfanChatRequest(messages)
-        val body = httpClient.post(chatUrl) {
+        val responseBody = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)
                 parameters.apply {
@@ -53,14 +52,26 @@ class QianfanApiProvider(
             }
             contentType(ContentType.Application.Json)
             setBody(request)
-        }.body<QianfanChatResponse>()
-        return Response.Success(
-            content = TextMessage(
-                sender = MessageSender.Model,
-                content = body.result
-            ),
-            successInfo = Unit
-        )
+        }.bodyAsText()
+        try {
+            val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+            return Response.Success(
+                content = TextMessage(
+                    sender = MessageSender.Model,
+                    content = body.result
+                ),
+                successInfo = Unit
+            )
+        } catch (e: SerializationException) {
+            val error = json.decodeFromString<RequestError>(responseBody)
+            return Response.Failure(
+                failInfo = error.toString()
+            )
+        } catch (e: Exception) {
+            return Response.Failure(
+                failInfo = e.stackTraceToString()
+            )
+        }
     }
 }
 

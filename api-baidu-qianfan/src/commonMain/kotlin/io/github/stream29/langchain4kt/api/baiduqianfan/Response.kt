@@ -25,6 +25,14 @@ data class AccessTokenError(
     val error: String
 )
 
+@Serializable
+data class RequestError(
+    @SerialName("error_code")
+    val errorCode: Int,
+    @SerialName("error_msg")
+    val errorMsg: String
+)
+
 //{
 //    "id": "as-fg4g836x8n",
 //    "object": "chat.completion",
