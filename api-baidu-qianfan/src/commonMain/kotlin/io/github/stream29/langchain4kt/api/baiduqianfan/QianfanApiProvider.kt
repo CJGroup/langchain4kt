@@ -23,7 +23,6 @@ class QianfanApiProvider(
 ) : ChatApiProvider<Unit, String> {
     var accessToken: String? = null
     private val json = Json {
-        encodeDefaults = true
         ignoreUnknownKeys = true
     }
     override suspend fun generate(context: Context): Response<Message<*>, Unit, String> {
@@ -42,7 +41,7 @@ class QianfanApiProvider(
                     it.content.toString()
                 )
             }.toList()
-        val request = generateConfig.toQianfanChatRequest(messages)
+        val request = generateConfig.toQianfanChatRequest(messages, context.systemInstruction?.content)
         val responseBody = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)

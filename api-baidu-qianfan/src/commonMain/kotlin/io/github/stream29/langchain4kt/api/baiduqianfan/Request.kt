@@ -48,7 +48,8 @@ data class GenerateConfig(
 )
 
 fun GenerateConfig.toQianfanChatRequest(
-    messages: List<QianfanMessage>
+    messages: List<QianfanMessage>,
+    system: String? = null
 ): QianfanChatRequest {
     return QianfanChatRequest(
         messages,
@@ -58,7 +59,7 @@ fun GenerateConfig.toQianfanChatRequest(
         this.stream,
         this.enableSystemMemory,
         this.systemMemoryId,
-        this.system,
+        system,
         this.stop,
         this.disableSearch,
         this.enableCitation,
