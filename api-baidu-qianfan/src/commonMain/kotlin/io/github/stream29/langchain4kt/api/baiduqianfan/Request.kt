@@ -4,25 +4,26 @@ import io.github.stream29.langchain4kt.core.message.MessageSender
 import kotlinx.serialization.Serializable
 
 //"messages": [
-//{"role":"user","content":"介绍一下北京"}
-//]
+//{"role":"user", "content": "给我推荐一些自驾游路线"}
+//],
+//"stream": true
 
 @Serializable
 data class QianfanChatRequest(
     val messages: List<QianfanMessage>,
-    val temperature: Float,
-    val topP: Float,
-    val penaltyScore: Float,
-    val stream: Boolean,
-    val enableSystemMemory: Boolean,
+    val temperature: Float = 0.8f,
+    val topP: Float = 0.8f,
+    val penaltyScore: Float = 1.0f,
+    val stream: Boolean = false,
+    val enableSystemMemory: Boolean = false,
     val systemMemoryId: String? = null,
     val system: String? = null,
     val stop: List<String>? = null,
-    val disableSearch: Boolean,
-    val enableCitation: Boolean,
-    val enableTrace: Boolean,
-    val maxOutputTokens: Int,
-    val responseFormat: String,
+    val disableSearch: Boolean = false,
+    val enableCitation: Boolean = false,
+    val enableTrace: Boolean = false,
+    val maxOutputTokens: Int = 1024,
+    val responseFormat: String = "text",
     val userIp: String? = null,
     val userId: String? = null,
 )
