@@ -19,8 +19,3 @@ fun TextMessage(
     sender: MessageSender,
     content: String
 ) = Message(MessageType.Text, sender, content)
-
-@Suppress("FunctionName")
-fun SystemMessage(
-    content: String
-) = TextMessage(MessageSender.System, content)
