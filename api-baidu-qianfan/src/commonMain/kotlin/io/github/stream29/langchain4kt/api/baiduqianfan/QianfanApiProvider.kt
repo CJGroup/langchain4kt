@@ -8,7 +8,6 @@ import io.github.stream29.langchain4kt.core.message.MessageType
 import io.github.stream29.langchain4kt.core.message.TextMessage
 import io.github.stream29.langchain4kt.core.output.Response
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -20,9 +19,11 @@ class QianfanApiProvider(
     val model: String,
     val apiKey: String,
     val secretKey: String,
+    val generateConfig: GenerateConfig,
 ) : ChatApiProvider<Unit, String> {
     var accessToken: String? = null
     private val json = Json {
+        encodeDefaults = true
         ignoreUnknownKeys = true
     }
     override suspend fun generate(context: Context): Response<Message<*>, Unit, String> {
@@ -32,18 +33,17 @@ class QianfanApiProvider(
                 is Response.Failure -> return Response.Failure(response.failInfo)
             }
         }
-        val request = QianfanChatRequest(
-            messages = context.history
-                .asSequence()
-                .filter { it.type == MessageType.Text }
-                .map {
-                    QianfanMessage(
-                        it.sender.toQianfanSender(),
-                        it.content.toString()
-                    )
-                }.toList(),
-        )
-        val body = httpClient.post(chatUrl) {
+        val messages = context.history
+            .asSequence()
+            .filter { it.type == MessageType.Text }
+            .map {
+                QianfanMessage(
+                    it.sender.toQianfanSender(),
+                    it.content.toString()
+                )
+            }.toList()
+        val request = generateConfig.toQianfanChatRequest(messages)
+        val responseBody = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)
                 parameters.apply {
@@ -52,14 +52,26 @@ class QianfanApiProvider(
             }
             contentType(ContentType.Application.Json)
             setBody(request)
-        }.body<QianfanChatResponse>()
-        return Response.Success(
-            content = TextMessage(
-                sender = MessageSender.Model,
-                content = body.result
-            ),
-            successInfo = Unit
-        )
+        }.bodyAsText()
+        try {
+            val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+            return Response.Success(
+                content = TextMessage(
+                    sender = MessageSender.Model,
+                    content = body.result
+                ),
+                successInfo = Unit
+            )
+        } catch (e: SerializationException) {
+            val error = json.decodeFromString<RequestError>(responseBody)
+            return Response.Failure(
+                failInfo = error.toString()
+            )
+        } catch (e: Exception) {
+            return Response.Failure(
+                failInfo = e.stackTraceToString()
+            )
+        }
     }
 }
 

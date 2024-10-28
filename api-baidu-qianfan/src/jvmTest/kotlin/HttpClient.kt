@@ -1,5 +1,4 @@
 import io.ktor.client.*
-import io.ktor.client.engine.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -22,6 +21,5 @@ val httpClient = HttpClient(CIO) {
     }
     engine {
         requestTimeout = 20 * 1000
-        proxy = ProxyBuilder.http("https://127.0.0.1:7890")
     }
 }
