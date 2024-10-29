@@ -1,6 +1,7 @@
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GenerationConfig
 import io.github.stream29.langchain4kt.core.SimpleChatModel
+import io.github.stream29.langchain4kt.core.dsl.of
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
@@ -12,9 +13,9 @@ import kotlin.test.Test
 class GeminiTest {
     @Test
     fun generationTest() {
-        val context = Context(
-            systemInstruction = "You are a lovely cat, you should act as if you are a cat."
-        )
+        val context = Context.of {
+            systemInstruction("you are a lovely cat, you should act as if you are a cat.")
+        }
 
         val apiProvider = GeminiApiProvider(
             httpClient = httpClient,

@@ -2,9 +2,7 @@ import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
 import io.github.stream29.langchain4kt.core.SimpleChatModel
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.output.Response
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -28,11 +26,10 @@ class QianFanTest {
 
         val model = SimpleChatModel(context, apiProvider)
         val response = runBlocking {
-            model.chat(Message(MessageSender.User, "一个初学者应该如何入门微积分呢？"))
+            with(model) {
+                MessageSender.User.chat("一个初学者应该如何入门微积分呢？")
+            }
         }
-        when (response) {
-            is Response.Success -> println("Success: $response")
-            is Response.Failure -> println("Failure: $response")
-        }
+        println(response)
     }
 }
