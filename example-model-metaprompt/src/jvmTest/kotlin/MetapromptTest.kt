@@ -31,7 +31,7 @@ class MetapromptTest {
                 """.trimIndent()
         }
         runBlocking {
-            model.chat(Message(MessageSender.User, "一个初学者应该如何入门微积分呢？"))
+            model.chat("一个初学者应该如何入门微积分呢？")
         }
     }
 }
