@@ -3,6 +3,7 @@ agp = "8.5.0"
 kotlin = "2.0.0"
 ktor = "3.0.0"
 logback = "1.5.6"
+streamlin = "2.4"
 nexus-publish = "2.0.0"
 android-minSdk = "24"
 android-compileSdk = "34"
@@ -10,6 +11,14 @@ android-compileSdk = "34"
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
+ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin"}
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
