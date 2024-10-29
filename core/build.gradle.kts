@@ -1,12 +1,28 @@
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    kotlin("plugin.serialization").version("2.0.10")
+    alias(libs.plugins.kotlinSerialization)
     id("module.publication")
 }
 
 kotlin {
-    jvm()
-    js().browser()
+    jvm {
+        withJava()
+    }
+
+    js(IR) {
+        browser()
+        nodejs()
+        binaries.executable()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        binaries.library()
+        browser()
+        nodejs()
+    }
 
     sourceSets {
         val commonMain by getting {

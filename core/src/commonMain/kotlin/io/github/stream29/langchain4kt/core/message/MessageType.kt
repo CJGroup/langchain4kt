@@ -1,10 +1,10 @@
 package io.github.stream29.langchain4kt.core.message
 
-sealed interface MessageType {
-    data object Text : MessageType
-    data object Image : MessageType
-    data object Video : MessageType
-    data object Audio : MessageType
-    data object FunctionCall : MessageType
-    data object FunctionCallResult : MessageType
+sealed interface MessageType<Content> {
+    data object Text : MessageType<String>
+    data object Image : MessageType<Nothing>
+    data object Video : MessageType<Nothing>
+    data object Audio : MessageType<Nothing>
+    data object FunctionCall : MessageType<Nothing>
+    data object FunctionCallResult : MessageType<Nothing>
 }
