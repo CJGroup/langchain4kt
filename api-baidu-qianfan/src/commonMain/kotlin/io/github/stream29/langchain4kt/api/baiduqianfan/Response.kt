@@ -52,14 +52,37 @@ data class QianfanChatResponse(
     val id: String,
     val `object`: String,
     val created: Int,
-    val result: String,
+    @SerialName("sentence_id")
+    val sentenceId: String,
+    @SerialName("is_end")
+    val isEnd: Boolean,
     @SerialName("is_truncated")
     val isTruncated: Boolean,
-    @SerialName("need_clear_history")
-    val needClearHistory: Boolean,
     @SerialName("finish_reason")
     val finishReason: String,
+    @SerialName("search_info")
+    val searchInfo: SearchInfo,
+    val result: String,
+    @SerialName("need_clear_history")
+    val needClearHistory: Boolean,
+    @SerialName("flag")
+    val flag: String,
+    @SerialName("ban_round")
+    val banRound: Boolean,
     val usage: Usage
+)
+
+@Serializable
+data class SearchInfo(
+    @SerialName("search_results")
+    val searchResults: List<SearchResult>
+)
+
+@Serializable
+data class SearchResult(
+    val index: Int,
+    val url: String,
+    val title: String
 )
 
 @Serializable
