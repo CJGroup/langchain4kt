@@ -23,7 +23,7 @@ class QianFanTest {
             apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
             secretKey = System.getenv("BAIDU_QIANFAN_SECRET_KEY")!!,
             model = "ernie-4.0-8k-latest",
-            generateConfig = GenerateConfig(stream = true),
+            generateConfig = GenerateConfig(),
         )
 
         val model = SimpleChatModel(context, apiProvider)

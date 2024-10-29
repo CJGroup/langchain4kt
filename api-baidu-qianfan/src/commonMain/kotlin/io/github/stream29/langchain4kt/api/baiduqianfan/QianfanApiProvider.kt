@@ -32,14 +32,13 @@ class QianfanApiProvider(
         }
         val messages = context.history
             .asSequence()
-            .filter { it.type == MessageType.Text }
             .map {
                 QianfanMessage(
                     it.sender.toQianfanSender(),
-                    it.content.toString()
+                    it.content
                 )
             }.toList()
-        val request = generateConfig.toQianfanChatRequest(messages, context.systemInstruction?.content)
+        val request = generateConfig.toQianfanChatRequest(messages, context.systemInstruction)
         val responseBody = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)
