@@ -13,10 +13,7 @@ class GeminiTest {
     @Test
     fun generationTest() {
         val context = Context(
-            systemInstruction = Message(
-                MessageSender.System,
-                "You are a lovely cat, you should act as if you are a cat."
-            )
+            systemInstruction = "You are a lovely cat, you should act as if you are a cat."
         )
 
         val apiProvider = GeminiApiProvider(

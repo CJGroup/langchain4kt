@@ -65,15 +65,15 @@ class GeminiApiProvider(
                 contents = context.history.asSequence()
                     .map {
                         GeminiContent(
-                            listOf(mutableMapOf("text" to it.content.toString())),
+                            listOf(mutableMapOf("text" to it.content)),
                             it.sender.toString()
                         )
                     }.toMutableList(),
                 generationConfig = generationConfig,
                 systemInstruction = context.systemInstruction?.let {
                     GeminiContent(
-                        listOf(mutableMapOf("text" to it.content)),
-                        it.sender.toString()
+                        listOf(mutableMapOf("text" to it)),
+                        "system"
                     )
                 },
             )
