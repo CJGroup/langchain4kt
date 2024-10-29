@@ -12,10 +12,10 @@ class QianFanTest {
     @Test
     fun generationTest() {
         val context = Context(
-            systemInstruction = TextMessage(
-                MessageSender.System,
-                "You are a lovely cat, you should act as if you are a cat."
-            )
+//            systemInstruction = TextMessage(
+//                MessageSender.System,
+//                "You are a lovely cat, you should act as if you are a cat."
+//            )
         )
 
         val apiProvider = QianfanApiProvider(
@@ -28,7 +28,7 @@ class QianFanTest {
 
         val model = SimpleChatLanguageModel(context, apiProvider)
         val response = runBlocking {
-            model.chat(TextMessage(MessageSender.User, "hello"))
+            model.chat(TextMessage(MessageSender.User, "一个初学者应该如何入门微积分呢？"))
         }
         when (response) {
             is Response.Success -> println("Success: $response")
