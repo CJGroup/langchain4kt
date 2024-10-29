@@ -4,10 +4,12 @@ import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
 
+@LangchainDsl
 fun Context.add(block: ContextBuilder.() -> Unit) {
     ContextBuilder(this).apply(block)
 }
 
+@LangchainDsl
 fun Context.Companion.of(block: ContextBuilder.() -> Unit) =
     Context().also { ContextBuilder(it).apply(block) }
 
