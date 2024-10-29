@@ -53,11 +53,26 @@ class QianfanApiProvider(
             setBody(request)
         }.bodyAsText()
         try {
-            val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+            if (!request.stream) {
+                val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+                return Response.Success(
+                    content = TextMessage(
+                        sender = MessageSender.Model,
+                        content = body.result
+                    ),
+                    successInfo = Unit
+                )
+            }
+            val regex = Regex("data: (.+?)(?=\n\ndata:|$)")
+            val body = mutableListOf<QianfanChatResponse>()
+            regex.findAll(responseBody).forEach { unit ->
+                val data = unit.value.substringAfter("data: ")
+                body.add(json.decodeFromString<QianfanChatResponse>(data))
+            }
             return Response.Success(
                 content = TextMessage(
                     sender = MessageSender.Model,
-                    content = body.result
+                    content = body.toString()
                 ),
                 successInfo = Unit
             )

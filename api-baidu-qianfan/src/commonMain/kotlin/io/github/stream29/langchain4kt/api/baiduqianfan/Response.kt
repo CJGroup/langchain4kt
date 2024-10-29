@@ -53,22 +53,22 @@ data class QianfanChatResponse(
     val `object`: String,
     val created: Int,
     @SerialName("sentence_id")
-    val sentenceId: String,
+    val sentenceId: Int? = null,
     @SerialName("is_end")
-    val isEnd: Boolean,
+    val isEnd: Boolean? = null,
     @SerialName("is_truncated")
     val isTruncated: Boolean,
     @SerialName("finish_reason")
     val finishReason: String,
     @SerialName("search_info")
-    val searchInfo: SearchInfo,
+    val searchInfo: SearchInfo? = null,
     val result: String,
     @SerialName("need_clear_history")
     val needClearHistory: Boolean,
     @SerialName("flag")
-    val flag: String,
+    val flag: Int? = null,
     @SerialName("ban_round")
-    val banRound: Boolean,
+    val banRound: Int? = null,
     val usage: Usage
 )
 
