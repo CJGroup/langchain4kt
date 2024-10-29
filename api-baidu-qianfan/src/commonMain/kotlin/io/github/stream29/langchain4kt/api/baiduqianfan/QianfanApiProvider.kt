@@ -4,8 +4,6 @@ import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.message.MessageType
-import io.github.stream29.langchain4kt.core.message.TextMessage
 import io.github.stream29.langchain4kt.core.output.Response
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -25,7 +23,7 @@ class QianfanApiProvider(
     private val json = Json {
         ignoreUnknownKeys = true
     }
-    override suspend fun generate(context: Context): Response<Message<*>, Unit, String> {
+    override suspend fun generate(context: Context): Response<Message, Unit, String> {
         if (accessToken == null) {
             when (val response = httpClient.getAccessToken(apiKey, secretKey, json)) {
                 is Response.Success -> accessToken = response.content
@@ -56,7 +54,7 @@ class QianfanApiProvider(
             if (!request.stream) {
                 val body = json.decodeFromString<QianfanChatResponse>(responseBody)
                 return Response.Success(
-                    content = TextMessage(
+                    content = Message(
                         sender = MessageSender.Model,
                         content = body.result
                     ),
@@ -70,7 +68,7 @@ class QianfanApiProvider(
                 body.add(json.decodeFromString<QianfanChatResponse>(data))
             }
             return Response.Success(
-                content = TextMessage(
+                content = Message(
                     sender = MessageSender.Model,
                     content = body.toString()
                 ),

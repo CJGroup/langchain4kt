@@ -4,7 +4,6 @@ import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.message.TextMessage
 import io.github.stream29.langchain4kt.core.output.Response
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -23,7 +22,7 @@ class GeminiApiProvider(
         ignoreUnknownKeys = true
     }
 
-    override suspend fun generate(context: Context): Response<Message<*>, GeminiResponse, String> {
+    override suspend fun generate(context: Context): Response<Message, GeminiResponse, String> {
         runCatching {
             httpClient.post("https://generativelanguage.googleapis.com/v1beta/models/") {
                 configureRequestBy(context)
@@ -38,7 +37,7 @@ class GeminiApiProvider(
             runCatching {
                 val geminiResponse = json.decodeFromString<GeminiResponse>(bodyAsText)
                 return Response.Success(
-                    content = TextMessage(
+                    content = Message(
                         MessageSender.Model,
                         geminiResponse.candidates
                             .first()

@@ -1,9 +1,8 @@
 import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
 import io.github.stream29.langchain4kt.api.baiduqianfan.MetapromptChatModel
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
-import io.github.stream29.langchain4kt.core.input.Context
+import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.message.TextMessage
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -32,7 +31,7 @@ class MetapromptTest {
                 """.trimIndent()
         }
         runBlocking {
-            model.chat(TextMessage(MessageSender.User, "一个初学者应该如何入门微积分呢？"))
+            model.chat(Message(MessageSender.User, "一个初学者应该如何入门微积分呢？"))
         }
     }
 }
