@@ -47,29 +47,6 @@ data class GenerateConfig(
     val userId: String? = null,
 )
 
-fun GenerateConfig.toQianfanChatRequest(
-    messages: List<QianfanMessage>
-): QianfanChatRequest {
-    return QianfanChatRequest(
-        messages,
-        this.temperature,
-        this.topP,
-        this.penaltyScore,
-        this.stream,
-        this.enableSystemMemory,
-        this.systemMemoryId,
-        this.system,
-        this.stop,
-        this.disableSearch,
-        this.enableCitation,
-        this.enableTrace,
-        this.maxOutputTokens,
-        this.responseFormat,
-        this.userIp,
-        this.userId
-    )
-}
-
 @Serializable
 data class QianfanMessage(
     val role: String,

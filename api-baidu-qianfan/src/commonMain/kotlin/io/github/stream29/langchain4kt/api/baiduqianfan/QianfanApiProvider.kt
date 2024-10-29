@@ -23,7 +23,6 @@ class QianfanApiProvider(
 ) : ChatApiProvider<Unit, String> {
     var accessToken: String? = null
     private val json = Json {
-        encodeDefaults = true
         ignoreUnknownKeys = true
     }
     override suspend fun generate(context: Context): Response<Message<*>, Unit, String> {
@@ -42,7 +41,7 @@ class QianfanApiProvider(
                     it.content.toString()
                 )
             }.toList()
-        val request = generateConfig.toQianfanChatRequest(messages)
+        val request = generateConfig.toQianfanChatRequest(messages, context.systemInstruction?.content)
         val responseBody = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)
@@ -54,11 +53,26 @@ class QianfanApiProvider(
             setBody(request)
         }.bodyAsText()
         try {
-            val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+            if (!request.stream) {
+                val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+                return Response.Success(
+                    content = TextMessage(
+                        sender = MessageSender.Model,
+                        content = body.result
+                    ),
+                    successInfo = Unit
+                )
+            }
+            val regex = Regex("data: (.+?)(?=\n\ndata:|$)")
+            val body = mutableListOf<QianfanChatResponse>()
+            regex.findAll(responseBody).forEach { unit ->
+                val data = unit.value.substringAfter("data: ")
+                body.add(json.decodeFromString<QianfanChatResponse>(data))
+            }
             return Response.Success(
                 content = TextMessage(
                     sender = MessageSender.Model,
-                    content = body.result
+                    content = body.toString()
                 ),
                 successInfo = Unit
             )
@@ -73,6 +87,30 @@ class QianfanApiProvider(
             )
         }
     }
+}
+
+private fun GenerateConfig.toQianfanChatRequest(
+    messages: List<QianfanMessage>,
+    system: String? = null
+): QianfanChatRequest {
+    return QianfanChatRequest(
+        messages,
+        this.temperature,
+        this.topP,
+        this.penaltyScore,
+        this.stream,
+        this.enableSystemMemory,
+        this.systemMemoryId,
+        system,
+        this.stop,
+        this.disableSearch,
+        this.enableCitation,
+        this.enableTrace,
+        this.maxOutputTokens,
+        this.responseFormat,
+        this.userIp,
+        this.userId
+    )
 }
 
 private suspend fun HttpClient.getAccessToken(
