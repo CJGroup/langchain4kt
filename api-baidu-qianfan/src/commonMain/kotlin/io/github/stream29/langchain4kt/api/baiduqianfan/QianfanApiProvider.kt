@@ -74,6 +74,30 @@ class QianfanApiProvider(
     }
 }
 
+private fun GenerateConfig.toQianfanChatRequest(
+    messages: List<QianfanMessage>,
+    system: String? = null
+): QianfanChatRequest {
+    return QianfanChatRequest(
+        messages,
+        this.temperature,
+        this.topP,
+        this.penaltyScore,
+        this.stream,
+        this.enableSystemMemory,
+        this.systemMemoryId,
+        system,
+        this.stop,
+        this.disableSearch,
+        this.enableCitation,
+        this.enableTrace,
+        this.maxOutputTokens,
+        this.responseFormat,
+        this.userIp,
+        this.userId
+    )
+}
+
 private suspend fun HttpClient.getAccessToken(
     apiKey: String,
     secretKey: String,
