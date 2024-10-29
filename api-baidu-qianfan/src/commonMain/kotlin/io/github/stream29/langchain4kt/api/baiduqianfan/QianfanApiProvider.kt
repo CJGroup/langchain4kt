@@ -15,7 +15,7 @@ class QianfanApiProvider(
     val model: String,
     val apiKey: String,
     val secretKey: String,
-    val generateConfig: GenerateConfig,
+    val generateConfig: GenerateConfig = GenerateConfig(),
 ) : ChatApiProvider<QianfanChatResponse> {
     var accessToken: String? = null
     private val json = Json {
