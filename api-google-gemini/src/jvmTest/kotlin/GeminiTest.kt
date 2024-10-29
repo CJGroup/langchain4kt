@@ -3,8 +3,6 @@ import io.github.stream29.langchain4kt.api.googlegemini.GenerationConfig
 import io.github.stream29.langchain4kt.core.SimpleChatModel
 import io.github.stream29.langchain4kt.core.dsl.of
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.output.Response
-import io.github.stream29.streamlin.prettyPrintln
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -26,9 +24,6 @@ class GeminiTest {
         val response = runBlocking {
             model.chat("hello")
         }
-        when (response) {
-            is Response.Success -> prettyPrintln("Success: $response")
-            is Response.Failure -> println("Failure: $response")
-        }
+        println(response)
     }
 }

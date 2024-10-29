@@ -2,8 +2,6 @@ package io.github.stream29.langchain4kt.api.baiduqianfan
 
 import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.message.Message
-import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.core.output.Response
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -18,26 +16,23 @@ class QianfanApiProvider(
     val apiKey: String,
     val secretKey: String,
     val generateConfig: GenerateConfig,
-) : ChatApiProvider<Unit, String> {
+) : ChatApiProvider<QianfanChatResponse> {
     var accessToken: String? = null
     private val json = Json {
         ignoreUnknownKeys = true
     }
-    override suspend fun generate(context: Context): Response<Message, Unit, String> {
+
+    override suspend fun generate(context: Context): Response<QianfanChatResponse> {
         if (accessToken == null) {
-            when (val response = httpClient.getAccessToken(apiKey, secretKey, json)) {
-                is Response.Success -> accessToken = response.content
-                is Response.Failure -> return Response.Failure(response.failInfo)
-            }
+            accessToken = httpClient.getAccessToken(apiKey, secretKey, json)
         }
         val messages = context.history
-            .asSequence()
             .map {
                 QianfanMessage(
                     it.sender.toQianfanSender(),
                     it.content
                 )
-            }.toList()
+            }
         val request = generateConfig.toQianfanChatRequest(messages, context.systemInstruction)
         val responseBody = httpClient.post(chatUrl) {
             url {
@@ -50,38 +45,14 @@ class QianfanApiProvider(
             setBody(request)
         }.bodyAsText()
         try {
-            if (!request.stream) {
-                val body = json.decodeFromString<QianfanChatResponse>(responseBody)
-                return Response.Success(
-                    content = Message(
-                        sender = MessageSender.Model,
-                        content = body.result
-                    ),
-                    successInfo = Unit
-                )
-            }
-            val regex = Regex("data: (.+?)(?=\n\ndata:|$)")
-            val body = mutableListOf<QianfanChatResponse>()
-            regex.findAll(responseBody).forEach { unit ->
-                val data = unit.value.substringAfter("data: ")
-                body.add(json.decodeFromString<QianfanChatResponse>(data))
-            }
-            return Response.Success(
-                content = Message(
-                    sender = MessageSender.Model,
-                    content = body.toString()
-                ),
-                successInfo = Unit
+            val body = json.decodeFromString<QianfanChatResponse>(responseBody)
+            return Response(
+                message = body.result,
+                metaInfo = body
             )
         } catch (e: SerializationException) {
             val error = json.decodeFromString<RequestError>(responseBody)
-            return Response.Failure(
-                failInfo = error.toString()
-            )
-        } catch (e: Exception) {
-            return Response.Failure(
-                failInfo = e.stackTraceToString()
-            )
+            throw QianFanGenerationException(error)
         }
     }
 }
@@ -95,7 +66,6 @@ private fun GenerateConfig.toQianfanChatRequest(
         this.temperature,
         this.topP,
         this.penaltyScore,
-        this.stream,
         this.enableSystemMemory,
         this.systemMemoryId,
         system,
@@ -114,7 +84,7 @@ private suspend fun HttpClient.getAccessToken(
     apiKey: String,
     secretKey: String,
     json: Json
-): Response<String, AccessTokenResponse, String> {
+): String {
     val responseBody = this.post(accessTokenAuthUrl) {
         url {
             parameters.apply {
@@ -126,19 +96,10 @@ private suspend fun HttpClient.getAccessToken(
     }.bodyAsText()
     try {
         val response = json.decodeFromString<AccessTokenResponse>(responseBody)
-        return Response.Success(
-            content = response.accessToken,
-            successInfo = response
-        )
+        return response.accessToken
     } catch (e: SerializationException) {
         val error = json.decodeFromString<AccessTokenError>(responseBody)
-        return Response.Failure(
-            failInfo = error.toString()
-        )
-    } catch (e: Exception) {
-        return Response.Failure(
-            failInfo = e.stackTraceToString()
-        )
+        throw QianFanTokenFetchException(error)
     }
 }
 

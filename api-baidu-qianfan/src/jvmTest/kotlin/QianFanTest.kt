@@ -2,7 +2,6 @@ import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
 import io.github.stream29.langchain4kt.core.SimpleChatModel
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.message.MessageSender
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 

@@ -2,28 +2,32 @@ package io.github.stream29.langchain4kt.core
 
 import io.github.stream29.langchain4kt.core.dsl.add
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.output.Response
+import io.github.stream29.langchain4kt.core.output.GenerationException
 
-interface ChatModel<SuccessInfo, FailInfo> {
+interface ChatModel {
     val context: Context
-    suspend fun chat(message: String): Response<Message, SuccessInfo, FailInfo>
+    suspend fun chat(message: String): String
 }
 
-class SimpleChatModel<SuccessInfo, FailInfo>(
+class SimpleChatModel<MetaInfo>(
     override val context: Context,
-    var apiProvider: ChatApiProvider<SuccessInfo, FailInfo>
-) : ChatModel<SuccessInfo, FailInfo> {
-    override suspend fun chat(message: String): Response<Message, SuccessInfo, FailInfo> {
-        context.add {
-            MessageSender.User.chat(message)
-        }
-        val response = apiProvider.generate(context)
-        if (response is Response.Success)
-            context.history.add(response.content)
-        else
+    var apiProvider: ChatApiProvider<MetaInfo>
+) : ChatModel {
+    override suspend fun chat(message: String): String {
+        try {
+            context.add {
+                MessageSender.User.chat(message)
+            }
+            val response = apiProvider.generate(context).message
+            context.add {
+                MessageSender.Model.chat(response)
+            }
+            return response
+        } catch (e: Exception) {
+            val failInfo = "Generation failed with context $context"
             context.history.removeLast()
-        return response
+            throw GenerationException(failInfo, e)
+        }
     }
 }
