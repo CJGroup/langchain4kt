@@ -12,8 +12,8 @@ class MetapromptChatModel(
     var apiProvider: ChatApiProvider<*, *>,
     var metapromptTransform: (String) -> String
 ) : ChatModel<Unit, Unit> {
-    override suspend fun <Content> chat(message: Message<Content>): Response<Message<*>, Unit, Unit> {
-        val metaprompt = metapromptTransform(message.content as String)
+    override suspend fun chat(message: Message): Response<Message, Unit, Unit> {
+        val metaprompt = metapromptTransform(message.content)
         val prompt =
             apiProvider.generate(
                 context.copy(
@@ -25,7 +25,7 @@ class MetapromptChatModel(
                     )
                 )
             ).let {
-                it as Response.Success<Message<String>, *>
+                it as Response.Success<Message, *>
             }.content.content
         val response = apiProvider.generate(
             context.copy().also {
@@ -36,9 +36,9 @@ class MetapromptChatModel(
                     )
                 )
             }
-        ) as Response.Success<Message<String>, Unit>
+        ) as Response.Success
         context.history.add(message)
         context.history.add(Message(MessageSender.Model, response.content.content))
-        return response
+        return Response.Success(response.content, Unit)
     }
 }

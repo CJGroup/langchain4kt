@@ -26,9 +26,7 @@ class QianFanTest {
 
         val model = SimpleChatModel(context, apiProvider)
         val response = runBlocking {
-            with(model) {
-                MessageSender.User.chat("一个初学者应该如何入门微积分呢？")
-            }
+            model.chat("一个初学者应该如何入门微积分呢？")
         }
         println(response)
     }
