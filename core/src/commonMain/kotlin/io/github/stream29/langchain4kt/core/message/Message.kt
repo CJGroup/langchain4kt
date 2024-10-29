@@ -1,7 +1,7 @@
 package io.github.stream29.langchain4kt.core.message
 
 data class Message<Content>(
-    val type: MessageType,
+    val type: MessageType<Content>,
     val sender: MessageSender,
     val content: Content
 ) {
