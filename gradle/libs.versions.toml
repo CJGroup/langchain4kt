@@ -1,6 +1,8 @@
 [versions]
 agp = "8.5.0"
 kotlin = "2.0.0"
+ktor = "3.0.0"
+logback = "1.5.6"
 nexus-publish = "2.0.0"
 android-minSdk = "24"
 android-compileSdk = "34"
@@ -12,3 +14,4 @@ nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.grad
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

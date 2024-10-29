@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    kotlin("plugin.serialization").version("2.0.10")
+    alias(libs.plugins.kotlinSerialization)
     id("module.publication")
 }
 
