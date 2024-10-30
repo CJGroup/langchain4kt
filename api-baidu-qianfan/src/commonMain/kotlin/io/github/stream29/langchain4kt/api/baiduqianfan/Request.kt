@@ -55,5 +55,4 @@ fun MessageSender.toQianfanSender() =
     when (this) {
         MessageSender.User -> "user"
         MessageSender.Model -> "assistant"
-        MessageSender.System -> "system"
     }
