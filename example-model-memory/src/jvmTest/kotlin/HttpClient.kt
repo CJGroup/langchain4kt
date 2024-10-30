@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 
 val httpClient = HttpClient(CIO) {
     install(Logging) {
-        level = LogLevel.ALL
+        level = LogLevel.BODY
         logger = Logger.SIMPLE
     }
     install(ContentNegotiation) {

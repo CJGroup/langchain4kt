@@ -9,7 +9,7 @@ import io.github.stream29.langchain4kt.core.message.MessageSender
 
 class MetapromptChatModel(
     override val context: Context = Context(),
-    var apiProvider: ChatApiProvider<*>,
+    override var apiProvider: ChatApiProvider<*>,
     var metapromptTransform: (String) -> String
 ) : ChatModel {
     override suspend fun chat(message: String): String {
