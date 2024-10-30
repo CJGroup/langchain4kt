@@ -7,12 +7,13 @@ import io.github.stream29.langchain4kt.core.output.GenerationException
 
 interface ChatModel {
     val context: Context
+    val apiProvider: ChatApiProvider<*>
     suspend fun chat(message: String): String
 }
 
 class SimpleChatModel<MetaInfo>(
-    override val context: Context,
-    var apiProvider: ChatApiProvider<MetaInfo>
+    override val context: Context = Context(),
+    override var apiProvider: ChatApiProvider<MetaInfo>
 ) : ChatModel {
     override suspend fun chat(message: String): String {
         try {
