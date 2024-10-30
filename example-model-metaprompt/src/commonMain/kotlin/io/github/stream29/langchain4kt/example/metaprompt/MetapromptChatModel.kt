@@ -1,4 +1,4 @@
-package io.github.stream29.langchain4kt.api.baiduqianfan
+package io.github.stream29.langchain4kt.example.metaprompt
 
 import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.ChatModel

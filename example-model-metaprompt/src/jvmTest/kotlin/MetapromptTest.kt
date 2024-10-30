@@ -1,5 +1,5 @@
 import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
-import io.github.stream29.langchain4kt.api.baiduqianfan.MetapromptChatModel
+import io.github.stream29.langchain4kt.example.metaprompt.MetapromptChatModel
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
