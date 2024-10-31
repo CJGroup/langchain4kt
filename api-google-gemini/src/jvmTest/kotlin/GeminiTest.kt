@@ -20,7 +20,7 @@ class GeminiTest {
             model = "gemini-1.5-flash"
         )
 
-        val model = SimpleChatModel(context, apiProvider)
+        val model = SimpleChatModel(apiProvider, context)
         val response = runBlocking {
             model.chat("hello")
         }

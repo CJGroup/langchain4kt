@@ -1,4 +1,3 @@
-import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
 import io.github.stream29.langchain4kt.core.SimpleChatModel
 import io.github.stream29.langchain4kt.core.dsl.of
@@ -20,7 +19,7 @@ class QianFanTest {
             model = "ernie-4.0-8k-latest",
         )
 
-        val model = SimpleChatModel(context, apiProvider)
+        val model = SimpleChatModel(apiProvider, context)
         val response = runBlocking {
             model.chat("一个初学者应该如何入门微积分呢？")
         }
