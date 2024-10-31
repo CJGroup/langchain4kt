@@ -9,9 +9,6 @@ interface Respondent {
 fun ChatApiProvider<*>.asRespondent(systemInstruction: String? = null) =
     SimpleRespondent(this, systemInstruction)
 
-fun ChatModel.asRespondent() =
-    SimpleRespondent(apiProvider, context.systemInstruction)
-
 fun Respondent.wrap(wrapper: (String) -> String) =
     WrappedRespondent(this, wrapper)
 
