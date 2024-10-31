@@ -8,10 +8,6 @@ import kotlin.test.Test
 class QianFanTest {
     @Test
     fun generationTest() {
-        val context = Context.of {
-            systemInstruction("You are a lovely cat, you should act as if you are a cat.")
-        }
-
         val apiProvider = QianfanApiProvider(
             httpClient = httpClient,
             apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
@@ -19,7 +15,10 @@ class QianFanTest {
             model = "ernie-4.0-8k-latest",
         )
 
-        val model = SimpleChatModel(apiProvider, context)
+        val model = SimpleChatModel(apiProvider) {
+            systemInstruction("You are a lovely cat, you should act as if you are a cat.")
+        }
+
         val response = runBlocking {
             model.chat("一个初学者应该如何入门微积分呢？")
         }
