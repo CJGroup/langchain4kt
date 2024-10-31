@@ -1,27 +1,40 @@
 package io.github.stream29.langchain4kt.utils
 
 import io.github.stream29.langchain4kt.core.ChatModel
+import io.github.stream29.langchain4kt.core.Respondent
 import io.github.stream29.langchain4kt.core.dsl.add
-import io.github.stream29.langchain4kt.core.dsl.of
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
+import io.github.stream29.langchain4kt.core.output.GenerationException
 
 class IteratedPromptModel(
-    val baseModel: ChatModel,
+    val respondent: Respondent,
+    override val context: Context = Context(),
     var prompt: String = "",
-    val onMessage: (message: Message, oldPrompt: String) -> String
-) : ChatModel by baseModel {
-    init {
-        prompt = context.history.fold(prompt) { acc, message -> onMessage(message, acc) }
+    val onMessagePrompt: (message: Message, oldPrompt: String) -> String
+) : ChatModel {
+    override suspend fun chat(message: String): String {
+        val promptBackup = prompt
+        val historyLengthBackup = context.history.size
+        try {
+            context.add { MessageSender.User.chat(message) }
+            onMessage(Message(MessageSender.User, message), prompt)
+            val response = respondent.chat(prompt)
+            context.add { MessageSender.Model.chat(response) }
+            onMessage(Message(MessageSender.Model, response), prompt)
+            return response
+        } catch (e: Exception) {
+            val generationException = GenerationException("Generation failed with prompt $prompt", e)
+            while (context.history.size > historyLengthBackup) {
+                context.history.removeLast()
+            }
+            prompt = promptBackup
+            throw generationException
+        }
     }
 
-    override suspend fun chat(message: String): String {
-        context.add { MessageSender.User.chat(message) }
-        val newPrompt = onMessage(Message(MessageSender.User, message), prompt)
-        val response = apiProvider.generate(Context.of { MessageSender.User.chat(newPrompt) }).message
-        context.add { MessageSender.Model.chat(response) }
-        prompt = onMessage(Message(MessageSender.Model, response), newPrompt)
-        return response
+    private suspend fun onMessage(message: Message, oldPrompt: String) {
+        prompt = respondent.chat(onMessagePrompt(message, oldPrompt))
     }
 }
