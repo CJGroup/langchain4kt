@@ -6,6 +6,15 @@ interface Respondent {
     suspend fun chat(message: String): String
 }
 
+fun ChatApiProvider<*>.asRespondent(systemInstruction: String? = null) =
+    SimpleRespondent(this, systemInstruction)
+
+fun ChatModel.asRespondent() =
+    SimpleRespondent(apiProvider, context.systemInstruction)
+
+fun Respondent.wrap(wrapper: (String) -> String) =
+    WrappedRespondent(this, wrapper)
+
 data class SimpleRespondent(
     val apiProvider: ChatApiProvider<*>,
     val systemInstruction: String? = null
@@ -18,12 +27,6 @@ data class SimpleRespondent(
     }
 }
 
-fun ChatApiProvider<*>.toRespondent(systemInstruction: String? = null) =
-    SimpleRespondent(this, systemInstruction)
-
-fun ChatModel.toRespondent() =
-    SimpleRespondent(apiProvider, context.systemInstruction)
-
 data class WrappedRespondent(
     val baseRespondent: Respondent,
     val wrapper: (String) -> String
@@ -32,6 +35,3 @@ data class WrappedRespondent(
         return baseRespondent.chat(wrapper(message))
     }
 }
-
-fun Respondent.wrap(wrapper: (String) -> String) =
-    WrappedRespondent(this, wrapper)

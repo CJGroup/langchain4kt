@@ -1,6 +1,6 @@
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GenerationConfig
-import io.github.stream29.langchain4kt.core.toRespondent
+import io.github.stream29.langchain4kt.core.asRespondent
 import io.github.stream29.langchain4kt.utils.MetapromptRespondent
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -15,7 +15,7 @@ class MetapromptTest {
             model = "gemini-1.5-flash"
         )
         val respondent = MetapromptRespondent(
-            baseRespondent = apiProvider.toRespondent()
+            baseRespondent = apiProvider.asRespondent()
         ) { prompt ->
             """
                 $prompt
