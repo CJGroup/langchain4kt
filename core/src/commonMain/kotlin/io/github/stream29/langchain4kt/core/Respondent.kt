@@ -23,3 +23,15 @@ fun ChatApiProvider<*>.toRespondent(systemInstruction: String? = null) =
 
 fun ChatModel.toRespondent() =
     SimpleRespondent(apiProvider, context.systemInstruction)
+
+data class WrappedRespondent(
+    val baseRespondent: Respondent,
+    val wrapper: (String) -> String
+) : Respondent {
+    override suspend fun chat(message: String): String {
+        return baseRespondent.chat(wrapper(message))
+    }
+}
+
+fun Respondent.wrap(wrapper: (String) -> String) =
+    WrappedRespondent(this, wrapper)
