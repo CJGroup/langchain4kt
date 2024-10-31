@@ -1,5 +1,6 @@
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.http.ContentType.Application.Json
@@ -19,6 +20,9 @@ val httpClient = HttpClient(CIO) {
                 ignoreUnknownKeys = true
             }
         )
+    }
+    install(HttpRequestRetry) {
+        retryOnException(10)
     }
     engine {
         requestTimeout = 200 * 1000

@@ -12,6 +12,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":api-baidu-qianfan"))
+                implementation(project(":api-google-gemini"))
                 implementation(libs.ktor.core)
                 implementation(libs.ktor.serialization.kotlinx.json)
             }

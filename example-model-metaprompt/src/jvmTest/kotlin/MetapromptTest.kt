@@ -1,6 +1,8 @@
 import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
 import io.github.stream29.langchain4kt.example.metaprompt.MetapromptChatModel
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
+import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
+import io.github.stream29.langchain4kt.api.googlegemini.GenerationConfig
 import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import kotlinx.coroutines.runBlocking
@@ -9,12 +11,11 @@ import kotlin.test.Test
 class MetapromptTest {
     @Test
     fun generationTest() {
-        val apiProvider = QianfanApiProvider(
+        val apiProvider = GeminiApiProvider(
             httpClient = httpClient,
-            apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
-            secretKey = System.getenv("BAIDU_QIANFAN_SECRET_KEY")!!,
-            model = "ernie-4.0-8k-latest",
-            generateConfig = GenerateConfig(),
+            apiKey = System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!,
+            generationConfig = GenerationConfig(),
+            model = "gemini-1.5-flash"
         )
         val model = MetapromptChatModel(
             apiProvider = apiProvider,
