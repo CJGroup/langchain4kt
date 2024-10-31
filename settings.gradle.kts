@@ -21,5 +21,5 @@ rootProject.name = "langchain4kt-root"
 include(":core")
 include(":api-google-gemini")
 include(":api-baidu-qianfan")
-include(":example-model-metaprompt")
+include(":example-respondent-metaprompt")
 include(":example-model-memory")

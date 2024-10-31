@@ -1,10 +1,7 @@
-import io.github.stream29.langchain4kt.api.baiduqianfan.GenerateConfig
-import io.github.stream29.langchain4kt.example.metaprompt.MetapromptChatModel
-import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GenerationConfig
-import io.github.stream29.langchain4kt.core.message.Message
-import io.github.stream29.langchain4kt.core.message.MessageSender
+import io.github.stream29.langchain4kt.core.toRespondent
+import io.github.stream29.langchain4kt.example.metaprompt.MetapromptRespondent
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -17,8 +14,8 @@ class MetapromptTest {
             generationConfig = GenerationConfig(),
             model = "gemini-1.5-flash"
         )
-        val model = MetapromptChatModel(
-            apiProvider = apiProvider,
+        val respondent = MetapromptRespondent(
+            baseRespondent = apiProvider.toRespondent()
         ) { prompt ->
             """
                 $prompt
@@ -32,7 +29,7 @@ class MetapromptTest {
                 """.trimIndent()
         }
         runBlocking {
-            model.chat("一个初学者应该如何入门微积分呢？")
+            respondent.chat("一个初学者应该如何入门微积分呢？")
         }
     }
 }
