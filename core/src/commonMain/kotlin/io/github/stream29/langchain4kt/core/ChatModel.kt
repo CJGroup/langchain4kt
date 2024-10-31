@@ -11,7 +11,7 @@ interface ChatModel {
     suspend fun chat(message: String): String
 }
 
-class SimpleChatModel<MetaInfo>(
+data class SimpleChatModel<MetaInfo>(
     override val context: Context = Context(),
     override var apiProvider: ChatApiProvider<MetaInfo>
 ) : ChatModel {

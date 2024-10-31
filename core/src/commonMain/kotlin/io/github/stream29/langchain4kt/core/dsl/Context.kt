@@ -16,7 +16,7 @@ fun Context.Companion.of(block: ContextBuilder.() -> Unit) =
 class ContextBuilder(
     private val context: Context
 ) {
-    fun systemInstruction(text: String) {
+    fun systemInstruction(text: String?) {
         context.systemInstruction = text
     }
 
