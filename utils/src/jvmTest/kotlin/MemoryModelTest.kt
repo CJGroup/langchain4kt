@@ -3,7 +3,7 @@ import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
 import io.github.stream29.langchain4kt.core.SimpleChatModel
 import io.github.stream29.langchain4kt.core.generate
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.example.memory.IteratedPromptModel
+import io.github.stream29.langchain4kt.utils.IteratedPromptModel
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 

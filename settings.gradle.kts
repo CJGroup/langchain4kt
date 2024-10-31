@@ -19,6 +19,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "langchain4kt-root"
 include(":core")
+include(":utils")
 include(":api-google-gemini")
 include(":api-baidu-qianfan")
 include(":example-respondent-metaprompt")

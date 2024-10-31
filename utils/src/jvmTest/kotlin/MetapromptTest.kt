@@ -1,7 +1,7 @@
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GenerationConfig
 import io.github.stream29.langchain4kt.core.toRespondent
-import io.github.stream29.langchain4kt.example.metaprompt.MetapromptRespondent
+import io.github.stream29.langchain4kt.utils.MetapromptRespondent
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 

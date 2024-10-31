@@ -1,4 +1,4 @@
-package io.github.stream29.langchain4kt.example.memory
+package io.github.stream29.langchain4kt.utils
 
 import io.github.stream29.langchain4kt.core.ChatModel
 import io.github.stream29.langchain4kt.core.dsl.add
