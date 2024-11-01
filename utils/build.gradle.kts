@@ -11,15 +11,15 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                compileOnly(project(":core"))
+                compileOnly(project(":langchain4kt-core"))
             }
         }
         val jvmTest by getting {
             dependencies {
                 implementation(libs.kotlin.script.runtime)
-                implementation(project(":core"))
-                implementation(project(":api-baidu-qianfan"))
-                implementation(project(":api-google-gemini"))
+                implementation(project(":langchain4kt-core"))
+                implementation(project(":langchain4kt-api-baidu-qianfan"))
+                implementation(project(":langchain4kt-api-google-gemini"))
                 implementation(libs.ktor.core)
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.kotlin.test)

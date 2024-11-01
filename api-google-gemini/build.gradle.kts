@@ -11,7 +11,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":core"))
+                api(project(":langchain4kt-core"))
                 implementation(libs.ktor.core)
                 implementation(libs.ktor.serialization.kotlinx.json)
             }
