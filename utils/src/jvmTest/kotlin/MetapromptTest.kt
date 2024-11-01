@@ -1,6 +1,7 @@
 import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.asRespondent
 import io.github.stream29.langchain4kt.utils.MetapromptRespondent
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -32,6 +33,11 @@ fun testMetapromptWith(apiProvider: ChatApiProvider<*>) {
                     """.trimIndent()
     }
     runBlocking {
-        respondent.chat("一个初学者应该如何入门微积分呢？")
+        launch {
+            respondent.chat("一个初学者应该如何入门微积分呢？")
+        }
+        launch {
+            respondent.chat("请介绍中国高考作文的标准格式。")
+        }
     }
 }
