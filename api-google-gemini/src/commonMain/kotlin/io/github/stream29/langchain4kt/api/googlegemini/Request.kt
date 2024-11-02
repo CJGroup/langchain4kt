@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GeminiRequest(
     val contents: MutableList<GeminiContent>,
-    val generationConfig: GenerationConfig = GenerationConfig(),
+    val generationConfig: GeminiGenerationConfig = GeminiGenerationConfig(),
     val systemInstruction: GeminiContent? = null,
     val safetySettings: List<SafetySetting>? = null,
 )
@@ -18,7 +18,7 @@ data class SafetySetting(
 )
 
 @Serializable
-data class GenerationConfig(
+data class GeminiGenerationConfig(
     val stopSequences: List<String>? = null,
     val temperature: Double = 1.0,
     val topK: Int = 64,

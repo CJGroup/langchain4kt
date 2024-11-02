@@ -17,7 +17,7 @@ class QianfanApiProvider(
     val model: String,
     val apiKey: String,
     val secretKey: String,
-    val generateConfig: GenerateConfig = GenerateConfig(),
+    val generationConfig: QianfanGenerationConfig = QianfanGenerationConfig(),
 ) : ChatApiProvider<QianfanChatResponse> {
     private val mutex = Mutex()
     var accessToken: String? = null
@@ -38,7 +38,7 @@ class QianfanApiProvider(
                     it.content
                 )
             }
-        val request = generateConfig.toQianfanChatRequest(messages, context.systemInstruction)
+        val request = generationConfig.toQianfanChatRequest(messages, context.systemInstruction)
         val responseBody = httpClient.post(chatUrl) {
             url {
                 appendPathSegments(model)
@@ -62,7 +62,7 @@ class QianfanApiProvider(
     }
 }
 
-private fun GenerateConfig.toQianfanChatRequest(
+private fun QianfanGenerationConfig.toQianfanChatRequest(
     messages: List<QianfanMessage>,
     system: String? = null
 ): QianfanChatRequest {

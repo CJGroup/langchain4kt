@@ -40,7 +40,7 @@ data class QianfanChatRequest(
 )
 
 @Serializable
-data class GenerateConfig(
+data class QianfanGenerationConfig(
     val temperature: Float = 0.8f,
     val topP: Float = 0.8f,
     val penaltyScore: Float = 1.0f,

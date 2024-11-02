@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 
 class GeminiApiProvider(
     val httpClient: HttpClient,
-    val generationConfig: GenerationConfig,
+    val generationConfig: GeminiGenerationConfig,
     val model: String,
     val apiKey: String
 ) : ChatApiProvider<GeminiResponse> {
