@@ -9,6 +9,7 @@ android-minSdk = "24"
 android-compileSdk = "34"
 
 [libraries]
+kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

@@ -7,6 +7,8 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
@@ -17,14 +19,17 @@ class QianfanApiProvider(
     val secretKey: String,
     val generateConfig: GenerateConfig = GenerateConfig(),
 ) : ChatApiProvider<QianfanChatResponse> {
+    private val mutex = Mutex()
     var accessToken: String? = null
     private val json = Json {
         ignoreUnknownKeys = true
     }
 
     override suspend fun generate(context: Context): Response<QianfanChatResponse> {
-        if (accessToken == null) {
-            accessToken = httpClient.getAccessToken(apiKey, secretKey, json)
+        mutex.withLock {
+            if (accessToken == null) {
+                accessToken = httpClient.getAccessToken(apiKey, secretKey, json)
+            }
         }
         val messages = context.history
             .map {

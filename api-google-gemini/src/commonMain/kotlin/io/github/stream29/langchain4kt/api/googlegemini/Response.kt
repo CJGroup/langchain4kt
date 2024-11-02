@@ -19,8 +19,8 @@ data class UsageMetadata(
 data class Candidate(
     val content: GeminiContent,
     val finishReason: String,
-    val index: Int,
-    val safetyRatings: List<SafetyRating>,
+    val index: Int? = null,
+    val safetyRatings: List<SafetyRating>? = null,
 )
 
 @Serializable
