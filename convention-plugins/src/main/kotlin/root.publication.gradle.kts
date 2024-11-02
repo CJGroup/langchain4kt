@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "io.github.stream29"
-    version = "0.0.3-SNAPSHOT"
+    version = "0.0.4-SNAPSHOT"
 }
 
 nexusPublishing {
