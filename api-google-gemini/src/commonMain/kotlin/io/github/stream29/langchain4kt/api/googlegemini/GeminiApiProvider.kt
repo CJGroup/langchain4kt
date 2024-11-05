@@ -10,7 +10,7 @@ import io.ktor.http.*
 import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.Json
 
-class GeminiApiProvider(
+data class GeminiApiProvider(
     val httpClient: HttpClient,
     val generationConfig: GeminiGenerationConfig,
     val model: String,

@@ -13,7 +13,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
-class QianfanApiProvider(
+data class QianfanApiProvider(
     val httpClient: HttpClient,
     val model: String,
     val apiKey: String,
