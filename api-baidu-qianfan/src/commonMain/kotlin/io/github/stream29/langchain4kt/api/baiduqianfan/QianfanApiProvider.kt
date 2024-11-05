@@ -7,6 +7,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.SerializationException
@@ -57,6 +58,10 @@ class QianfanApiProvider(
             )
         } catch (e: SerializationException) {
             val error = json.decodeFromString<RequestError>(responseBody)
+            if(error.errorCode == 110) {
+                accessToken = null
+                return generate(context)
+            }
             throw QianFanGenerationException(error)
         }
     }
