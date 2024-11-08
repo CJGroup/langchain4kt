@@ -7,19 +7,19 @@ import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.core.output.GenerationException
 
-interface ChatModel {
-    val context: Context
-    suspend fun chat(message: String): String
+public interface ChatModel {
+    public val context: Context
+    public suspend fun chat(message: String): String
 }
 
-fun ChatApiProvider<*>.asChatModel(context: ContextBuilder.() -> Unit = {}) =
+public fun ChatApiProvider<*>.asChatModel(context: ContextBuilder.() -> Unit = {}): ChatModel =
     SimpleChatModel(this, context)
 
-data class SimpleChatModel<MetaInfo>(
+public data class SimpleChatModel<MetaInfo>(
     var apiProvider: ChatApiProvider<MetaInfo>,
     override val context: Context = Context()
 ) : ChatModel {
-    constructor(
+    public constructor(
         apiProvider: ChatApiProvider<MetaInfo>,
         context: ContextBuilder.() -> Unit
     ) : this(apiProvider, Context.of(context))

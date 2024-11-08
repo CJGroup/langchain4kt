@@ -9,6 +9,7 @@ plugins {
 }
 
 kotlin {
+    explicitApi()
     jvm {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
