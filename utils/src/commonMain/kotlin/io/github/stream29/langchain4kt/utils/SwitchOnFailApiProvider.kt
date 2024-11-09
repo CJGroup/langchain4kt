@@ -5,7 +5,7 @@ import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.output.GenerationException
 import io.github.stream29.langchain4kt.core.output.Response
 
-data class SwitchOnFailApiProvider(
+public data class SwitchOnFailApiProvider(
     val apiProviders: List<ChatApiProvider<*>>,
     var currentApiProviderIndex: Int = 0,
     var currentFailSum: Int = 0

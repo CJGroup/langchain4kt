@@ -2,7 +2,7 @@ package io.github.stream29.langchain4kt.utils
 
 import io.github.stream29.langchain4kt.core.Respondent
 
-data class MetapromptRespondent(
+public data class MetapromptRespondent(
     val baseRespondent: Respondent,
     val promptgenRespondent: Respondent = baseRespondent,
     val metaprompt: (String) -> String

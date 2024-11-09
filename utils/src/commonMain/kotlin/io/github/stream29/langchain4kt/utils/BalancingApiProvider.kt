@@ -4,7 +4,7 @@ import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.output.Response
 
-data class BalancingApiProvider(
+public data class BalancingApiProvider(
     val apiProviders: List<ChatApiProvider<*>>,
     var currentApiProviderIndex: Int = 0
 ): ChatApiProvider<Any?> {

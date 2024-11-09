@@ -8,11 +8,11 @@ import io.github.stream29.langchain4kt.core.message.Message
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.core.output.GenerationException
 
-class IteratedPromptModel(
-    val respondent: Respondent,
+public class IteratedPromptModel(
+    public val respondent: Respondent,
     override val context: Context = Context(),
-    var prompt: String = "",
-    val onMessagePrompt: (message: Message, oldPrompt: String) -> String
+    public var prompt: String = "",
+    public val onMessagePrompt: (message: Message, oldPrompt: String) -> String
 ) : ChatModel {
     override suspend fun chat(message: String): String {
         val promptBackup = prompt
