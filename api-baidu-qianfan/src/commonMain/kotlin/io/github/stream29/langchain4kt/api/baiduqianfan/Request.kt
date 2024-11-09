@@ -4,13 +4,8 @@ import io.github.stream29.langchain4kt.core.message.MessageSender
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//"messages": [
-//{"role":"user", "content": "给我推荐一些自驾游路线"}
-//],
-//"stream": true
-
 @Serializable
-data class QianfanChatRequest(
+internal data class QianfanChatRequest(
     val messages: List<QianfanMessage>,
     val temperature: Float = 0.8f,
     @SerialName("top_p")
@@ -40,7 +35,7 @@ data class QianfanChatRequest(
 )
 
 @Serializable
-data class QianfanGenerationConfig(
+public data class QianfanGenerationConfig(
     val temperature: Float = 0.8f,
     val topP: Float = 0.8f,
     val penaltyScore: Float = 1.0f,
@@ -58,12 +53,12 @@ data class QianfanGenerationConfig(
 )
 
 @Serializable
-data class QianfanMessage(
+internal data class QianfanMessage(
     val role: String,
     val content: String
 )
 
-fun MessageSender.toQianfanSender() =
+internal fun MessageSender.toQianfanSender() =
     when (this) {
         MessageSender.User -> "user"
         MessageSender.Model -> "assistant"

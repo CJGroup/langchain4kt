@@ -16,7 +16,7 @@ class QianFanTest {
         }
 
         val response = runBlocking {
-            model.chat("一个初学者应该如何入门微积分呢？")
+            model.chat("hello")
         }
         println(response)
     }
