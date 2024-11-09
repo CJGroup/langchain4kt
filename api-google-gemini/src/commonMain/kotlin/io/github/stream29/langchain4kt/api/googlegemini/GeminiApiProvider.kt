@@ -10,6 +10,9 @@ import io.ktor.http.*
 import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.Json
 
+/**
+ * Providing access to Google Gemini API.
+ */
 public data class GeminiApiProvider(
     val httpClient: HttpClient,
     val model: String,
@@ -59,6 +62,7 @@ public data class GeminiApiProvider(
                         "system"
                     )
                 },
+                safetySettings = generationConfig.safetySettings
             )
         )
     }

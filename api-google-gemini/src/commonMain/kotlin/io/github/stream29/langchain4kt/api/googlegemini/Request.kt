@@ -3,20 +3,9 @@ package io.github.stream29.langchain4kt.api.googlegemini
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
-internal data class GeminiRequest(
-    val contents: MutableList<GeminiContent>,
-    val generationConfig: GeminiGenerationConfig = GeminiGenerationConfig(),
-    val systemInstruction: GeminiContent? = null,
-    val safetySettings: List<GeminiSafetySetting>? = null,
-)
-
-@Serializable
-public data class GeminiSafetySetting(
-    val category: GeminiHarmCategory,
-    val threshold: GeminiHarmBlockThreshold,
-)
-
+/**
+ * Generation config for gemini.
+ */
 @Serializable
 public data class GeminiGenerationConfig(
     val stopSequences: List<String>? = null,
@@ -24,9 +13,22 @@ public data class GeminiGenerationConfig(
     val topK: Int = 64,
     val topP: Double = 0.95,
     val maxOutputTokens: Int = 8192,
-    val responseMimeType: String = "text/plain"
+    val responseMimeType: String = "text/plain",
+    val safetySettings: List<GeminiSafetySetting>? = null,
 )
 
+/**
+ * A single entry of gemini safety settings.
+ */
+@Serializable
+public data class GeminiSafetySetting(
+    val category: GeminiHarmCategory,
+    val threshold: GeminiHarmBlockThreshold,
+)
+
+/**
+ * Threshold for blocking harmful content.
+ */
 @Serializable
 public enum class GeminiHarmBlockThreshold {
     @SerialName("0")
@@ -41,6 +43,9 @@ public enum class GeminiHarmBlockThreshold {
     BLOCK_NONE
 }
 
+/**
+ * Category of harmful content.
+ */
 @Serializable
 public enum class GeminiHarmCategory {
     @SerialName("0")
@@ -58,3 +63,11 @@ public enum class GeminiHarmCategory {
     @SerialName("10")
     HARM_CATEGORY_DANGEROUS_CONTENT
 }
+
+@Serializable
+internal data class GeminiRequest(
+    val contents: MutableList<GeminiContent>,
+    val generationConfig: GeminiGenerationConfig = GeminiGenerationConfig(),
+    val systemInstruction: GeminiContent? = null,
+    val safetySettings: List<GeminiSafetySetting>? = null,
+)
