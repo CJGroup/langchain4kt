@@ -12,7 +12,9 @@ import io.github.stream29.langchain4kt.core.output.GenerationException
  *
  * You can simply chat with [String] message. Every message will produce a response in [String].
  *
- * It does not prove thread safety. Please do not use it in concurrency environment.
+ * It should provide **strong exception safety guarantee** that when [chat] throws a exception, the state of itself **should not** change
+ *
+ * It is **not** concurrency safe.
  */
 public interface ChatModel {
     public val context: Context

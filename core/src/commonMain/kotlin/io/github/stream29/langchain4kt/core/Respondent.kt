@@ -5,7 +5,7 @@ import io.github.stream29.langchain4kt.core.message.MessageSender
 /**
  * A respondent that generate a single response for a single message.
  *
- * It should be stateless and thread-safe.
+ * It should be stateless and concurrency-safe.
  */
 public interface Respondent {
     /**

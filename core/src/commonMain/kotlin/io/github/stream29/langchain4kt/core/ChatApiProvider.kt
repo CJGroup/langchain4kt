@@ -9,7 +9,7 @@ import io.github.stream29.langchain4kt.core.output.Response
 /**
  * An LLM api provider that generates a text response based on the given context.
  *
- * It should be stateless and thread-safe.
+ * It should be stateless and concurrency-safe.
  *
  * @param MetaInfo The type of the meta info that the api provider generates.
  */
