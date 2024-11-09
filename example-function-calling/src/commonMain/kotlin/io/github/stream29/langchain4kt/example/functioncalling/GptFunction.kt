@@ -39,7 +39,9 @@ data class GptFunction(
     val params: List<GptParameter>,
     val description: String,
     val resolve: suspend (List<String>) -> String
-)
+) : suspend (List<String>) -> GptFunctionResult {
+    override suspend operator fun invoke(params: List<String>) = GptFunctionResult(name, params, resolve(params))
+}
 
 data class GptFunctionExample(
     val function: GptFunction,

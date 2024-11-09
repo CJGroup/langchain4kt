@@ -1,80 +1,81 @@
 package io.github.stream29.langchain4kt.example.functioncalling
 
+import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.ChatModel
+import io.github.stream29.langchain4kt.core.asRespondent
+import io.github.stream29.langchain4kt.core.dsl.add
+import io.github.stream29.langchain4kt.core.input.Context
+import io.github.stream29.langchain4kt.core.message.MessageSender
+import io.github.stream29.langchain4kt.core.output.GenerationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 
 data class FunctionCallingModel(
-    val baseModel: ChatModel,
+    val apiProvider: ChatApiProvider<*>,
+    val memoryMetaprompt: (String, FunctionCallingMessage) -> String,
     val resolveFunctionCall: (String) -> List<GptFunctionCall>,
-    val onFunctionCall: suspend (GptFunctionCall) -> GptFunctionResult,
-    val onFunctionReturn: (GptFunctionResult) -> String
-) : ChatModel by baseModel {
-    override suspend fun chat(message: String): String {
-        val response = baseModel.chat(message)
-        val functionCall = resolveFunctionCall(response)
-        if (functionCall.isEmpty()) return response
-        val functionReturns = coroutineScope {
-            functionCall.asFlow().map {
+    val onFunctionReturn: (List<Result<GptFunctionResult>>) -> String,
+    val finalResponsePrompt: (memory: String) -> String,
+    val functions: List<GptFunctionExample>,
+    var memory: String = "",
+    override val context: Context = Context()
+) : ChatModel {
+    private val respondent = apiProvider.asRespondent(context.systemInstruction)
+    private val memoryRespondent = apiProvider.asRespondent()
+    override suspend fun chat(message: String): String = coroutineScope {
+        val historyLengthBackup = context.history.size
+        val memoryBackup = memory
+        try {
+            context.add { MessageSender.User.chat(message) }
+            onMessage(message, FunctionCallingMessageType.UserMessage)
+            val response = respondent.chat(memory)
+            val functionCalls = resolveFunctionCall(response)
+
+            if (functionCalls.isEmpty()) {
+                onMessage(response, FunctionCallingMessageType.ModelMessage)
+                context.add { MessageSender.Model.chat(response) }
+                return@coroutineScope response
+            }
+            val addFunctionCallingMessage = launch {
+                onMessage(response, FunctionCallingMessageType.FunctionCall)
+            }
+            val functionResults = functionCalls.map { functionCall ->
                 async {
-                    onFunctionReturn(onFunctionCall(it))
+                    runCatching {
+                        functions.find { it.function.name == functionCall.functionName }
+                            ?.function
+                            ?.invoke(functionCall.params)
+                            ?: throw FunctionNotFoundException(functionCall)
+                    }
                 }
-            }.buffer().toList().awaitAll().joinToString("\n")
+            }.awaitAll()
+            addFunctionCallingMessage.join()
+            val functionReturn = onFunctionReturn(functionResults)
+            onMessage(functionReturn, FunctionCallingMessageType.FunctionReturn)
+
+            val finalResponse = memoryRespondent.chat(finalResponsePrompt(memory))
+            onMessage(finalResponse, FunctionCallingMessageType.ModelMessage)
+            context.add { MessageSender.Model.chat(finalResponse) }
+            finalResponse
+        } catch (e: Exception) {
+            while (context.history.size > historyLengthBackup) {
+                context.history.removeLast()
+            }
+            memory = memoryBackup
+            throw GenerationException("Generation failed with prompt $message", e)
         }
-        val functionCallResponse = baseModel.chat(functionReturns)
-        return functionCallResponse
+    }
+
+    private suspend fun onMessage(message: String, messageType: FunctionCallingMessageType) {
+        val prompt = memoryMetaprompt(
+            memory,
+            FunctionCallingMessage(
+                messageType,
+                message
+            )
+        )
+        memory = memoryRespondent.chat(prompt)
     }
 }
-
-@Suppress("function_name")
-fun FunctionCallingModel(baseModel: ChatModel, functionExplained: List<GptFunctionExample>): FunctionCallingModel {
-    val functionMap = functionExplained.associateBy { it.function.name }
-    return FunctionCallingModel(
-        baseModel,
-        resolveFunctionCall = ::resolveFunctionCall,
-        onFunctionCall = {
-            val function = functionMap[it.functionName]
-            if (function == null) {
-                GptFunctionResult(it.functionName, it.params, "警告：尝试调用不存在的函数")
-            } else {
-                val result = function.function.resolve.invoke(it.params)
-                GptFunctionResult(function.function.name, it.params, result)
-            }
-        },
-        onFunctionReturn = {
-            """
-            =====函数调用结果=====
-            函数：${it.functionName}
-            调用参数：${it.params}
-            返回值：${it.result}
-            =====函数调用结果=====
-        """.trimIndent()
-        }
-    )
-}
-
-private fun resolveFunctionCall(message: String): List<GptFunctionCall> {
-    return message.substringAfter("=====FUNCTION=CALL=====")
-        .lines()
-        .asSequence()
-        .map {
-            if (!it.startsWith("==="))
-                return@map null
-            val functionCallInfo = it.substringAfter("===").split("=")
-            val functionName = functionCallInfo.first()
-            val params = functionCallInfo.drop(1)
-            if(functionName.isEmpty())
-                return@map null
-            GptFunctionCall(
-                functionName,
-                params
-            )
-        }.filterNotNull().toList()
-}
-
-const val stopSequence = "======"
