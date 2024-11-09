@@ -22,6 +22,7 @@ prefixedModule("core")
 prefixedModule("utils")
 prefixedModule("api-google-gemini")
 prefixedModule("api-baidu-qianfan")
+prefixedModule("api-langchain4j")
 
 fun prefixedModule(name: String) {
     val modulePrefix = "langchain4kt-"

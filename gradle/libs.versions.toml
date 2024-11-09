@@ -25,3 +25,4 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
