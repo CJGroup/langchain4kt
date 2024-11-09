@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.`maven-publish`
@@ -6,6 +7,13 @@ import java.net.URI
 plugins {
     `maven-publish`
     signing
+    id("com.vanniktech.maven.publish")
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+    coordinates((group as String), name, version.toString())
 }
 
 publishing {

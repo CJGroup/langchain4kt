@@ -8,11 +8,13 @@ streamlin = "2.4"
 nexus-publish = "2.0.0"
 langchain4j = "0.35.0"
 coroutinesRunBlockingAll = "0.1.0-rc.1"
+vanniktech = "0.29.0"
 
 [libraries]
 kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
+vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
