@@ -9,6 +9,9 @@ import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.core.output.Response
 
+/**
+ * Wrapping [ChatLanguageModel] to [ChatApiProvider].
+ */
 public data class Langchain4jApiProvider(
     val model: ChatLanguageModel,
 ) : ChatApiProvider<Langchain4jMetaInfo> {

@@ -4,6 +4,9 @@ import dev.langchain4j.model.output.FinishReason
 import dev.langchain4j.model.output.Response
 import dev.langchain4j.model.output.TokenUsage
 
+/**
+ * Meta information of [Response].
+ */
 public data class Langchain4jMetaInfo(
     val tokenUsage: TokenUsage,
     val finishReason: FinishReason,
