@@ -8,5 +8,6 @@ kotlin {
 }
 
 dependencies {
+    testImplementation(libs.langchain4j)
     testImplementation(libs.kotlin.test)
 }
