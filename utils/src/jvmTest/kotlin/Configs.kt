@@ -42,7 +42,7 @@ val qianfanApiProvider = QianfanApiProvider(
 
 val geminiApiProvider = GeminiApiProvider(
     httpClient = httpClient,
+    model = "gemini-1.5-flash",
     apiKey = System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!,
-    generationConfig = GeminiGenerationConfig(),
-    model = "gemini-1.5-flash"
+    generationConfig = GeminiGenerationConfig()
 )

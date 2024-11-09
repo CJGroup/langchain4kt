@@ -10,11 +10,11 @@ import io.ktor.http.*
 import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.Json
 
-data class GeminiApiProvider(
+public data class GeminiApiProvider(
     val httpClient: HttpClient,
-    val generationConfig: GeminiGenerationConfig,
     val model: String,
-    val apiKey: String
+    val apiKey: String,
+    val generationConfig: GeminiGenerationConfig = GeminiGenerationConfig()
 ) : ChatApiProvider<GeminiResponse> {
     private val json = Json {
         ignoreUnknownKeys = true

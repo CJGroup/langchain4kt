@@ -4,21 +4,21 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeminiRequest(
+internal data class GeminiRequest(
     val contents: MutableList<GeminiContent>,
     val generationConfig: GeminiGenerationConfig = GeminiGenerationConfig(),
     val systemInstruction: GeminiContent? = null,
-    val safetySettings: List<SafetySetting>? = null,
+    val safetySettings: List<GeminiSafetySetting>? = null,
 )
 
 @Serializable
-data class SafetySetting(
-    val category: HarmCategory,
-    val threshold: HarmBlockThreshold,
+public data class GeminiSafetySetting(
+    val category: GeminiHarmCategory,
+    val threshold: GeminiHarmBlockThreshold,
 )
 
 @Serializable
-data class GeminiGenerationConfig(
+public data class GeminiGenerationConfig(
     val stopSequences: List<String>? = null,
     val temperature: Double = 1.0,
     val topK: Int = 64,
@@ -28,7 +28,7 @@ data class GeminiGenerationConfig(
 )
 
 @Serializable
-enum class HarmBlockThreshold {
+public enum class GeminiHarmBlockThreshold {
     @SerialName("0")
     HARM_BLOCK_THRESHOLD_UNSPECIFIED,
     @SerialName("1")
@@ -42,7 +42,7 @@ enum class HarmBlockThreshold {
 }
 
 @Serializable
-enum class HarmCategory {
+public enum class GeminiHarmCategory {
     @SerialName("0")
     HARM_CATEGORY_UNSPECIFIED,
 

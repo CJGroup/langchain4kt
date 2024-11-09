@@ -3,40 +3,40 @@ package io.github.stream29.langchain4kt.api.googlegemini
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeminiResponse(
-    val candidates: List<Candidate>,
-    val usageMetadata: UsageMetadata,
+public data class GeminiResponse(
+    val candidates: List<GeminiCandidate>,
+    val usageMetadata: GeminiUsageMetadata,
 )
 
 @Serializable
-data class UsageMetadata(
+public data class GeminiUsageMetadata(
     val promptTokenCount: Int,
     val candidatesTokenCount: Int,
     val totalTokenCount: Int,
 )
 
 @Serializable
-data class Candidate(
+public data class GeminiCandidate(
     val content: GeminiContent,
     val finishReason: String,
     val index: Int? = null,
-    val safetyRatings: List<SafetyRating>? = null,
+    val safetyRatings: List<GeminiSafetyRating>? = null,
 )
 
 @Serializable
-data class GeminiContent(
+public data class GeminiContent(
     val parts: List<MutableMap<String, String>>,
     val role: String
 )
 
-var GeminiContent.text: String
+internal var GeminiContent.text: String
     get() = parts[0]["text"]!!
     set(value) {
         parts[0]["text"] = value
     }
 
 @Serializable
-data class SafetyRating(
+public data class GeminiSafetyRating(
     val category: String,
     val probability: String
 )
