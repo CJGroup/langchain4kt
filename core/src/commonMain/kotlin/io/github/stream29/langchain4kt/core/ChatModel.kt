@@ -7,14 +7,35 @@ import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.core.output.GenerationException
 
+/**
+ * A chat model that records its own historical [context].
+ *
+ * You can simply chat with [String] message. Every message will produce a response in [String].
+ *
+ * It does not prove thread safety. Please do not use it in concurrency environment.
+ */
 public interface ChatModel {
     public val context: Context
     public suspend fun chat(message: String): String
 }
 
-public fun ChatApiProvider<*>.asChatModel(context: ContextBuilder.() -> Unit = {}): ChatModel =
+/**
+ * Build a [SimpleChatModel] with a [ChatApiProvider].
+ *
+ * @param context Building the initial context of the chat model.
+ */
+public fun <T> ChatApiProvider<T>.asChatModel(context: ContextBuilder.() -> Unit = {}): SimpleChatModel<T> =
     SimpleChatModel(this, context)
 
+/**
+ * A simple chat model that uses a [ChatApiProvider] to generate responses.
+ *
+ * It simply adds the message into the context,
+ * generates a response with [apiProvider],
+ * and adds it into [context].
+ *
+ * It does not record any [MetaInfo].
+ */
 public data class SimpleChatModel<MetaInfo>(
     var apiProvider: ChatApiProvider<MetaInfo>,
     override val context: Context = Context()
