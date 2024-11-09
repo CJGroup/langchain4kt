@@ -12,6 +12,9 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
+/**
+ * Providing access to Baidu Qianfan API.
+ */
 public data class QianfanApiProvider(
     val httpClient: HttpClient,
     val model: String,
@@ -56,7 +59,7 @@ public data class QianfanApiProvider(
                 metaInfo = body
             )
         } catch (e: SerializationException) {
-            val error = json.decodeFromString<RequestError>(responseBody)
+            val error = json.decodeFromString<QianfanRequestError>(responseBody)
             if (error.errorCode == 110) {
                 accessToken = null
                 return generate(context)
@@ -107,7 +110,7 @@ private suspend fun HttpClient.getAccessToken(
         val response = json.decodeFromString<AccessTokenResponse>(responseBody)
         return response.accessToken
     } catch (e: SerializationException) {
-        val error = json.decodeFromString<AccessTokenError>(responseBody)
+        val error = json.decodeFromString<QianfanAccessTokenError>(responseBody)
         throw QianFanTokenFetchException(error)
     }
 }

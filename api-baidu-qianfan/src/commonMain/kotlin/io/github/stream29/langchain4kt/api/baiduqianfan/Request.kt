@@ -4,6 +4,27 @@ import io.github.stream29.langchain4kt.core.message.MessageSender
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Generation configuration for QianFan.
+ */
+@Serializable
+public data class QianfanGenerationConfig(
+    val temperature: Float = 0.8f,
+    val topP: Float = 0.8f,
+    val penaltyScore: Float = 1.0f,
+    val enableSystemMemory: Boolean = false,
+    val systemMemoryId: String? = null,
+    val system: String? = null,
+    val stop: List<String>? = null,
+    val disableSearch: Boolean = false,
+    val enableCitation: Boolean = false,
+    val enableTrace: Boolean = false,
+    val maxOutputTokens: Int = 1024,
+    val responseFormat: String = "text",
+    val userIp: String? = null,
+    val userId: String? = null,
+)
+
 @Serializable
 internal data class QianfanChatRequest(
     val messages: List<QianfanMessage>,
@@ -31,24 +52,6 @@ internal data class QianfanChatRequest(
     @SerialName("user_ip")
     val userIp: String? = null,
     @SerialName("user_id")
-    val userId: String? = null,
-)
-
-@Serializable
-public data class QianfanGenerationConfig(
-    val temperature: Float = 0.8f,
-    val topP: Float = 0.8f,
-    val penaltyScore: Float = 1.0f,
-    val enableSystemMemory: Boolean = false,
-    val systemMemoryId: String? = null,
-    val system: String? = null,
-    val stop: List<String>? = null,
-    val disableSearch: Boolean = false,
-    val enableCitation: Boolean = false,
-    val enableTrace: Boolean = false,
-    val maxOutputTokens: Int = 1024,
-    val responseFormat: String = "text",
-    val userIp: String? = null,
     val userId: String? = null,
 )
 
