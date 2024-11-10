@@ -34,6 +34,10 @@ kotlin {
                 implementation(libs.ktor.client.logging)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.logback.classic)
+                implementation("org.jetbrains.kotlin:kotlin-scripting-common")
+                implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
+                implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
+                implementation("org.jetbrains.kotlin:kotlin-scripting-jsr223")
             }
         }
     }

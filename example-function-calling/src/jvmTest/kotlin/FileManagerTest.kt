@@ -2,7 +2,8 @@ import io.github.stream29.langchain4kt.core.dsl.of
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.example.functioncalling.*
 import kotlinx.coroutines.runBlocking
-import java.io.File
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 import kotlin.test.Test
 
 class FileManagerTest {
@@ -19,7 +20,7 @@ class FileManagerTest {
             memory = "我的桌面位于C:\\Users\\Lenovo\\Desktop"
         )
         val result = runBlocking {
-            model.chat("我的桌面上有哪些文件夹，大小分别是多少？")
+            model.chat("我的桌面上有特别大的文件夹吗？")
         }
         println(result)
     }
@@ -36,8 +37,9 @@ val metaFunction = listOf(
                 resolveFunctionCall = ::resolveFunctionCall,
                 onFunctionReturn = ::onFunctionReturn,
                 functions = fileFunction,
-                systemInstruction = functionCallPrompt(fileFunction){
-                    appendLine("所有文件查询都可以且必须通过函数调用完成。单个函数调用不能解决问题就一次调用多个函数。")
+                systemInstruction = functionCallPrompt(fileFunction) {
+                    appendLine("所有文件查询都可以且必须通过函数调用完成。")
+                    appendLine("对于每个查询，你都必须提供完整的结果，不可以有省略。")
                 },
                 messageModifier = { "$it\n如果你接下来需要调用函数，请先说明你调用的目的再进行调用；如果已经不需要再调用函数了，请根据所有信息给出最终的完整回复" }
             )
@@ -48,38 +50,34 @@ val metaFunction = listOf(
 
 val fileFunction = listOf(
     GptFunction {
-        name("查询文件信息")
-        addParam("路径", "文件或文件夹的完整路径")
-        description("返回文件或文件夹的信息，包括名称、大小、类型，如果是文件夹，会统计文件夹下所有文件的大小总和")
-        resolveWith { path ->
-            val file = File(path[0])
-            when {
-                !file.exists() -> "文件不存在"
-                file.isDirectory ->
-                    "文件名：${file.name}\n文件夹大小：${file.walk().sumOf { it.length() }}字节\n类型：文件夹"
+        name("运行kotlin代码")
+        addParam("代码", "一段kotlin代码")
+        description("返回值为脚本的输出内容。你可以通过这个函数来执行文件操作。")
+        resolveWith { args ->
+            val script = args.first()
+            captureOut {
+                jsr223KtsEngine.eval("$script\nmain()")
+            }
+        }
+    }.exampleExplained(
+        """
+        import java.io.File
 
-                else -> "文件名：${file.name}\n文件大小：${file.length()}字节\n类型：文件"
-            }
+        fun main() {
+            println(File("C:\\").listFiles()!!.joinToString("\n") { it.name })
         }
-    }.exampleExplained("E:\\ACodeSpace\\IDEA\\langchain4kt\\build.gradle.kts"),
-    GptFunction {
-        name("列出路径下的文件与文件夹")
-        addParam("路径", "绝对路径")
-        description("返回路径下的所有文件与文件夹的名称与类型")
-        resolveWith { path ->
-            val file = File(path[0])
-            if (!file.exists()) {
-                "路径不存在"
-            } else {
-                val listFiles = file.listFiles()
-                when {
-                    listFiles == null -> "不是文件夹"
-                    listFiles.isEmpty() -> "文件夹为空"
-                    else -> listFiles.joinToString("\n") {
-                        if (it.isDirectory) "文件夹：${it.name}" else "文件：${it.name}"
-                    }
-                }
-            }
-        }
-    }.exampleExplained("E:\\ACodeSpace\\IDEA\\langchain4kt"),
+    """.trimIndent())
 )
+
+private fun captureOut(body: () -> Unit): String {
+    val outStream = ByteArrayOutputStream()
+    val prevOut = System.out
+    System.setOut(PrintStream(outStream))
+    try {
+        body()
+    } finally {
+        System.out.flush()
+        System.setOut(prevOut)
+    }
+    return outStream.toString().trim()
+}

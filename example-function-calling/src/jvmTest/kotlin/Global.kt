@@ -7,6 +7,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import javax.script.ScriptEngineManager
 
 val httpClient = HttpClient(CIO) {
     install(Logging) {
@@ -38,3 +39,5 @@ val qianfanApiProvider = QianfanApiProvider(
         disableSearch = true
     )
 )
+
+val jsr223KtsEngine = ScriptEngineManager().getEngineByExtension("kts")

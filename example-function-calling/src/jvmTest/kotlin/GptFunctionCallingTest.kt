@@ -27,5 +27,3 @@ class GptFunctionCallingTest {
         println(result)
     }
 }
-
-const val stopSequence = "======"
