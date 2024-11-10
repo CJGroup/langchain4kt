@@ -23,7 +23,7 @@ val httpClient = HttpClient(CIO) {
         )
     }
     engine {
-        requestTimeout = 20 * 1000
+        requestTimeout = 200 * 1000
         proxy = ProxyBuilder.http("https://127.0.0.1:7890")
     }
 }
