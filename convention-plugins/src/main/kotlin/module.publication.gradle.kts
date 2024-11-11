@@ -14,40 +14,29 @@ mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
     coordinates((group as String), name, version.toString())
+    pom {
+        name.set("Langchain4kt")
+        description.set("KMP library for generic LLM application")
+        url.set("https://github.com/CJGroup/langchain4kt")
+
+        licenses {
+            license {
+                name.set("MIT")
+                url.set("https://opensource.org/licenses/MIT")
+            }
+        }
+        developers {
+            developer {
+                name.set("Stream")
+            }
+        }
+        scm {
+            url.set("https://github.com/CJGroup/langchain4kt")
+        }
+    }
 }
 
 publishing {
-    // Configure all publications
-    publications.withType<MavenPublication> {
-        // Stub javadoc.jar artifact
-        artifact(tasks.register("${name}JavadocJar", Jar::class) {
-            archiveClassifier.set("javadoc")
-            archiveAppendix.set(this@withType.name)
-        })
-
-        // Provide artifacts information required by Maven Central
-        pom {
-            name.set("Langchain4kt")
-            description.set("KMP library for generic LLM application")
-            url.set("https://github.com/CJGroup/langchain4kt")
-
-            licenses {
-                license {
-                    name.set("MIT")
-                    url.set("https://opensource.org/licenses/MIT")
-                }
-            }
-            developers {
-                developer {
-                    name.set("Stream")
-                }
-            }
-            scm {
-                url.set("https://github.com/CJGroup/langchain4kt")
-            }
-        }
-    }
-
     repositories {
         maven {
             name = "GitHubPackages"
