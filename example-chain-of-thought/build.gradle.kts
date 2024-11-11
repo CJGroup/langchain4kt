@@ -16,24 +16,13 @@ kotlin {
     js().browser()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(project(":langchain4kt-core"))
-                implementation(project(":langchain4kt-utils"))
-                implementation(libs.coroutines.run.blocking.all)
-                implementation(libs.ktor.core)
-                implementation(libs.ktor.serialization.kotlinx.json)
-            }
-        }
         val jvmTest by getting {
             dependencies {
+                implementation(project(":langchain4kt-core"))
                 implementation(project(":langchain4kt-api-langchain4j"))
+                implementation(libs.kotlinx.coroutine.core)
                 implementation(libs.langchain4j.dashscope)
                 implementation(libs.kotlin.test)
-                implementation(libs.streamlin)
-                implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.client.logging)
-                implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.logback.classic)
             }
         }
