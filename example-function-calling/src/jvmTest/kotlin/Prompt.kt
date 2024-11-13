@@ -117,9 +117,9 @@ fun onFunctionReturn(functionResults: List<Result<GptFunctionResult>>) =
     }
 
 fun resolveFunctionCall(message: String): List<GptFunctionCall> {
-    if(message.contains(stopSequence).not())
+    if(message.contains(functionCallHead).not())
         return emptyList()
-    return message.substringAfter(beginFunctionCall).substringBeforeLast(stopSequence)
+    return message.substringAfter(functionCallHead).substringBeforeLast(stopSequence)
         .splitToSequence(functionCallHead)
         .map {
             val functionCallInfo = it.split(functionCallDelimiter).filter { it.isNotBlank() }
