@@ -34,8 +34,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":langchain4kt-core"))
-                api(libs.kotlinx.coroutine.core)
-                //put your multiplatform dependencies here
             }
         }
     }
