@@ -33,6 +33,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(libs.kotlinx.coroutine.core)
                 //put your multiplatform dependencies here
             }
         }

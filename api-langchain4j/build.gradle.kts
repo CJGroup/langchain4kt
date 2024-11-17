@@ -9,7 +9,7 @@ kotlin {
 }
 
 dependencies {
-    compileOnly(project(":langchain4kt-core"))
+    implementation(project(":langchain4kt-core"))
     implementation(libs.langchain4j.core)
     testImplementation(project(":langchain4kt-core"))
     testImplementation(libs.kotlin.test)
