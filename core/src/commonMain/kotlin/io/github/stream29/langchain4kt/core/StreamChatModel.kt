@@ -44,7 +44,7 @@ public data class SimpleStreamChatModel(
         val contextBackup = context.history.size
         fun rollback() {
             while (context.history.size > contextBackup)
-                context.history.removeLast()
+                context.history.removeAt(context.history.size - 1) // I don't know why, but when I use removeLast I get deadlocked
             _isReady = true
         }
         try {
@@ -54,10 +54,6 @@ public data class SimpleStreamChatModel(
             apiProvider
                 .generate(context).message
                 .onEach { stringBuilder.append(it) }
-                .catch {
-                    rollback()
-                    throw it
-                }
                 .onCompletion {
                     if (it == null) {
                         context.add { MessageSender.Model.chat(stringBuilder.toString()) }
@@ -67,7 +63,6 @@ public data class SimpleStreamChatModel(
                         throw it
                     }
                 }
-//                .onCompletion { _isReady = true }
         } catch (e: Exception) {
             rollback()
             throw e
