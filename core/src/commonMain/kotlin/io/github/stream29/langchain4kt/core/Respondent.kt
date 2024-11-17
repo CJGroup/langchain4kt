@@ -27,7 +27,7 @@ public fun ChatApiProvider<*>.asRespondent(systemInstruction: String? = null): S
  *
  * @param wrapper The function that processes the message before sending it to the base [Respondent].
  */
-public fun Respondent.wrap(wrapper: (String) -> String): Respondent =
+public fun Respondent.wrap(wrapper: (String) -> String): WrappedRespondent =
     WrappedRespondent(this, wrapper)
 
 /**
