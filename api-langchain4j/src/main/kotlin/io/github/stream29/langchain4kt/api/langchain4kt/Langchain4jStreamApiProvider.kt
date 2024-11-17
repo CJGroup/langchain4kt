@@ -6,10 +6,10 @@ import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.StreamingResponseHandler
 import dev.langchain4j.model.chat.StreamingChatLanguageModel
 import dev.langchain4j.model.output.Response
-import io.github.stream29.langchain4kt.core.StreamChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.output.StreamResponse
+import io.github.stream29.langchain4kt.streaming.StreamChatApiProvider
+import io.github.stream29.langchain4kt.streaming.StreamResponse
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 
 public data class Langchain4jStreamApiProvider(
     val model: StreamingChatLanguageModel,
-):StreamChatApiProvider<Langchain4jMetaInfo> {
+): StreamChatApiProvider<Langchain4jMetaInfo> {
     override suspend fun generate(context: Context): StreamResponse<Langchain4jMetaInfo> {
         val langchain4jContext = buildList {
             context.systemInstruction?.let {

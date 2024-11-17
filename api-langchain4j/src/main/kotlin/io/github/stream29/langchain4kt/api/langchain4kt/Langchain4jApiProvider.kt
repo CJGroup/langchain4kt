@@ -5,7 +5,6 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatLanguageModel
 import io.github.stream29.langchain4kt.core.ChatApiProvider
-import io.github.stream29.langchain4kt.core.asStreamChatModel
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.core.output.Response

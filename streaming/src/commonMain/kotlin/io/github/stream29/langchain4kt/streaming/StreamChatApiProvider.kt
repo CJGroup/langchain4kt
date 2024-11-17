@@ -1,10 +1,9 @@
-package io.github.stream29.langchain4kt.core
+package io.github.stream29.langchain4kt.streaming
 
 import io.github.stream29.langchain4kt.core.dsl.ContextBuilder
 import io.github.stream29.langchain4kt.core.dsl.of
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.message.MessageSender
-import io.github.stream29.langchain4kt.core.output.StreamResponse
 import kotlinx.coroutines.flow.Flow
 
 /**

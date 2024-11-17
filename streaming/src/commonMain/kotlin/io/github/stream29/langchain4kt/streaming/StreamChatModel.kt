@@ -1,4 +1,4 @@
-package io.github.stream29.langchain4kt.core
+package io.github.stream29.langchain4kt.streaming
 
 import io.github.stream29.langchain4kt.core.dsl.ContextBuilder
 import io.github.stream29.langchain4kt.core.dsl.add

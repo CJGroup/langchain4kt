@@ -3,7 +3,7 @@ import dev.langchain4j.model.dashscope.QwenStreamingChatModel
 import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jApiProvider
 import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jStreamApiProvider
 import io.github.stream29.langchain4kt.core.asChatModel
-import io.github.stream29.langchain4kt.core.asStreamChatModel
+import io.github.stream29.langchain4kt.streaming.asStreamChatModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
