@@ -20,7 +20,6 @@ kotlin {
             dependencies {
                 implementation(project(":langchain4kt-core"))
                 implementation(project(":langchain4kt-api-langchain4j"))
-                implementation(libs.kotlinx.coroutine.core)
                 implementation(libs.langchain4j.dashscope)
                 implementation(libs.kotlin.test)
                 implementation(libs.logback.classic)

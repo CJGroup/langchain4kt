@@ -20,8 +20,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                compileOnly(project(":langchain4kt-core"))
-                implementation(libs.kotlinx.coroutine.core)
+                api(project(":langchain4kt-core"))
             }
         }
         val jvmTest by getting {

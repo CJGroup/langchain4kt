@@ -21,8 +21,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":langchain4kt-core"))
-                implementation(libs.ktor.core)
-                implementation(libs.ktor.serialization.kotlinx.json)
+                api(libs.ktor.core)
+                api(libs.ktor.serialization.kotlinx.json)
             }
         }
         val jvmTest by getting {
