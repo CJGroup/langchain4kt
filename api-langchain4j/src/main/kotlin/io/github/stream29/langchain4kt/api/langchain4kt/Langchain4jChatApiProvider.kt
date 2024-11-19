@@ -12,7 +12,7 @@ import io.github.stream29.langchain4kt.core.output.Response
 /**
  * Wrapping [ChatLanguageModel] to [ChatApiProvider].
  */
-public data class Langchain4jApiProvider(
+public data class Langchain4jChatApiProvider(
     val model: ChatLanguageModel,
 ) : ChatApiProvider<Langchain4jMetaInfo> {
     override suspend fun generate(context: Context): Response<Langchain4jMetaInfo> {
