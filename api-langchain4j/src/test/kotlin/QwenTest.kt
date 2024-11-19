@@ -1,7 +1,9 @@
 import dev.langchain4j.model.dashscope.QwenChatModel
+import dev.langchain4j.model.dashscope.QwenEmbeddingModel
 import dev.langchain4j.model.dashscope.QwenStreamingChatModel
-import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jApiProvider
-import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jStreamApiProvider
+import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jChatApiProvider
+import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jEmbeddingApiProvider
+import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jStreamChatApiProvider
 import io.github.stream29.langchain4kt.core.asChatModel
 import io.github.stream29.langchain4kt.streaming.asStreamChatModel
 import kotlinx.coroutines.delay
@@ -9,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertTrue
 
 val apiKey = System.getenv("ALIBABA_QWEN_API_KEY")
     ?: throw RuntimeException("ALIBABA_QWEN_API_KEY is not set")
@@ -22,7 +25,7 @@ class QwenTest {
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-        val langchain4ktModel = Langchain4jApiProvider(langchain4jModel).asChatModel {
+        val langchain4ktModel = Langchain4jChatApiProvider(langchain4jModel).asChatModel {
             systemInstruction("you are a lovely cat, you should act like a lovely cat.")
         }
         val response = runBlocking {
@@ -38,7 +41,7 @@ class QwenTest {
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-        val model = Langchain4jStreamApiProvider(langchain4jModel).asStreamChatModel {
+        val model = Langchain4jStreamChatApiProvider(langchain4jModel).asStreamChatModel {
             systemInstruction("you are a lovely cat, you should act like a lovely cat.")
         }
         runBlocking {
@@ -63,7 +66,7 @@ class QwenTest {
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-        val model = Langchain4jStreamApiProvider(langchain4jModel).asStreamChatModel {
+        val model = Langchain4jStreamChatApiProvider(langchain4jModel).asStreamChatModel {
             systemInstruction("you are a lovely cat, you should act like a lovely cat.")
         }
         runBlocking {
@@ -78,6 +81,24 @@ class QwenTest {
                 delay(100)
             }
             assertEquals(2, model.context.history.size)
+        }
+    }
+
+    @Test
+    fun `embed and compare`() {
+        operator fun FloatArray.times(other: FloatArray): Double {
+            return this.zip(other).sumOf { (it.first * it.second).toDouble() }
+        }
+
+        val langchain4jModel = QwenEmbeddingModel.builder().apiKey(apiKey).modelName("text-embedding-v3").build()
+        val langchain4ktApiProvider = Langchain4jEmbeddingApiProvider(langchain4jModel)
+        runBlocking {
+            val embedding1 = langchain4ktApiProvider.embed("hello? Is there anyone?")
+            val embedding2 = langchain4ktApiProvider.embed("Excuse me, anybody here?")
+            val embedding3 = langchain4ktApiProvider.embed("Let's go")
+            println("embedding1 * embedding2 = ${embedding1 * embedding2}")
+            println("embedding1 * embedding3 = ${embedding1 * embedding3}")
+            assertTrue { embedding1 * embedding2 > embedding1 * embedding3 }
         }
     }
 }
