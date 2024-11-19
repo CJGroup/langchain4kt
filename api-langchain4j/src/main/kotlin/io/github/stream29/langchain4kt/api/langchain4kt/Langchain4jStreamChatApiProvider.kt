@@ -15,7 +15,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.runBlocking
 
-public data class Langchain4jStreamApiProvider(
+public data class Langchain4jStreamChatApiProvider(
     val model: StreamingChatLanguageModel,
 ): StreamChatApiProvider<Langchain4jMetaInfo> {
     override suspend fun generate(context: Context): StreamResponse<Langchain4jMetaInfo> {
