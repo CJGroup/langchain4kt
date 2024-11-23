@@ -1,4 +1,4 @@
-import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
+import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanChatApiProvider
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanGenerationConfig
 import io.ktor.client.*
 import io.ktor.client.engine.*
@@ -29,7 +29,7 @@ val httpClient = HttpClient(CIO) {
     }
 }
 
-val qianfanApiProvider = QianfanApiProvider(
+val qianfanApiProvider = QianfanChatApiProvider(
     httpClient = httpClient,
     apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
     secretKey = System.getenv("BAIDU_QIANFAN_SECRET_KEY")!!,

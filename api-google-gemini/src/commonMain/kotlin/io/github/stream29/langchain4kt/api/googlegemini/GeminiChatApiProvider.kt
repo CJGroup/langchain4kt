@@ -13,7 +13,7 @@ import kotlinx.serialization.json.Json
 /**
  * Providing access to Google Gemini API.
  */
-public data class GeminiApiProvider(
+public data class GeminiChatApiProvider(
     val httpClient: HttpClient,
     val model: String,
     val apiKey: String,

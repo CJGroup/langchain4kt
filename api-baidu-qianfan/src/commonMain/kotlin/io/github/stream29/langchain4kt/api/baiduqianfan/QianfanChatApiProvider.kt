@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 /**
  * Providing access to Baidu Qianfan API.
  */
-public data class QianfanApiProvider(
+public data class QianfanChatApiProvider(
     val httpClient: HttpClient,
     val model: String,
     val apiKey: String,

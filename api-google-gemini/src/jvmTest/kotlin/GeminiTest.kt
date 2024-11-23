@@ -1,4 +1,4 @@
-import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
+import io.github.stream29.langchain4kt.api.googlegemini.GeminiChatApiProvider
 import io.github.stream29.langchain4kt.core.asChatModel
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -6,7 +6,7 @@ import kotlin.test.Test
 class GeminiTest {
     @Test
     fun generationTest() {
-        val model = GeminiApiProvider(
+        val model = GeminiChatApiProvider(
             httpClient = httpClient,
             model = "gemini-1.5-flash",
             apiKey = System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!

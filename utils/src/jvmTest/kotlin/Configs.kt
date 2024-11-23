@@ -1,6 +1,6 @@
 import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanGenerationConfig
-import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
-import io.github.stream29.langchain4kt.api.googlegemini.GeminiApiProvider
+import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanChatApiProvider
+import io.github.stream29.langchain4kt.api.googlegemini.GeminiChatApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiGenerationConfig
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -32,7 +32,7 @@ val httpClient = HttpClient(CIO) {
     }
 }
 
-val qianfanApiProvider = QianfanApiProvider(
+val qianfanApiProvider = QianfanChatApiProvider(
     httpClient = httpClient,
     apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
     secretKey = System.getenv("BAIDU_QIANFAN_SECRET_KEY")!!,
@@ -40,7 +40,7 @@ val qianfanApiProvider = QianfanApiProvider(
     generationConfig = QianfanGenerationConfig(),
 )
 
-val geminiApiProvider = GeminiApiProvider(
+val geminiApiProvider = GeminiChatApiProvider(
     httpClient = httpClient,
     model = "gemini-1.5-flash",
     apiKey = System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!,

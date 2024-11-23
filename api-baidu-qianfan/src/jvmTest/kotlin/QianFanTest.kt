@@ -1,4 +1,4 @@
-import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanApiProvider
+import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanChatApiProvider
 import io.github.stream29.langchain4kt.core.asChatModel
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -6,7 +6,7 @@ import kotlin.test.Test
 class QianFanTest {
     @Test
     fun generationTest() {
-        val model = QianfanApiProvider(
+        val model = QianfanChatApiProvider(
             httpClient = httpClient,
             apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
             secretKey = System.getenv("BAIDU_QIANFAN_SECRET_KEY")!!,
