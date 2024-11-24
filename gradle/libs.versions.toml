@@ -5,15 +5,14 @@ kotlinx-coroutines = "1.9.0"
 ktor = "3.0.0"
 logback = "1.5.6"
 streamlin = "2.4"
-nexus-publish = "2.0.0"
 langchain4j = "0.35.0"
 coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
+spring-ai = "1.0.0-SNAPSHOT"
 
 [libraries]
 kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
@@ -26,6 +25,8 @@ langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = 
 langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-dashscope", version.ref = "langchain4j" }
 kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 coroutines-run-blocking-all = { module = "com.javiersc.kotlinx:coroutines-run-blocking-all", version.ref = "coroutinesRunBlockingAll" }
+spring-ai-core = { module = "org.springframework.ai:spring-ai-core", version.ref = "spring-ai" }
+spring-ai-qianfan = { module = "org.springframework.ai:spring-ai-qianfan", version.ref = "spring-ai" }
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
