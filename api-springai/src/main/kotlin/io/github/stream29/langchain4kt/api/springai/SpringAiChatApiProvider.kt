@@ -7,6 +7,9 @@ import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.model.Model
 
+/**
+ * Wrapping [Model] to [ChatApiProvider].
+ */
 public data class SpringAiChatApiProvider(
     val chatModel: Model<Prompt, ChatResponse>
 ) : ChatApiProvider<ChatResponse> {
@@ -19,3 +22,8 @@ public data class SpringAiChatApiProvider(
         )
     }
 }
+
+/**
+ * Wrapping [Model] to [ChatApiProvider].
+ */
+public fun Model<Prompt, ChatResponse>.asLangchain4ktProvider(): SpringAiChatApiProvider = SpringAiChatApiProvider(this)

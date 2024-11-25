@@ -7,6 +7,9 @@ import org.springframework.ai.chat.messages.Message
 import org.springframework.ai.chat.messages.SystemMessage
 import org.springframework.ai.chat.messages.UserMessage
 
+/**
+ * Convert [Context] to [List] of [Message].
+ */
 internal fun fromContext(context: Context) = buildList {
     context.systemInstruction?.let { add(SystemMessage(it)) }
     context.history.forEach {

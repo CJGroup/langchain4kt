@@ -14,6 +14,9 @@ import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.model.StreamingChatModel
 import org.springframework.ai.chat.prompt.Prompt
 
+/**
+ * Wrapping [StreamingChatModel] to [StreamChatApiProvider].
+ */
 public data class SpringAiStreamChatApiProvider(
     val streamModel: StreamingChatModel
 ) : StreamChatApiProvider<List<ChatResponse>> {
@@ -44,3 +47,9 @@ public data class SpringAiStreamChatApiProvider(
         )
     }
 }
+
+/**
+ * Wrapping [StreamingChatModel] to [StreamChatApiProvider].
+ */
+public fun StreamingChatModel.asLangchain4ktProvider(): SpringAiStreamChatApiProvider =
+    SpringAiStreamChatApiProvider(this)
