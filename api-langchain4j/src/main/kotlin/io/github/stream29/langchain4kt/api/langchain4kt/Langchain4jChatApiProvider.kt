@@ -35,3 +35,8 @@ public data class Langchain4jChatApiProvider(
         )
     }
 }
+
+/**
+ * Wrapping [ChatLanguageModel] to [ChatApiProvider].
+ */
+public fun ChatLanguageModel.asChatApiProvider(): Langchain4jChatApiProvider = Langchain4jChatApiProvider(this)

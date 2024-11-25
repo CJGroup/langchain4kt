@@ -15,6 +15,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.runBlocking
 
+/**
+ * Wrapping [StreamingChatLanguageModel] to [StreamChatApiProvider].
+ */
 public data class Langchain4jStreamChatApiProvider(
     val model: StreamingChatLanguageModel,
 ): StreamChatApiProvider<Langchain4jMetaInfo> {
@@ -55,3 +58,8 @@ public data class Langchain4jStreamChatApiProvider(
         )
     }
 }
+
+/**
+ * Wrapping [StreamingChatLanguageModel] to [StreamChatApiProvider].
+ */
+public fun StreamingChatLanguageModel.asStreamChatApiProvider(): Langchain4jStreamChatApiProvider = Langchain4jStreamChatApiProvider(this)
