@@ -6,7 +6,7 @@ import org.springframework.ai.embedding.EmbeddingModel
 /**
  * Wrapping [EmbeddingModel] to [EmbeddingApiProvider].
  */
-public data class SpringEmbeddingApiProvider(
+public data class SpringAiEmbeddingApiProvider(
     val model: EmbeddingModel
 ) : EmbeddingApiProvider<FloatArray> {
     override suspend fun embed(text: String): FloatArray {
@@ -17,4 +17,4 @@ public data class SpringEmbeddingApiProvider(
 /**
  * Wrapping [EmbeddingModel] to [EmbeddingApiProvider].
  */
-public fun EmbeddingModel.asLangchain4ktProvider(): SpringEmbeddingApiProvider = SpringEmbeddingApiProvider(this)
+public fun EmbeddingModel.asLangchain4ktProvider(): SpringAiEmbeddingApiProvider = SpringAiEmbeddingApiProvider(this)
