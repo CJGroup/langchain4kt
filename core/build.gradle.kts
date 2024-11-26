@@ -34,6 +34,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.kotlinx.coroutine.core)
+                api(libs.kotlinx.serialization.core)
             }
         }
     }
