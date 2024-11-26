@@ -1,4 +1,4 @@
 allprojects {
     group = "io.github.stream29"
-    version = "1.3.1"
+    version = "1.4.0"
 }
