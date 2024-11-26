@@ -1,9 +1,9 @@
 import dev.langchain4j.model.dashscope.QwenChatModel
 import dev.langchain4j.model.dashscope.QwenEmbeddingModel
 import dev.langchain4j.model.dashscope.QwenStreamingChatModel
-import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jChatApiProvider
-import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jEmbeddingApiProvider
-import io.github.stream29.langchain4kt.api.langchain4kt.Langchain4jStreamChatApiProvider
+import io.github.stream29.langchain4kt.api.langchain4j.Langchain4jChatApiProvider
+import io.github.stream29.langchain4kt.api.langchain4j.Langchain4jEmbeddingApiProvider
+import io.github.stream29.langchain4kt.api.langchain4j.Langchain4jStreamChatApiProvider
 import io.github.stream29.langchain4kt.core.asChatModel
 import io.github.stream29.langchain4kt.streaming.asStreamChatModel
 import kotlinx.coroutines.delay

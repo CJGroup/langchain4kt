@@ -1,4 +1,4 @@
-package io.github.stream29.langchain4kt.api.langchain4kt
+package io.github.stream29.langchain4kt.api.langchain4j
 
 import dev.langchain4j.model.embedding.EmbeddingModel
 import io.github.stream29.langchain4kt.embedding.EmbeddingApiProvider
