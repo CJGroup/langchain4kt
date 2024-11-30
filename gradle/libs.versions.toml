@@ -12,9 +12,11 @@ vanniktech = "0.29.0"
 spring-ai = "1.0.0-SNAPSHOT"
 
 [libraries]
+vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
+kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
+
 langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
 langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-dashscope", version.ref = "langchain4j" }
-vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
 streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
