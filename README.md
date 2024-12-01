@@ -7,49 +7,9 @@ Kotlin Multiplatform.
 
 This library is already published onto Github packages and maven central.
 So you can add `langchain4kt-core` dependency directly.
-In order to start a application, you also need to include an `ApiProvider`.
-For example, Gemini by Google:
 
-```kotlin
-implementation("io.github.stream29:langchain4kt-core:1.0.0")
-implementation("io.github.stream29:langchain4kt-api-google-gemini:1.0.0")
-implementation("io.ktor:ktor-client-core:3.0.0")
-implementation("io.ktor:ktor-client-cio:3.0.0")
-implementation("io.ktor:ktor-client-content-negotiation:3.0.0")
-implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
-```
-
-Then you can start:
-
-```kotlin
-val httpClient = HttpClient(CIO) {
-    install(ContentNegotiation) {
-        json(
-            Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            }
-        )
-    }
-    engine {
-        requestTimeout = 20 * 1000
-        proxy = ProxyBuilder.http("https://127.0.0.1:7890")
-    }
-}
-val model = GeminiApiProvider(
-    httpClient = httpClient,
-    model = "gemini-1.5-flash",
-    apiKey = System.getenv("GOOGLE_AI_GEMINI_API_KEY")!!
-).asChatModel {
-    systemInstruction("you are a lovely cat, you should act as if you are a cat.")
-}
-
-val response = runBlocking {
-    model.chat("hello")
-}
-println(response)
-```
+To start up, you can refer to [kotlin notebook example](example-kotlin-notebook/BasicUsage.ipynb)
+or [chain-of-thought example](example-chain-of-thought/src/jvmTest) [file agent example](example-function-calling/src/jvmTest).
 
 ## for development
 
@@ -103,6 +63,8 @@ public interface ChatModel {
 
 You can implement the interface to develop an AI-agent, or something more.
 See into examples in the repository.
+
+Streaming version of the interfaces are also provided in `langchain4kt-streaming` module.
 
 Convenient tools are provided to build a context or a model with given context.
 
