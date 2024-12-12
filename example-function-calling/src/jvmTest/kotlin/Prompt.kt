@@ -40,7 +40,7 @@ fun functionCallPrompt(examples: List<GptFunctionExample>) =
                 appendLine("参数：无")
             appendLine(example.function.description)
             appendLine("使用示例：")
-            appendLine("===${example.function.name}=${example.params.joinToString("=")}")
+            appendLine("===${example.function.name}${functionCallDelimiter}${example.params.joinToString("=")}")
             appendLine("返回值示例：")
             appendLine(example.result)
             appendLine("########以上是关于第${index + 1}个函数的信息########")
