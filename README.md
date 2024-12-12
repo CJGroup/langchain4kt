@@ -76,3 +76,13 @@ apiProvider.asChatModel {
 ```
 
 `buildString` is recommended to build a context from code.
+
+## Future Plan
+
+multimodal I/O, tool calling, structured output are planned to be supported in the future.
+
+priority from high to low:
+
+structured output
+tool calling
+multimodal I/O
