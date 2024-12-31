@@ -83,6 +83,8 @@ multimodal I/O, tool calling, structured output are planned to be supported in t
 
 priority from high to low:
 
-structured output
+structured output -> I'm working on it at [JsonSchemaGenerator](https://github.com/Stream29/JsonSchemaGenerator)
+
 tool calling
+
 multimodal I/O
