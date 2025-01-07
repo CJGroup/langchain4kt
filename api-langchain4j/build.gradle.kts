@@ -1,11 +1,6 @@
 plugins {
-    alias(libs.plugins.kotlinJvm)
     id("module.publication")
-}
-
-kotlin {
-    explicitApi()
-    jvmToolchain(8)
+    id("kotlin-jvm-convention")
 }
 
 dependencies {
