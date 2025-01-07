@@ -1,7 +1,4 @@
-plugins {
-    id("root.publication")
-    //trick: for the same plugin versions in all sub-modules
-    alias(libs.plugins.androidLibrary).apply(false)
-    alias(libs.plugins.kotlinMultiplatform).apply(false)
-    alias(libs.plugins.kotlinJvm) apply false
+allprojects {
+    group = "io.github.stream29"
+    version = "1.5.1"
 }
