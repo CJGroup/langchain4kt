@@ -1,6 +1,6 @@
 plugins {
-    id("module.publication")
     id("kotlin-jvm-convention")
+    id("publishing-convention")
 }
 
 dependencies {

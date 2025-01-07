@@ -1,7 +1,7 @@
 plugins {
     id("kotlin-multiplatform-convention")
     alias(libs.plugins.kotlinSerialization)
-    id("module.publication")
+    id("publishing-convention")
 }
 
 kotlin {
