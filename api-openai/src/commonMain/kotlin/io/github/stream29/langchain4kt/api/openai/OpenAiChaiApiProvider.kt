@@ -12,25 +12,43 @@ import io.github.stream29.langchain4kt.core.output.Response
 
 public class OpenAiChaiApiProvider(
     public val openAiClient: OpenAI,
-    public val model: String
+    public val generationConfig: OpenAiGenerationConfig
 ) : ChatApiProvider<ChatCompletion> {
     override suspend fun generate(context: Context): Response<ChatCompletion> {
-        val messageList = context.systemInstruction?.let {
+        val messageList = mutableListOf<ChatMessage>()
+        context.systemInstruction?.let {
             ChatMessage(
                 role = Role.System,
                 content = it
             )
-        }.let { sequenceOf(it) }.plus(context.history.asSequence().map {
+        }?.let { messageList.add(it) }
+        context.history.asSequence().map {
             ChatMessage(
                 role = it.sender.toOpenAiRole(),
                 content = it.content
             )
-        }).filterNotNull().toList()
+        }.forEach { messageList.add(it) }
+
+
         val chatCompletion = openAiClient.chatCompletion(
-            ChatCompletionRequest(
-                model = ModelId(model),
-                messages = messageList
-            )
+            with(generationConfig) {
+                ChatCompletionRequest(
+                    model = ModelId(model),
+                    messages = messageList,
+                    temperature = temperature,
+                    topP = topP,
+                    stop = stop,
+                    maxTokens = maxTokens,
+                    presencePenalty = presencePenalty,
+                    frequencyPenalty = frequencyPenalty,
+                    logitBias = logitBias,
+                    user = user,
+                    seed = seed,
+                    logprobs = logprobs,
+                    topLogprobs = topLogprobs,
+                    instanceId = instanceId,
+                )
+            }
         )
         return Response(
             chatCompletion.choices.firstOrNull()?.message?.content
