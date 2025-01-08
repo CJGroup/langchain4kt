@@ -10,6 +10,7 @@ langchain4j = "0.35.0"
 coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
 spring-ai = "1.0.0-SNAPSHOT"
+openai-client = "4.0.0-beta01"
 
 [libraries]
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
@@ -25,12 +26,15 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 
 kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 coroutines-run-blocking-all = { module = "com.javiersc.kotlinx:coroutines-run-blocking-all", version.ref = "coroutinesRunBlockingAll" }
+
+openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai-client" }
 
 spring-ai-core = { module = "org.springframework.ai:spring-ai-core", version.ref = "spring-ai" }
 spring-ai-qianfan = { module = "org.springframework.ai:spring-ai-qianfan", version.ref = "spring-ai" }

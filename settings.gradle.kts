@@ -25,6 +25,7 @@ prefixedModule("api-google-gemini")
 prefixedModule("api-baidu-qianfan")
 prefixedModule("api-langchain4j")
 prefixedModule("api-springai")
+prefixedModule("api-openai")
 prefixedModule("example-chain-of-thought")
 prefixedModule("example-function-calling")
 
