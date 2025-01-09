@@ -3,6 +3,8 @@ package io.github.stream29.langchain4kt.api.openai
 /**
  * Configuration for generating chat completions.
  *
+ * The docs are copied from [com.aallam.openai.api.chat.ChatCompletionRequest](https://github.com/aallam/openai-kotlin/blob/main/openai-core/src/commonMain/kotlin/com.aallam.openai.api/chat/ChatCompletionRequest.kt)
+ *
  * @property model ID of the model to use.
  * @property temperature What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random,
  * while lower values like 0.2 will make it more focused and deterministic.
