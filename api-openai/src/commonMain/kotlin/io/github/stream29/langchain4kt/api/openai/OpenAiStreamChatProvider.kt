@@ -1,21 +1,27 @@
 package io.github.stream29.langchain4kt.api.openai
 
-import com.aallam.openai.api.chat.ChatCompletion
+import com.aallam.openai.api.chat.ChatCompletionChunk
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIConfig
-import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.output.Response
+import io.github.stream29.langchain4kt.streaming.StreamChatApiProvider
+import io.github.stream29.langchain4kt.streaming.StreamResponse
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
-public class OpenAiChaiApiProvider(
+public class OpenAiStreamChatProvider(
     public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig
-) : ChatApiProvider<ChatCompletion> {
+) : StreamChatApiProvider<ChatCompletionChunk> {
     public val client: OpenAI = OpenAI(clientConfig)
-    override suspend fun generate(context: Context): Response<ChatCompletion> {
-        val chatCompletion = client.chatCompletion(
+    override suspend fun generate(context: Context): StreamResponse<ChatCompletionChunk> {
+        var currentMetaInfo: ChatCompletionChunk? = null
+        val lastMetaInfo = CompletableDeferred<ChatCompletionChunk>()
+        val flow = client.chatCompletions(
             with(generationConfig) {
                 ChatCompletionRequest(
                     model = ModelId(model),
@@ -34,11 +40,14 @@ public class OpenAiChaiApiProvider(
                     instanceId = instanceId,
                 )
             }
-        )
-        return Response(
-            chatCompletion.choices.firstOrNull()?.message?.content
-                ?: throw IllegalStateException("No legal response message found"),
-            chatCompletion
-        )
+        ).onEach {
+            currentMetaInfo = it
+        }.map {
+            it.choices.firstOrNull()?.delta?.content
+                ?: throw IllegalStateException("No legal response message found")
+        }.onCompletion {
+            lastMetaInfo.complete(currentMetaInfo!!)
+        }
+        return StreamResponse(flow, lastMetaInfo)
     }
 }
