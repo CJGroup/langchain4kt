@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onEach
 public class OpenAiStreamChatProvider(
     public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig,
-    public val requestOptions: RequestOptions
+    public val requestOptions: RequestOptions = RequestOptions(),
 ) : StreamChatApiProvider<ChatCompletionChunk> {
     public val client: OpenAI = OpenAI(clientConfig)
     override suspend fun generate(context: Context): StreamResponse<ChatCompletionChunk> {
