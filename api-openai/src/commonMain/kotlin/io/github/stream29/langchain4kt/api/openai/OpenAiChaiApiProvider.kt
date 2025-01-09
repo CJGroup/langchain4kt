@@ -6,14 +6,16 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.core.Role
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import com.aallam.openai.client.OpenAIConfig
 import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.output.Response
 
 public class OpenAiChaiApiProvider(
-    public val openAiClient: OpenAI,
+    public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig
 ) : ChatApiProvider<ChatCompletion> {
+    public val client: OpenAI = OpenAI(clientConfig)
     override suspend fun generate(context: Context): Response<ChatCompletion> {
         val messageList = mutableListOf<ChatMessage>()
         context.systemInstruction?.let {
@@ -30,7 +32,7 @@ public class OpenAiChaiApiProvider(
         }.forEach { messageList.add(it) }
 
 
-        val chatCompletion = openAiClient.chatCompletion(
+        val chatCompletion = client.chatCompletion(
             with(generationConfig) {
                 ChatCompletionRequest(
                     model = ModelId(model),
