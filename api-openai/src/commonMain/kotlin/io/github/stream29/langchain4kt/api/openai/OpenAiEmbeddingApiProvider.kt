@@ -7,6 +7,9 @@ import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIConfig
 import io.github.stream29.langchain4kt.embedding.EmbeddingApiProvider
 
+/**
+ * Implementation of [EmbeddingApiProvider] for OpenAI Embedding API.
+ */
 public class OpenAiEmbeddingApiProvider(
     public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig,

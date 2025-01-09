@@ -10,6 +10,9 @@ import io.github.stream29.langchain4kt.core.ChatApiProvider
 import io.github.stream29.langchain4kt.core.input.Context
 import io.github.stream29.langchain4kt.core.output.Response
 
+/**
+ * Implementation of [ChatApiProvider] for OpenAI Chat API.
+ */
 public class OpenAiChaiApiProvider(
     public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig,

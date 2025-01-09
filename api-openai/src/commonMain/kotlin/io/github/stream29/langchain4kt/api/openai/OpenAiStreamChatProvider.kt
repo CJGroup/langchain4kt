@@ -14,6 +14,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * Implementation of [StreamChatApiProvider] for OpenAI Chat API.
+ *
+ * The meta info in the response is the last [ChatCompletionChunk] returned by OpenAI API.
+ */
 public class OpenAiStreamChatProvider(
     public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig,
