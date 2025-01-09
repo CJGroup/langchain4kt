@@ -2,6 +2,7 @@ package io.github.stream29.langchain4kt.api.openai
 
 import com.aallam.openai.api.chat.ChatCompletion
 import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.core.RequestOptions
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIConfig
@@ -11,7 +12,8 @@ import io.github.stream29.langchain4kt.core.output.Response
 
 public class OpenAiChaiApiProvider(
     public val clientConfig: OpenAIConfig,
-    public val generationConfig: OpenAiGenerationConfig
+    public val generationConfig: OpenAiGenerationConfig,
+    public val requestOptions: RequestOptions = RequestOptions(),
 ) : ChatApiProvider<ChatCompletion> {
     public val client: OpenAI = OpenAI(clientConfig)
     override suspend fun generate(context: Context): Response<ChatCompletion> {
@@ -33,7 +35,8 @@ public class OpenAiChaiApiProvider(
                     topLogprobs = topLogprobs,
                     instanceId = instanceId,
                 )
-            }
+            },
+            requestOptions
         )
         return Response(
             chatCompletion.choices.firstOrNull()?.message?.content
