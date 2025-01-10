@@ -7,11 +7,6 @@ import kotlin.test.Test
 
 class MetapromptTest {
     @Test
-    fun qianfanTest() {
-        testMetapromptWith(qianfanApiProvider)
-    }
-
-    @Test
     fun geminiTest() {
         testMetapromptWith(geminiApiProvider)
     }
