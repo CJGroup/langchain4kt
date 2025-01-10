@@ -3,14 +3,11 @@ plugins {
     id("publishing-convention")
 }
 
-kotlin {
-    jvmToolchain(17)
-}
-
 repositories {
     mavenCentral()
     maven("https://repo.spring.io/snapshot")
 }
+
 
 dependencies {
     implementation(project(":langchain4kt-core"))

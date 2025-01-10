@@ -11,24 +11,12 @@ plugins {
     kotlin("multiplatform")
 }
 
-/*
- * Copyright 2017-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
-/*
- * Stream copied this script from kotlinx.serialization project
- */
-
 kotlin {
     explicitApi()
     jvm {
         withJava()
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
-        }
     }
-    jvmToolchain(8)
+    jvmToolchain(21)
 
     js {
         nodejs {
@@ -81,18 +69,16 @@ kotlin {
         watchosDeviceArm64()
     }
 
-
     // Tier 2
     linuxX64()
     linuxArm64()
 
-
     // Tier 3
     mingwX64()
-    androidNativeArm32()
-    androidNativeArm64()
-    androidNativeX86()
-    androidNativeX64()
+//    androidNativeArm32()
+//    androidNativeArm64()
+//    androidNativeX86()
+//    androidNativeX64()
 
 
 

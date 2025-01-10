@@ -1,8 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     kotlin("jvm")
 }
 
 kotlin {
     explicitApi()
-    jvmToolchain(8)
+    jvmToolchain(21)
 }

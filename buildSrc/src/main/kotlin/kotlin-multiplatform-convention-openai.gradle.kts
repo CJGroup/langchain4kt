@@ -16,12 +16,8 @@ kotlin {
     explicitApi()
     jvm {
         withJava()
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
-        }
     }
-    jvmToolchain(8)
+    jvmToolchain(21)
 
     js {
         nodejs {
