@@ -50,10 +50,12 @@ kotlin {
     wasmJs {
         nodejs()
     }
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmWasi {
-        nodejs()
-    }
+    // WasmWasi is not supported by ktor now
+//    @OptIn(ExperimentalWasmDsl::class)
+//    wasmWasi {
+//        nodejs()
+//    }
+
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {
@@ -79,12 +81,13 @@ kotlin {
         watchosDeviceArm64()
     }
 
+
     // Tier 2
     linuxX64()
     linuxArm64()
 
 
-
+    // Tier 3
     mingwX64()
     androidNativeArm32()
     androidNativeArm64()

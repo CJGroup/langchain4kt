@@ -1,5 +1,5 @@
 plugins {
-    id("kotlin-multiplatform-convention")
+    id("kotlin-multiplatform-convention-ktor")
     alias(libs.plugins.kotlinSerialization)
     id("publishing-convention")
 }
