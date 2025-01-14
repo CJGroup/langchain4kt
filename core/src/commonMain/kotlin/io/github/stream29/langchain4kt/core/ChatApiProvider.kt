@@ -13,7 +13,7 @@ import io.github.stream29.langchain4kt.core.output.Response
  *
  * @param MetaInfo The type of the meta info that the api provider generates.
  */
-public interface ChatApiProvider<MetaInfo> {
+public interface ChatApiProvider<out MetaInfo> {
     /**
      * Generates a text response with meta info based on the given context.
      */
