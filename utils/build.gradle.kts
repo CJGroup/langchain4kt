@@ -10,6 +10,7 @@ kotlin {
             dependencies {
                 api(project(":langchain4kt-core"))
                 api(project(":langchain4kt-streaming"))
+                api(project(":langchain4kt-embedding"))
             }
         }
         val jvmTest by getting {
