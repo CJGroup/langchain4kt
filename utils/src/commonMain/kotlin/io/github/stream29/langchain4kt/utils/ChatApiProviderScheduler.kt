@@ -42,3 +42,29 @@ public class Polling<T>(
     }
 }
 
+/**
+ * Weighted polling strategy for scheduling ChatApiProvider.
+ * Every ChatApiProvider will be used n times in a iteration where n is the weight of the ChatApiProvider.
+ * @property chatApiProviders Map of ChatApiProviders to poll with their respective weights
+ */
+public class WeightedPolling<T>(
+    public val chatApiProviders: Map<ChatApiProvider<T>, Int>
+) : ChatApiProviderScheduler<T> {
+    init {
+        require(chatApiProviders.isNotEmpty()) { "chatApiProviders must not be empty" }
+    }
+
+    private val mutex = Mutex()
+    private val iterator = sequence {
+        while (true)
+            for ((provider, weight) in chatApiProviders)
+                repeat(weight) { yield(provider) }
+    }.iterator()
+
+    override suspend fun <R> provide(block: suspend (ChatApiProvider<T>) -> R): R {
+        val provider = mutex.withLock {
+            iterator.next()
+        }
+        return block(provider)
+    }
+}
