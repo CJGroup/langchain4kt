@@ -7,11 +7,11 @@ import kotlin.concurrent.Volatile
 /**
  * Custom strategy for scheduling [ApiProvider] usage.
  */
-public interface ApiProviderScheduler<ApiProvider> {
+public interface ApiProviderDispatcher<ApiProvider> {
     /**
      * Provides a [ApiProvider] to the consumer.
      */
-    public suspend fun <R> provide(block: suspend (ApiProvider) -> R): R
+    public suspend fun <R> dispatch(block: suspend (ApiProvider) -> R): R
 }
 
 /**
@@ -21,7 +21,7 @@ public interface ApiProviderScheduler<ApiProvider> {
  */
 public class Polling<ApiProvider>(
     public val apiProviders: List<ApiProvider>,
-) : ApiProviderScheduler<ApiProvider> {
+) : ApiProviderDispatcher<ApiProvider> {
     init {
         require(apiProviders.isNotEmpty()) { "apiProviders must not be empty" }
     }
@@ -31,7 +31,7 @@ public class Polling<ApiProvider>(
     @Volatile
     private var index = 0
 
-    override suspend fun <R> provide(block: suspend (ApiProvider) -> R): R {
+    override suspend fun <R> dispatch(block: suspend (ApiProvider) -> R): R {
         val provider = mutex.withLock {
             apiProviders[index].also {
                 index = (index + 1) % apiProviders.size
@@ -48,7 +48,7 @@ public class Polling<ApiProvider>(
  */
 public class WeightedPolling<ApiProvider>(
     public val apiProviders: Map<ApiProvider, Int>
-) : ApiProviderScheduler<ApiProvider> {
+) : ApiProviderDispatcher<ApiProvider> {
     init {
         require(apiProviders.isNotEmpty()) { "chatApiProviders must not be empty" }
     }
@@ -60,7 +60,7 @@ public class WeightedPolling<ApiProvider>(
                 repeat(weight) { yield(provider) }
     }.iterator()
 
-    override suspend fun <R> provide(block: suspend (ApiProvider) -> R): R {
+    override suspend fun <R> dispatch(block: suspend (ApiProvider) -> R): R {
         val provider = mutex.withLock {
             iterator.next()
         }

@@ -8,37 +8,37 @@ import io.github.stream29.langchain4kt.streaming.StreamChatApiProvider
 import io.github.stream29.langchain4kt.streaming.StreamResponse
 
 /**
- * A [ChatApiProvider] that uses a [ApiProviderScheduler] to generate response.
- * @property scheduler [ApiProviderScheduler] to use
+ * A [ChatApiProvider] that uses a [ApiProviderDispatcher] to generate response.
+ * @property dispatcher [ApiProviderDispatcher] to use
  */
-public class ScheduledChatApiProvider<MetaInfo>(
-    public val scheduler: ApiProviderScheduler<ChatApiProvider<MetaInfo>>,
+public class DispatchedChatApiProvider<MetaInfo>(
+    public val dispatcher: ApiProviderDispatcher<ChatApiProvider<MetaInfo>>,
 ) : ChatApiProvider<MetaInfo> {
     override suspend fun generate(context: Context): Response<MetaInfo> {
-        return scheduler.provide { it.generate(context) }
+        return dispatcher.dispatch { it.generate(context) }
     }
 }
 
 /**
- * A [StreamChatApiProvider] that uses a [ApiProviderScheduler] to generate response.
- * @property scheduler [ApiProviderScheduler] to use
+ * A [StreamChatApiProvider] that uses a [ApiProviderDispatcher] to generate response.
+ * @property dispatcher [ApiProviderDispatcher] to use
  */
-public class ScheduledStreamChatApiProvider<MetaInfo>(
-    public val scheduler: ApiProviderScheduler<StreamChatApiProvider<MetaInfo>>,
+public class DispatchedStreamChatApiProvider<MetaInfo>(
+    public val dispatcher: ApiProviderDispatcher<StreamChatApiProvider<MetaInfo>>,
 ) : StreamChatApiProvider<MetaInfo> {
     override suspend fun generate(context: Context): StreamResponse<MetaInfo> {
-        return scheduler.provide { it.generate(context) }
+        return dispatcher.dispatch { it.generate(context) }
     }
 }
 
 /**
- * A [EmbeddingApiProvider] that uses a [ApiProviderScheduler] to generate response.
- * @property scheduler [EmbeddingApiProvider] to use
+ * A [EmbeddingApiProvider] that uses a [ApiProviderDispatcher] to generate response.
+ * @property dispatcher [EmbeddingApiProvider] to use
  */
-public class ScheduledEmbeddingChatApiProvider<T>(
-    public val scheduler: ApiProviderScheduler<EmbeddingApiProvider<T>>,
+public class DispatchedEmbeddingChatApiProvider<T>(
+    public val dispatcher: ApiProviderDispatcher<EmbeddingApiProvider<T>>,
 ) : EmbeddingApiProvider<T> {
     override suspend fun embed(text: String): T {
-        return scheduler.provide { it.embed(text) }
+        return dispatcher.dispatch { it.embed(text) }
     }
 }
