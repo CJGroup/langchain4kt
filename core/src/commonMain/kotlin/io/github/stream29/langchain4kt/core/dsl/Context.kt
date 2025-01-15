@@ -7,7 +7,7 @@ import io.github.stream29.langchain4kt.core.message.MessageSender
 /**
  * Adding a message to the context.
  */
-@LangchainDsl
+@ContextDsl
 public fun Context.add(block: ContextBuilder.() -> Unit) {
     ContextBuilder(this).apply(block)
 }
@@ -15,7 +15,7 @@ public fun Context.add(block: ContextBuilder.() -> Unit) {
 /**
  * Building a new instance of [Context].
  */
-@LangchainDsl
+@ContextDsl
 public fun Context.Companion.of(block: ContextBuilder.() -> Unit): Context =
     Context().also { ContextBuilder(it).apply(block) }
 
