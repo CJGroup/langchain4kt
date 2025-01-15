@@ -17,7 +17,7 @@ val apiKey = System.getenv("ALIBABA_QWEN_API_KEY")
     ?: throw RuntimeException("ALIBABA_QWEN_API_KEY is not set")
 
 
-class QwenTest {
+class Langchain4jQwenTest {
     @Test
     fun `normal generation`() {
         val langchain4jModel =

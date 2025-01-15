@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class QianfanTest {
+class SpringAiQianfanTest {
     @Test
     fun `direct call`() {
         val response = qianFanChatModel.call("hello")

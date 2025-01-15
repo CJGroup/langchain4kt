@@ -13,7 +13,7 @@ import io.ktor.client.plugins.logging.*
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
-class QwenTest {
+class OpenAiQwenTest {
     val clientConfig = OpenAIConfig(
         token = System.getenv("ALIBABA_QWEN_API_KEY")!!,
         host = OpenAIHost(

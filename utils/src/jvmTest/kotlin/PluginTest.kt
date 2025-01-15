@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
-class MetapromptTest {
+class PluginTest {
     @Test
     fun geminiTest() {
         val respondent =
