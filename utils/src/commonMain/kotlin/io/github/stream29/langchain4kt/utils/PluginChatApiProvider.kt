@@ -1,91 +1,99 @@
 package io.github.stream29.langchain4kt.utils
 
 import io.github.stream29.langchain4kt.core.ChatApiProvider
+import io.github.stream29.langchain4kt.core.Respondent
 import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.output.GenerationException
 import io.github.stream29.langchain4kt.core.output.Response
-import kotlinx.coroutines.delay
-import kotlin.time.Duration
-import kotlin.time.measureTimedValue
+import io.github.stream29.langchain4kt.streaming.StreamChatApiProvider
+import io.github.stream29.langchain4kt.streaming.StreamResponse
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
-public typealias ChatApiProviderPlugin<T, R> = suspend (Context, ChatApiProvider<T>) -> Response<R>
+public typealias ChatApiProviderPlugin<T> = GeneratorPlugin<Context, Response<T>>
+public typealias RespondentPlugin = GeneratorPlugin<String, String>
+public typealias EmbeddingApiProviderPlugin<T> = GeneratorPlugin<String, T>
 
-public class PluginChatApiProvider<T, R>(
-    public val baseChatApiProvider: ChatApiProvider<T>,
-    public val aroundGenerate: ChatApiProviderPlugin<T, R>,
-) : ChatApiProvider<R> {
-    override suspend fun generate(context: Context): Response<R> {
-        return aroundGenerate(context, baseChatApiProvider)
+/**
+ * A [ChatApiProvider] that uses a plugin to modify the behavior of the provider.
+ * @property baseChatApiProvider [ChatApiProvider] to use
+ * @property aroundGenerate Plugin to use
+ */
+public class PluginChatApiProvider<MetaInfo>(
+    public val baseChatApiProvider: ChatApiProvider<MetaInfo>,
+    public val aroundGenerate: ChatApiProviderPlugin<MetaInfo>,
+) : ChatApiProvider<MetaInfo> {
+    override suspend fun generate(context: Context): Response<MetaInfo> {
+        return aroundGenerate(context, baseChatApiProvider::generate)
     }
 }
 
-public object Plugins {
-    public inline fun <T> logging(
-        crossinline output: (String) -> Unit = ::println,
-        crossinline successFormat: (Context, Response<T>, Duration) -> String = { context, response, duration ->
-            "Generation completed in $duration with context \n$context\n and response \n$response"
-        },
-        crossinline failureFormat: (Context, Throwable, Duration) -> String = { context, throwable, duration ->
-            "Generation failed in $duration with context \n$context\n and exception \n$throwable"
-        },
-    ): ChatApiProviderPlugin<T, T> = { context, chatApiProvider ->
-        val timedValue = measureTimedValue {
-            runCatching {
-                chatApiProvider.generate(context)
+public class PluginStreamChatApiProvider<MetaInfo>(
+    public val baseStreamChatApiProvider: StreamChatApiProvider<MetaInfo>,
+    public val aroundGenerate: ChatApiProviderPlugin<MetaInfo>,
+) : StreamChatApiProvider<MetaInfo> {
+    override suspend fun generate(context: Context): StreamResponse<MetaInfo> {
+        val streamResult = baseStreamChatApiProvider.generate(context)
+        val buffer = mutableListOf<String>()
+        val deferredResponse = CompletableDeferred<Response<MetaInfo>>()
+        coroutineScope {
+            launch {
+                aroundGenerate(context) { deferredResponse.await() }
             }
         }
-        val duration = timedValue.duration
-        timedValue.value.onSuccess { response ->
-            output(successFormat(context, response, duration))
-        }.onFailure { throwable ->
-            output(failureFormat(context, throwable, duration))
-        }.getOrThrow()
-    }
-
-    public fun <T> retryOnFail(
-        times: Int = 5,
-        delayMillis: Long = 0,
-    ): ChatApiProviderPlugin<T, T> = plugin@{ context, chatApiProvider ->
-        var count = 0
-        while (true) {
-            runCatching {
-                return@plugin chatApiProvider.generate(context)
-            }.onFailure {
-                if (count >= times) throw GenerationException(
-                    "Generation failed after $times retries with context: \n$context",
-                    it
-                )
-                count++
-                delay(delayMillis)
-            }
+        streamResult.message.onEach {
+            buffer.add(it)
+        }.onCompletion {
+            deferredResponse.complete(Response(buffer.joinToString(""), streamResult.metaInfo.await()))
         }
-        TODO("Unreachable code")
+        return streamResult
     }
-
-    public fun <T> retryOnResponse(
-        times: Int = 5,
-        delayMillis: Long = 0,
-        retryOn: (Response<T>) -> Boolean,
-    ): ChatApiProviderPlugin<T, T> = plugin@{ context, chatApiProvider ->
-        var count = 0
-        while (true) {
-            runCatching {
-                chatApiProvider.generate(context)
-            }.onFailure {
-                if (count >= times) throwRetryException(times, context, it)
-                delay(delayMillis)
-            }.onSuccess {
-                if (!retryOn(it)) return@plugin it
-                if (count >= times) throwRetryException(times, context, it.message)
-            }
-            count++
-        }
-        TODO("Unreachable code")
-    }
-
-    private fun throwRetryException(times: Int, context: Context, cause: Throwable): Nothing =
-        throw GenerationException("Generation failed after $times retries with context: \n$context", cause)
-
-    private fun throwRetryException(times: Int, context: Context, responseText: String): Nothing =
-        throwRetryException(times, context, IllegalArgumentException("Response requires retry, content: \n$responseText"))
 }
+
+public class PluginRespondent(
+    public val baseRespondent: Respondent,
+    public val aroundChat: RespondentPlugin,
+) : Respondent {
+    override suspend fun chat(message: String): String {
+        return aroundChat(message, baseRespondent::chat)
+    }
+}
+
+/**
+ * Install a list of [ChatApiProviderPlugin] to a [ChatApiProvider].
+ * @param plugins List of plugins to install
+ */
+public fun <T> ChatApiProvider<T>.install(vararg plugins: ChatApiProviderPlugin<T>): ChatApiProvider<T> =
+    plugins.fold(this) { chatApiProvider, plugin ->
+        PluginChatApiProvider(
+            chatApiProvider,
+            plugin
+        )
+    }
+
+/**
+ * Install a list of [ChatApiProviderPlugin] to a [StreamChatApiProvider].
+ * The behaviour of plugin is just like that on [ChatApiProvider], but waiting for the stream generation complete.
+ * @param plugins List of plugins to install
+ */
+public fun <T> StreamChatApiProvider<T>.install(vararg plugins: ChatApiProviderPlugin<T>): StreamChatApiProvider<T> =
+    plugins.fold(this) { chatApiProvider, plugin ->
+        PluginStreamChatApiProvider(
+            chatApiProvider,
+            plugin
+        )
+    }
+
+/**
+ * Install a list of [RespondentPlugin] to a [Respondent].
+ * @param plugins List of plugins to install
+ */
+public fun Respondent.install(vararg plugins: RespondentPlugin): Respondent =
+    plugins.fold(this) { respondent, plugin ->
+        PluginRespondent(
+            respondent,
+            plugin
+        )
+    }

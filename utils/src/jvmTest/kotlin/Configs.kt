@@ -3,16 +3,18 @@ import io.github.stream29.langchain4kt.api.baiduqianfan.QianfanChatApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiChatApiProvider
 import io.github.stream29.langchain4kt.api.googlegemini.GeminiGenerationConfig
 import io.ktor.client.*
+import io.ktor.client.engine.ProxyBuilder
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 val httpClient = HttpClient(CIO) {
     install(Logging) {
-        level = LogLevel.BODY
+        level = LogLevel.INFO
         logger = Logger.SIMPLE
     }
     install(ContentNegotiation) {
@@ -26,19 +28,12 @@ val httpClient = HttpClient(CIO) {
     }
     engine {
         requestTimeout = 200 * 1000
+        proxy = ProxyBuilder.http(Url("http://127.0.0.1:7890"))
     }
     install(HttpRequestRetry) {
         retryOnException(maxRetries = 10)
     }
 }
-
-val qianfanApiProvider = QianfanChatApiProvider(
-    httpClient = httpClient,
-    apiKey = System.getenv("BAIDU_QIANFAN_API_KEY")!!,
-    secretKey = System.getenv("BAIDU_QIANFAN_SECRET_KEY")!!,
-    model = "ernie-4.0-8k-latest",
-    generationConfig = QianfanGenerationConfig(),
-)
 
 val geminiApiProvider = GeminiChatApiProvider(
     httpClient = httpClient,
