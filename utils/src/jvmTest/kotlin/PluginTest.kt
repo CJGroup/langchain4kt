@@ -1,6 +1,7 @@
 import io.github.stream29.langchain4kt.core.asRespondent
 import io.github.stream29.langchain4kt.utils.Plugins
 import io.github.stream29.langchain4kt.utils.install
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -12,7 +13,7 @@ class PluginTest {
             geminiApiProvider
                 .asRespondent()
                 .install(
-                    Plugins.retryOnFail(5, 10),
+                    Plugins.retryOnFail(times = 5, beforeRetry = { println("Retried because $it"); delay(10) }),
                     Plugins.logging(),
                     Plugins.metaprompt { prompt ->
                         """
