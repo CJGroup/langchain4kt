@@ -18,8 +18,9 @@ mavenPublishing {
 
         licenses {
             license {
-                name.set("MIT")
-                url.set("https://opensource.org/licenses/MIT")
+                name.set("Apache License Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0")
+                distribution.set("https://www.apache.org/licenses/LICENSE-2.0")
             }
         }
         developers {
