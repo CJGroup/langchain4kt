@@ -67,4 +67,51 @@ public interface DispatchStrategy<ApiProvider> {
             return block(provider)
         }
     }
+
+    /**
+     * Random strategy for scheduling [ApiProvider].
+     * @property apiProviders List of [ApiProvider]s to choose from
+     */
+    public class Random<ApiProvider>(
+        public val apiProviders: List<ApiProvider>,
+    ) : DispatchStrategy<ApiProvider> {
+        init {
+            require(apiProviders.isNotEmpty()) { "apiProviders must not be empty" }
+        }
+
+        private val random = kotlin.random.Random
+
+        override suspend fun <R> dispatch(block: suspend (ApiProvider) -> R): R {
+            val provider = apiProviders[random.nextInt(apiProviders.size)]
+            return block(provider)
+        }
+    }
+
+    /**
+     * Weighted random strategy for scheduling [ApiProvider].
+     * @property apiProviders Map of [ApiProvider] to choose from with their respective weights
+     */
+    public class WeightedRandom<ApiProvider>(
+        apiProviders: Map<ApiProvider, Int>
+    ) : DispatchStrategy<ApiProvider> {
+        init {
+            require(apiProviders.isNotEmpty()) { "chatApiProviders must not be empty" }
+        }
+
+        private val random = kotlin.random.Random
+        private val apiProviderList = apiProviders.keys.toList()
+        private val acc = apiProviders.values
+            .asSequence()
+            .runningFold(0) { acc, weight -> acc + weight }
+            .drop(1)
+            .distinct()
+            .toList()
+        private val max = acc.last()
+
+        override suspend fun <R> dispatch(block: suspend (ApiProvider) -> R): R {
+            val index = acc.binarySearch(random.nextInt(max)).let { if (it >= 0) it + 1 else -it - 1 }
+            val provider = apiProviderList[index]
+            return block(provider)
+        }
+    }
 }
