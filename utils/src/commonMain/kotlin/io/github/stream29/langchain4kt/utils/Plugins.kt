@@ -1,9 +1,25 @@
 package io.github.stream29.langchain4kt.utils
 
-import io.github.stream29.langchain4kt.core.output.GenerationException
 import io.github.stream29.langchain4kt.core.Respondent
+import io.github.stream29.langchain4kt.core.input.Context
+import io.github.stream29.langchain4kt.core.output.GenerationException
+import io.github.stream29.langchain4kt.core.output.Response
+import io.github.stream29.langchain4kt.streaming.StreamResponse
+import io.github.stream29.langchain4kt.utils.Plugins.metaprompt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.coroutineContext
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlin.jvm.JvmName
 import kotlin.time.Duration
+import kotlin.time.TimeSource
 import kotlin.time.measureTimedValue
 
 /**
@@ -26,6 +42,7 @@ public object Plugins {
      */
     public inline fun <T, R> curry(crossinline block: suspend (Generator<T, R>, T) -> R): Plugin<Generator<T, R>> =
         { p0 -> { p1 -> block(p0, p1) } }
+
     /**
      * Plugin that logs the generation process.
      * @param output Destination to output the log
@@ -51,6 +68,70 @@ public object Plugins {
         }.onFailure { throwable ->
             output(failureFormat(param, throwable, duration))
         }.getOrThrow()
+    }
+
+    @JvmName("loggingOnComplete4Response")
+    public inline fun <MetaInfo> loggingOnComplete(
+        crossinline output: (String) -> Unit = ::println,
+        crossinline successFormat: (Context, Response<MetaInfo>, Duration) -> String = { context, response, duration ->
+            "Generation completed in $duration with context \n$context\n and response \n$response"
+        },
+        crossinline failureFormat: (Context, Throwable, Duration) -> String = { message, throwable, duration ->
+            "Generation failed in $duration with message \n$message\n and exception \n$throwable"
+        }
+    ): Plugin<Generator<Context, StreamResponse<MetaInfo>>> = curry { generate, param ->
+        val timestamp = TimeSource.Monotonic.markNow()
+        val response = runCatching { generate(param) }.onFailure { e ->
+            output(failureFormat(param, e, timestamp.elapsedNow()))
+        }.getOrThrow()
+
+        val mutex = Mutex()
+        val buffer = StringBuilder()
+        val deferredMetaInfo = response.metaInfo
+        val wrappedFlow = response.message
+            .onEach {
+                mutex.withLock { buffer.append(it) }
+            }.onCompletion { e ->
+                if (e == null) {
+                    CoroutineScope(currentCoroutineContext()).launch {
+                        runCatching {
+                            val message = buffer.toString()
+                            val metaInfo = deferredMetaInfo.await()
+                            Response(message, metaInfo)
+                        }.onSuccess {
+                            output(successFormat(param, it, timestamp.elapsedNow()))
+                        }.onFailure { throwable ->
+                            output(failureFormat(param, throwable, timestamp.elapsedNow()))
+                        }
+                    }
+                } else {
+                    output(failureFormat(param, e, timestamp.elapsedNow()))
+                }
+            }
+        StreamResponse(wrappedFlow, deferredMetaInfo)
+    }
+
+    @JvmName("loggingOnComplete4String")
+    public inline fun loggingOnComplete(
+        crossinline output: (String) -> Unit = ::println,
+        crossinline successFormat: (String, String, Duration) -> String = { message, response, duration ->
+            "Generation completed in $duration with message \n$message\n and response \n$response"
+        },
+        crossinline failureFormat: (String, Throwable, Duration) -> String = { message, throwable, duration ->
+            "Generation failed in $duration with message \n$message\n and exception \n$throwable"
+        }
+    ): Plugin<Generator<String, Flow<String>>> = curry<String, Flow<String>> { generate, param ->
+        val timestamp = TimeSource.Monotonic.markNow()
+        val response = runCatching { generate(param) }.onFailure {
+            output(failureFormat(param, it, timestamp.elapsedNow()))
+        }.getOrThrow()
+        val mutex = Mutex()
+        val buffer = StringBuilder()
+        response.onEach { mutex.withLock { buffer.append(it) } }
+            .onCompletion { e ->
+                if (e == null) output(successFormat(param, buffer.toString(), timestamp.elapsedNow()))
+                else output(failureFormat(param, e, timestamp.elapsedNow()))
+            }
     }
 
 

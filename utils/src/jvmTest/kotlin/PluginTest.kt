@@ -1,4 +1,5 @@
 import io.github.stream29.langchain4kt.core.asRespondent
+import io.github.stream29.langchain4kt.streaming.generateFrom
 import io.github.stream29.langchain4kt.utils.Plugins
 import io.github.stream29.langchain4kt.utils.install
 import kotlinx.coroutines.delay
@@ -8,7 +9,7 @@ import kotlin.test.Test
 
 class PluginTest {
     @Test
-    fun geminiTest() {
+    fun respondent() {
         val respondent =
             geminiApiProvider
                 .asRespondent()
@@ -34,6 +35,18 @@ class PluginTest {
             }
             launch {
                 respondent.chat("请介绍中国高考作文的标准格式。")
+            }
+        }
+    }
+
+    @Test
+    fun streamChatApiProvider() {
+        runBlocking {
+            val streamChatApiProvider = TestStreamChatApiProvider().install(
+                Plugins.loggingOnComplete<Nothing?>()
+            )
+            streamChatApiProvider.generateFrom("hello").collect {
+                println("Collected: $it")
             }
         }
     }
