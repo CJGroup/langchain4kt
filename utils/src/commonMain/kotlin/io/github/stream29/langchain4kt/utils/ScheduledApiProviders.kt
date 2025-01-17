@@ -8,11 +8,11 @@ import io.github.stream29.langchain4kt.streaming.StreamChatApiProvider
 import io.github.stream29.langchain4kt.streaming.StreamResponse
 
 /**
- * A [ChatApiProvider] that uses a [ApiProviderDispatcher] to generate response.
- * @property dispatcher [ApiProviderDispatcher] to use
+ * A [ChatApiProvider] that uses a [DispatchStrategy] to generate response.
+ * @property dispatcher [DispatchStrategy] to use
  */
 public class DispatchedChatApiProvider<MetaInfo>(
-    public val dispatcher: ApiProviderDispatcher<ChatApiProvider<MetaInfo>>,
+    public val dispatcher: DispatchStrategy<ChatApiProvider<MetaInfo>>,
 ) : ChatApiProvider<MetaInfo> {
     override suspend fun generate(context: Context): Response<MetaInfo> {
         return dispatcher.dispatch { it.generate(context) }
@@ -20,11 +20,11 @@ public class DispatchedChatApiProvider<MetaInfo>(
 }
 
 /**
- * A [StreamChatApiProvider] that uses a [ApiProviderDispatcher] to generate response.
- * @property dispatcher [ApiProviderDispatcher] to use
+ * A [StreamChatApiProvider] that uses a [DispatchStrategy] to generate response.
+ * @property dispatcher [DispatchStrategy] to use
  */
 public class DispatchedStreamChatApiProvider<MetaInfo>(
-    public val dispatcher: ApiProviderDispatcher<StreamChatApiProvider<MetaInfo>>,
+    public val dispatcher: DispatchStrategy<StreamChatApiProvider<MetaInfo>>,
 ) : StreamChatApiProvider<MetaInfo> {
     override suspend fun generate(context: Context): StreamResponse<MetaInfo> {
         return dispatcher.dispatch { it.generate(context) }
@@ -32,11 +32,11 @@ public class DispatchedStreamChatApiProvider<MetaInfo>(
 }
 
 /**
- * A [EmbeddingApiProvider] that uses a [ApiProviderDispatcher] to generate response.
+ * A [EmbeddingApiProvider] that uses a [DispatchStrategy] to generate response.
  * @property dispatcher [EmbeddingApiProvider] to use
  */
 public class DispatchedEmbeddingChatApiProvider<T>(
-    public val dispatcher: ApiProviderDispatcher<EmbeddingApiProvider<T>>,
+    public val dispatcher: DispatchStrategy<EmbeddingApiProvider<T>>,
 ) : EmbeddingApiProvider<T> {
     override suspend fun embed(text: String): T {
         return dispatcher.dispatch { it.embed(text) }
