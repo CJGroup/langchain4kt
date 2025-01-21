@@ -49,14 +49,18 @@ fun KotlinMultiplatformExtension.configureWasmForKtor() {
     }
 }
 
+fun KotlinMultiplatformExtension.configureNative() {
+    linuxArm64()
+    configureNativeForOpenAi()
+}
+
 fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
     if (HostManager.hostIsMac) {
+        configureIosForGemini()
         // According to https://kotlinlang.org/docs/native-target-support.html
         // Tier 1
         macosX64()
         macosArm64()
-        iosSimulatorArm64()
-        iosX64()
         // Tier 2
         watchosSimulatorArm64()
         watchosX64()
@@ -65,7 +69,6 @@ fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
         tvosSimulatorArm64()
         tvosX64()
         tvosArm64()
-        iosArm64()
         // Tier 3
         watchosDeviceArm64()
     }
@@ -91,7 +94,8 @@ fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
     }
 }
 
-fun KotlinMultiplatformExtension.configureNative() {
-    linuxArm64()
-    configureNativeForOpenAi()
+fun KotlinMultiplatformExtension.configureIosForGemini() {
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 }

@@ -11,6 +11,7 @@ coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
 spring-ai = "1.0.0-SNAPSHOT"
 openai-client = "4.0.0-beta01"
+google-generative-ai = "0.9.0-1.0.1-wasm"
 
 [libraries]
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
@@ -35,6 +36,9 @@ kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-co
 coroutines-run-blocking-all = { module = "com.javiersc.kotlinx:coroutines-run-blocking-all", version.ref = "coroutinesRunBlockingAll" }
 
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai-client" }
+
+google-generative-ai = { module = "dev.shreyaspatil.generativeai:generativeai-google", version.ref = "google-generative-ai" }
+google-generative-ai-common = { module = "dev.shreyaspatil.generativeai:common", version.ref = "google-generative-ai" }
 
 spring-ai-core = { module = "org.springframework.ai:spring-ai-core", version.ref = "spring-ai" }
 spring-ai-qianfan = { module = "org.springframework.ai:spring-ai-qianfan", version.ref = "spring-ai" }
