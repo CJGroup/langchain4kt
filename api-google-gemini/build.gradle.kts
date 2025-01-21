@@ -7,6 +7,7 @@ plugins {
 kotlin {
     configureJvm(17)
     configureJs()
+    configureIosForGemini()
     configureWasmForKtor()
     sourceSets {
         val commonMain by getting {

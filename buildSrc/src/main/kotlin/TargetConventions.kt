@@ -95,7 +95,9 @@ fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
 }
 
 fun KotlinMultiplatformExtension.configureIosForGemini() {
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    if (HostManager.hostIsMac) {
+        iosX64()
+        iosArm64()
+        iosSimulatorArm64()
+    }
 }
