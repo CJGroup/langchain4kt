@@ -8,6 +8,9 @@ repositories {
     maven("https://repo.spring.io/snapshot")
 }
 
+kotlin {
+    jvmToolchain(17)
+}
 
 dependencies {
     implementation(project(":langchain4kt-core"))

@@ -7,9 +7,8 @@ import io.github.stream29.langchain4kt.api.openai.OpenAiStreamChatProvider
 import io.github.stream29.langchain4kt.core.generateFrom
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.streaming.generateFrom
-import io.github.stream29.streamlin.prettyPrint
 import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.logging.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -20,15 +19,6 @@ class OpenAiQwenTest {
             baseUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/completions",
         ),
         engine = CIO.create(),
-        httpClientConfig = {
-            install(Logging) {
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        prettyPrint(message)
-                    }
-                }
-            }
-        }
     )
     val generationConfig = OpenAiGenerationConfig("qwen-turbo")
 
@@ -38,7 +28,7 @@ class OpenAiQwenTest {
             clientConfig,
             generationConfig
         )
-        runBlocking {
+        runBlocking(Dispatchers.IO) {
             val response = chatApiProvider.generateFrom("hello")
             println(response)
         }
@@ -53,7 +43,7 @@ class OpenAiQwenTest {
         runBlocking {
             val response = streamChatProvider.generateFrom { MessageSender.User.chat("hello") }
             response.message.collect { println(it) }
-            response.metaInfo.await().let { prettyPrint(it) }
+            response.metaInfo.await().let { println(it) }
         }
     }
 
@@ -65,7 +55,7 @@ class OpenAiQwenTest {
         )
         runBlocking {
             val response = embeddingApiProvider.embed("hello")
-            prettyPrint(response)
+            println(response)
         }
     }
 }

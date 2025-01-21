@@ -17,7 +17,7 @@ kotlin {
     jvm {
         withJava()
     }
-    jvmToolchain(21)
+    jvmToolchain(11)
 
     js {
         nodejs {

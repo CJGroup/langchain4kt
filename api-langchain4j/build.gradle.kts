@@ -3,6 +3,10 @@ plugins {
     id("publishing-convention")
 }
 
+kotlin {
+    jvmToolchain(8)
+}
+
 dependencies {
     implementation(project(":langchain4kt-core"))
     implementation(project(":langchain4kt-streaming"))

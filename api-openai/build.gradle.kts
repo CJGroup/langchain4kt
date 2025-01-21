@@ -19,12 +19,10 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 api(libs.kotlin.test)
-                api(libs.streamlin)
                 api(libs.ktor.client.cio)
                 api(libs.ktor.client.logging)
                 api(libs.ktor.client.content.negotiation)
                 api(libs.ktor.client.auth)
-                api(libs.logback.classic)
             }
         }
     }
