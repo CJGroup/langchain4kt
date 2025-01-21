@@ -1,10 +1,13 @@
 plugins {
-    id("kotlin-multiplatform-convention-ktor")
+    id("kotlin-multiplatform-convention-base")
     alias(libs.plugins.kotlinSerialization)
     id("publishing-convention")
 }
 
 kotlin {
+    configureJvm(17)
+    configureJs()
+    configureWasmForKtor()
     sourceSets {
         val commonMain by getting {
             dependencies {

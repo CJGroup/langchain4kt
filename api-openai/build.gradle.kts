@@ -1,10 +1,14 @@
 plugins {
-    id("kotlin-multiplatform-convention-openai")
+    id("kotlin-multiplatform-convention-base")
     alias(libs.plugins.kotlinSerialization)
     id("publishing-convention")
 }
 
 kotlin {
+    configureJvm(11)
+    configureJs()
+    configureWasmForKtor()
+    configureNativeForOpenAi()
     sourceSets {
         val commonMain by getting {
             dependencies {

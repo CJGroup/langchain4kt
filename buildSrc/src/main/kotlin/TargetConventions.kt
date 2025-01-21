@@ -1,23 +1,22 @@
+import org.gradle.kotlin.dsl.assign
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.konan.target.HostManager
 
-plugins {
-    kotlin("multiplatform")
-}
-
-kotlin {
-    explicitApi()
+fun KotlinMultiplatformExtension.configureJvm(jdkVersion: Int) {
     jvm {
         withJava()
     }
-    jvmToolchain(8)
+    jvmToolchain(jdkVersion)
+}
 
+fun KotlinMultiplatformExtension.configureJs() {
     js {
         nodejs {
             testTask {
@@ -33,22 +32,24 @@ kotlin {
             moduleKind = JsModuleKind.MODULE_UMD
         }
     }
+}
 
+fun KotlinMultiplatformExtension.configureWasm() {
+    configureWasmForKtor()
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmWasi {
+        nodejs()
+    }
+}
+
+fun KotlinMultiplatformExtension.configureWasmForKtor() {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         nodejs()
     }
-    // WasmWasi is not supported by ktor now
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmWasi {
-//        nodejs()
-//    }
+}
 
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    applyDefaultHierarchyTemplate {
-
-    }
+fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
     if (HostManager.hostIsMac) {
         // According to https://kotlinlang.org/docs/native-target-support.html
         // Tier 1
@@ -71,7 +72,6 @@ kotlin {
 
     // Tier 2
     linuxX64()
-    linuxArm64()
 
     // Tier 3
     mingwX64()
@@ -79,8 +79,6 @@ kotlin {
 //    androidNativeArm64()
 //    androidNativeX86()
 //    androidNativeX64()
-
-
 
     // setup tests running in RELEASE mode
     targets.withType<KotlinNativeTarget>().configureEach {
@@ -91,4 +89,9 @@ kotlin {
             setExecutionSourceFrom(binaries.getTest(NativeBuildType.RELEASE))
         }
     }
+}
+
+fun KotlinMultiplatformExtension.configureNative() {
+    linuxArm64()
+    configureNativeForOpenAi()
 }
