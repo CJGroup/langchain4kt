@@ -1,6 +1,6 @@
 import com.aallam.openai.client.OpenAIConfig
 import com.aallam.openai.client.OpenAIHost
-import io.github.stream29.langchain4kt.api.openai.OpenAiChaiApiProvider
+import io.github.stream29.langchain4kt.api.openai.OpenAiChatApiProvider
 import io.github.stream29.langchain4kt.api.openai.OpenAiEmbeddingApiProvider
 import io.github.stream29.langchain4kt.api.openai.OpenAiGenerationConfig
 import io.github.stream29.langchain4kt.api.openai.OpenAiStreamChatApiProvider
@@ -24,7 +24,7 @@ class OpenAiQwenTest {
 
     @Test
     fun `ChatApiProvider test`() {
-        val chatApiProvider = OpenAiChaiApiProvider(
+        val chatApiProvider = OpenAiChatApiProvider(
             clientConfig,
             generationConfig
         )
