@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.onEach
  *
  * The meta info in the response is the last [ChatCompletionChunk] returned by OpenAI API.
  */
-public class OpenAiStreamChatProvider(
+public class OpenAiStreamChatApiProvider(
     public val clientConfig: OpenAIConfig,
     public val generationConfig: OpenAiGenerationConfig,
     public val requestOptions: RequestOptions = RequestOptions(),

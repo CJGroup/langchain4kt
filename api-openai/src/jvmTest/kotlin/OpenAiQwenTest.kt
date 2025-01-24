@@ -3,7 +3,7 @@ import com.aallam.openai.client.OpenAIHost
 import io.github.stream29.langchain4kt.api.openai.OpenAiChaiApiProvider
 import io.github.stream29.langchain4kt.api.openai.OpenAiEmbeddingApiProvider
 import io.github.stream29.langchain4kt.api.openai.OpenAiGenerationConfig
-import io.github.stream29.langchain4kt.api.openai.OpenAiStreamChatProvider
+import io.github.stream29.langchain4kt.api.openai.OpenAiStreamChatApiProvider
 import io.github.stream29.langchain4kt.core.generateFrom
 import io.github.stream29.langchain4kt.core.message.MessageSender
 import io.github.stream29.langchain4kt.streaming.generateFrom
@@ -36,7 +36,7 @@ class OpenAiQwenTest {
 
     @Test
     fun `StreamChatApiProvider test`() {
-        val streamChatProvider = OpenAiStreamChatProvider(
+        val streamChatProvider = OpenAiStreamChatApiProvider(
             clientConfig,
             generationConfig
         )
