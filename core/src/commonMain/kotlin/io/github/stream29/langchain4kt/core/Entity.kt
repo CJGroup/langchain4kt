@@ -10,7 +10,7 @@ public enum class DataDirection {
     Output
 }
 
-public data class ChatMessage<Content>(
+public data class ChatMessage<out Content>(
     val direction: DataDirection,
     val content: Content
 )

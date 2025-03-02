@@ -13,8 +13,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":langchain4kt-core"))
-                api(project(":langchain4kt-streaming"))
-                api(project(":langchain4kt-embedding"))
                 api(libs.google.generative.ai)
                 api(libs.google.generative.ai.common)
             }

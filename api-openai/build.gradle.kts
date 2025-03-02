@@ -13,8 +13,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":langchain4kt-core"))
-                api(project(":langchain4kt-streaming"))
-                api(project(":langchain4kt-embedding"))
                 api(libs.openai.client)
                 api(libs.ktor.core)
                 api(libs.ktor.serialization.kotlinx.json)

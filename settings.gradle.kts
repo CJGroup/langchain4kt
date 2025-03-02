@@ -18,7 +18,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "langchain4kt-root"
 prefixedModule("core")
-prefixedModule("utils")
 prefixedModule("api-google-gemini")
 prefixedModule("api-baidu-qianfan")
 prefixedModule("api-langchain4j")
