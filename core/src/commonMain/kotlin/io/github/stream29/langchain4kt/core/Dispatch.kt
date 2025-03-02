@@ -31,20 +31,20 @@ public object DispatchStrategy {
         }
     }
 
-    public fun <Input, Output> randomOn(source: Collection<Generator<Input, Output>>): Generator<Input, Output> {
+    public fun <Input, Output> randomOn(source: List<Generator<Input, Output>>): Generator<Input, Output> {
         checkNotEmpty(source)
         return { input -> source.random().invoke(input) }
     }
 
     public fun <Input, Output> weightedRandomOn(source: Map<Generator<Input, Output>, Int>): Generator<Input, Output> {
-        val weightedSource = source.asSequence().flatMap { it.key.repeat(it.value) }.toList()
-        checkNotEmpty(weightedSource)
-        return { input -> weightedSource.random()(input) }
+        val weightedSource = sequence {
+            for ((generator, weight) in source)
+                repeat(weight) { yield(generator) }
+        }.toList()
+        return randomOn(weightedSource)
     }
 
     private fun checkNotEmpty(source: Collection<*>) {
         require(source.isNotEmpty()) { "Generators must not be empty" }
     }
-
-    private fun <T> T.repeat(times: Int) = sequence { repeat(times) { yield(this@repeat) } }
 }
