@@ -1,4 +1,4 @@
-package io.github.stream29.langchain4kt.core.output
+package io.github.stream29.langchain4kt.core
 
 /**
  * Exception that is thrown when generation of a response fails.

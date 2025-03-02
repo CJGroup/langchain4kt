@@ -6,6 +6,7 @@ kotlinx-serialization = "1.7.3"
 ktor = "3.0.0"
 logback = "1.5.6"
 streamlin = "2.5.0"
+kunion = "0.0.1"
 langchain4j = "0.35.0"
 coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
@@ -21,6 +22,7 @@ kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradl
 langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
 langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-dashscope", version.ref = "langchain4j" }
 streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
+kunion = { module = "io.github.stream29:kunion", version.ref = "kunion" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
