@@ -15,22 +15,6 @@ internal fun MessageSender.toGeminiSender() = when (this) {
     MessageSender.User -> "user"
 }
 
-@OptIn(ExperimentalSerializationApi::class)
-internal fun constructRequest(
-    modelName: String,
-    context: Context,
-    safetySettings: List<SafetySetting>?,
-    generationConfig: GenerationConfig?
-) =
-    GenerateContentRequest(
-        modelName,
-        context.history.map { Content(it.sender.toGeminiSender(), listOf(TextPart(it.content))) },
-        safetySettings,
-        generationConfig,
-        null,
-        null,
-        context.systemInstruction?.let { Content("system", listOf(TextPart(it))) },
-    )
 
 @OptIn(ExperimentalSerializationApi::class)
 internal val GenerateContentResponse.text: String?
