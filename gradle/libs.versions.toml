@@ -7,7 +7,7 @@ ktor = "3.0.0"
 logback = "1.5.6"
 streamlin = "2.5.0"
 kunion = "0.0.1"
-langchain4j = "0.35.0"
+langchain4j = "1.0.0-beta1"
 coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
 spring-ai = "1.0.0-SNAPSHOT"
@@ -20,7 +20,7 @@ kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbra
 kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 
 langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
-langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-dashscope", version.ref = "langchain4j" }
+langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-community-dashscope", version.ref = "langchain4j" }
 streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
 kunion = { module = "io.github.stream29:kunion", version.ref = "kunion" }
 
