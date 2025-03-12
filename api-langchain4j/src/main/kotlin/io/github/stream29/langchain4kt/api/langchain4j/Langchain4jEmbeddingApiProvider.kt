@@ -1,20 +1,22 @@
 package io.github.stream29.langchain4kt.api.langchain4j
 
+import dev.langchain4j.data.embedding.Embedding
+import dev.langchain4j.data.segment.TextSegment
 import dev.langchain4j.model.embedding.EmbeddingModel
-import io.github.stream29.langchain4kt.embedding.EmbeddingApiProvider
+import io.github.stream29.langchain4kt.core.Generator
+import io.github.stream29.langchain4kt.core.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-/**
- * Wrapping [EmbeddingModel] to [EmbeddingApiProvider].
- */
-public data class Langchain4jEmbeddingApiProvider(
-    val model: EmbeddingModel
-): EmbeddingApiProvider<FloatArray> {
-    override suspend fun embed(text: String): FloatArray {
-        return model.embed(text).content().vector()
+public fun EmbeddingModel.toGenerator(): Generator<List<TextSegment>, Response<List<Embedding>, Map<String, Any>>> =
+    { segments ->
+        suspendCoroutine { continuation ->
+            val rawResponse = this.embedAll(segments)
+            continuation.resume(
+                Response(
+                    rawResponse.content(),
+                    rawResponse.metadata()
+                )
+            )
+        }
     }
-}
-
-/**
- * Wrapping [EmbeddingModel] to [EmbeddingApiProvider].
- */
-public fun EmbeddingModel.asEmbeddingApiProvider(): Langchain4jEmbeddingApiProvider = Langchain4jEmbeddingApiProvider(this)

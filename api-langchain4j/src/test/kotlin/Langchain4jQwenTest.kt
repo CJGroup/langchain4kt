@@ -1,16 +1,16 @@
-import dev.langchain4j.model.dashscope.QwenChatModel
-import dev.langchain4j.model.dashscope.QwenEmbeddingModel
-import dev.langchain4j.model.dashscope.QwenStreamingChatModel
-import io.github.stream29.langchain4kt.api.langchain4j.Langchain4jChatApiProvider
-import io.github.stream29.langchain4kt.api.langchain4j.Langchain4jEmbeddingApiProvider
-import io.github.stream29.langchain4kt.api.langchain4j.Langchain4jStreamChatApiProvider
-import io.github.stream29.langchain4kt.core.asChatModel
-import io.github.stream29.langchain4kt.streaming.asStreamChatModel
-import kotlinx.coroutines.delay
+import dev.langchain4j.community.model.dashscope.QwenChatModel
+import dev.langchain4j.community.model.dashscope.QwenEmbeddingModel
+import dev.langchain4j.community.model.dashscope.QwenStreamingChatModel
+import dev.langchain4j.data.message.UserMessage
+import dev.langchain4j.data.segment.TextSegment
+import io.github.stream29.langchain4kt.api.langchain4j.toApiProvider
+import io.github.stream29.langchain4kt.api.langchain4j.toGenerator
+import io.github.stream29.langchain4kt.api.langchain4j.toStreamingApiProvider
+import io.github.stream29.union.SafeUnion5
+import io.github.stream29.union.consume0
+import io.github.stream29.union.consume1
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFails
 import kotlin.test.assertTrue
 
 val apiKey = System.getenv("ALIBABA_QWEN_API_KEY")
@@ -20,67 +20,31 @@ val apiKey = System.getenv("ALIBABA_QWEN_API_KEY")
 class Langchain4jQwenTest {
     @Test
     fun `normal generation`() {
-        val langchain4jModel =
+        val generate =
             QwenChatModel.builder()
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-        val langchain4ktModel = Langchain4jChatApiProvider(langchain4jModel).asChatModel {
-            systemInstruction("you are a lovely cat, you should act like a lovely cat.")
-        }
+                .toApiProvider()
         val response = runBlocking {
-            langchain4ktModel.chat("hello")
+            generate(listOf(SafeUnion5(UserMessage("hello, can you dance for me?"))))
         }
-        println(response)
+        println(response.content.text())
     }
 
     @Test
     fun `stream generation`() {
-        val langchain4jModel =
+        val generate =
             QwenStreamingChatModel.builder()
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-        val model = Langchain4jStreamChatApiProvider(langchain4jModel).asStreamChatModel {
-            systemInstruction("you are a lovely cat, you should act like a lovely cat.")
-        }
+                .toStreamingApiProvider()
         runBlocking {
-            model.chat("hello, can you dance for me?").collect {
-                print(it)
-                System.out.flush()
-                delay(100)
+            generate(listOf(SafeUnion5(UserMessage("hello, who are you?")))).collect {
+                it.consume0 { print(it.text()); System.out.flush() }
+                    .consume1 { println(); println(it) }
             }
-            println()
-            model.chat("thank you").collect {
-                print(it)
-                System.out.flush()
-                delay(100)
-            }
-        }
-    }
-
-    @Test
-    fun `stream generation with rollback and queueing`() {
-        val langchain4jModel =
-            QwenStreamingChatModel.builder()
-                .apiKey(apiKey)
-                .modelName("qwen-plus")
-                .build()
-        val model = Langchain4jStreamChatApiProvider(langchain4jModel).asStreamChatModel {
-            systemInstruction("you are a lovely cat, you should act like a lovely cat.")
-        }
-        runBlocking {
-            assertFails {
-                model.chat("hello, can you dance for me?").collect {
-                    throw RuntimeException("test")
-                }
-            }
-            model.chat("hello").collect {
-                print(it)
-                System.out.flush()
-                delay(100)
-            }
-            assertEquals(2, model.context.history.size)
         }
     }
 
@@ -90,12 +54,16 @@ class Langchain4jQwenTest {
             return this.zip(other).sumOf { (it.first * it.second).toDouble() }
         }
 
-        val langchain4jModel = QwenEmbeddingModel.builder().apiKey(apiKey).modelName("text-embedding-v3").build()
-        val langchain4ktApiProvider = Langchain4jEmbeddingApiProvider(langchain4jModel)
+        val embed =
+            QwenEmbeddingModel.builder()
+                .apiKey(apiKey)
+                .modelName("text-embedding-v3")
+                .build()
+                .toGenerator()
         runBlocking {
-            val embedding1 = langchain4ktApiProvider.embed("hello? Is there anyone?")
-            val embedding2 = langchain4ktApiProvider.embed("Excuse me, anybody here?")
-            val embedding3 = langchain4ktApiProvider.embed("Let's go")
+            val embedding1 = embed(listOf(TextSegment.from("hello? Is there anyone?"))).content.first().vector()
+            val embedding2 = embed(listOf(TextSegment.from("Excuse me, anybody here?"))).content.first().vector()
+            val embedding3 = embed(listOf(TextSegment.from("Let's go"))).content.first().vector()
             println("embedding1 * embedding2 = ${embedding1 * embedding2}")
             println("embedding1 * embedding3 = ${embedding1 * embedding3}")
             assertTrue { embedding1 * embedding2 > embedding1 * embedding3 }
