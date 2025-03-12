@@ -15,6 +15,7 @@ kotlin {
 dependencies {
     implementation(project(":langchain4kt-core"))
     implementation(libs.spring.ai.core)
+    implementation(libs.kotlinx.coroutine.reactive)
     testImplementation(libs.spring.ai.qianfan)
     testImplementation(libs.kotlin.test)
 }
