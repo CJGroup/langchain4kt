@@ -1,6 +1,6 @@
-import io.github.stream29.langchain4kt.core.generateFrom
-import io.github.stream29.langchain4kt.streaming.generateFrom
+import io.github.stream29.union.SafeUnion4
 import kotlinx.coroutines.runBlocking
+import org.springframework.ai.chat.messages.UserMessage
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -13,15 +13,15 @@ class SpringAiQianfanTest {
 
     @Test
     fun `text response`() = runBlocking {
-        val response = chatApiProvider.generateFrom("hello")
-        println(response)
+        val response = chatApiProvider(listOf(SafeUnion4(UserMessage("hello"))))
+        println(response.result.output.text)
     }
 
     @Test
     fun `streaming response`() = runBlocking {
-        val response = streamChatApiProvider.generateFrom("hello")
+        val response = streamChatApiProvider(listOf(SafeUnion4(UserMessage("hello"))))
         response.collect {
-            println("collected: $it")
+            println("collected: ${it.result.output.text}")
         }
     }
 
@@ -31,9 +31,9 @@ class SpringAiQianfanTest {
             (it.first * it.second).toDouble()
         }
 
-        val embedding1 = embeddingApiProvider.embed("hello? Is there anyone?")
-        val embedding2 = embeddingApiProvider.embed("Excuse me, anybody here?")
-        val embedding3 = embeddingApiProvider.embed("Let's go")
+        val embedding1 = embeddingApiProvider("hello? Is there anyone?")
+        val embedding2 = embeddingApiProvider("Excuse me, anybody here?")
+        val embedding3 = embeddingApiProvider("Let's go")
         println("embedding1 * embedding2 = ${embedding1 * embedding2}")
         println("embedding1 * embedding3 = ${embedding1 * embedding3}")
         assertTrue { embedding1 * embedding2 > embedding1 * embedding3 }

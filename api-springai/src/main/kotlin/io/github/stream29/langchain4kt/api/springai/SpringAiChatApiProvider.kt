@@ -1,29 +1,24 @@
 package io.github.stream29.langchain4kt.api.springai
 
-import io.github.stream29.langchain4kt.core.ChatApiProvider
-import io.github.stream29.langchain4kt.core.input.Context
-import io.github.stream29.langchain4kt.core.output.Response
+import io.github.stream29.langchain4kt.core.ApiProvider
+import io.github.stream29.union.Union4
+import org.springframework.ai.chat.messages.*
+import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.prompt.Prompt
-import org.springframework.ai.model.Model
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-/**
- * Wrapping [Model] to [ChatApiProvider].
- */
-public data class SpringAiChatApiProvider(
-    val chatModel: Model<Prompt, ChatResponse>
-) : ChatApiProvider<ChatResponse> {
-    override suspend fun generate(context: Context): Response<ChatResponse> {
-        val messageList = fromContext(context)
-        val chatResponse = chatModel.call(Prompt(messageList))
-        return Response(
-            message = chatResponse.result.output.content,
-            metaInfo = chatResponse
-        )
+public typealias SpringAiHistoryType = Union4<
+        SystemMessage,
+        UserMessage,
+        AssistantMessage,
+        ToolResponseMessage
+        >
+
+public fun ChatModel.asApiProvider(): ApiProvider<SpringAiHistoryType, ChatResponse> =
+    { history ->
+        suspendCoroutine { continuation ->
+            continuation.resume(call(Prompt(history.map { it.value as Message })))
+        }
     }
-}
-
-/**
- * Wrapping [Model] to [ChatApiProvider].
- */
-public fun Model<Prompt, ChatResponse>.asLangchain4ktProvider(): SpringAiChatApiProvider = SpringAiChatApiProvider(this)

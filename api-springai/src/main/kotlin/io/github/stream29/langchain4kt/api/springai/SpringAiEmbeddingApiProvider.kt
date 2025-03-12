@@ -1,20 +1,12 @@
 package io.github.stream29.langchain4kt.api.springai
 
-import io.github.stream29.langchain4kt.embedding.EmbeddingApiProvider
+import io.github.stream29.langchain4kt.core.Generator
 import org.springframework.ai.embedding.EmbeddingModel
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-/**
- * Wrapping [EmbeddingModel] to [EmbeddingApiProvider].
- */
-public data class SpringAiEmbeddingApiProvider(
-    val model: EmbeddingModel
-) : EmbeddingApiProvider<FloatArray> {
-    override suspend fun embed(text: String): FloatArray {
-        return model.embed(text)
+public fun EmbeddingModel.asEmbeddingGenerator(): Generator<String, FloatArray> = { text ->
+    suspendCoroutine { continuation ->
+        continuation.resume(embed(text))
     }
 }
-
-/**
- * Wrapping [EmbeddingModel] to [EmbeddingApiProvider].
- */
-public fun EmbeddingModel.asLangchain4ktProvider(): SpringAiEmbeddingApiProvider = SpringAiEmbeddingApiProvider(this)
