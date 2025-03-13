@@ -14,9 +14,9 @@ public fun <Response> ConfiguredGenerator<ChatRequest.Builder, Response>.generat
 
 public fun ChatMessage.singleTextOrNull() = when (type()) {
     ChatMessageType.TOOL_EXECUTION_RESULT -> null
-    ChatMessageType.SYSTEM -> (this as SystemMessage).text()
-    ChatMessageType.USER -> (this as UserMessage).run { if (hasSingleText()) singleText() else null }
-    ChatMessageType.AI -> (this as AiMessage).text()
+    ChatMessageType.SYSTEM -> (this as? SystemMessage)?.text()
+    ChatMessageType.USER -> (this as? UserMessage)?.run { if (hasSingleText()) singleText() else null }
+    ChatMessageType.AI -> (this as? AiMessage)?.text()
     ChatMessageType.CUSTOM -> null
 }
 

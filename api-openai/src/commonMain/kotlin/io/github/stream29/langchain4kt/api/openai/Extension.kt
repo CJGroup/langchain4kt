@@ -18,13 +18,13 @@ public fun ChatMessage.textOrNull() = when (val content = messageContent) {
 
 public fun ChatMessage.text() = textOrNull() ?: error("Getting text from $this")
 
-public fun ChatCompletion.singleText() = choices.first().message.content ?: error("No text in $this")
+public fun ChatCompletion.singleText() = singleTextOrNull() ?: error("No text in $this")
 
-public fun ChatCompletion.singleTextOrNull() = choices.first().message.textOrNull()
+public fun ChatCompletion.singleTextOrNull() = choices.firstOrNull()?.message?.textOrNull()
 
 public fun ChatCompletionChunk.singleText() = singleTextOrNull() ?: error("No text in $this")
 
-public fun ChatCompletionChunk.singleTextOrNull() = choices.first().delta?.content
+public fun ChatCompletionChunk.singleTextOrNull() = choices.firstOrNull()?.delta?.content
 
 public fun <Output> Generator<List<ChatMessage>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(ChatMessage.User(it)) }
