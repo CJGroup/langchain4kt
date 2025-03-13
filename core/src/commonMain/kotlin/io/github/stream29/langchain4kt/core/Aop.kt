@@ -1,10 +1,17 @@
 package io.github.stream29.langchain4kt.core
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
 public inline fun <Input, Output, NewInput, NewOutput> Generator<Input, Output>.wrapped(crossinline block: (Generator<Input, Output>) -> Generator<NewInput, NewOutput>): Generator<NewInput, NewOutput> =
     block(this)
 
 public inline fun <Input, Output, NewOutput> Generator<Input, Output>.mapOutput(crossinline block: suspend (Output) -> NewOutput): Generator<Input, NewOutput> =
     { input -> block(this(input)) }
+
+public inline fun <Input, OutputChunk, NewOutputChunk> Generator<Input, Flow<OutputChunk>>.mapOutputFlow(
+    crossinline block: suspend (OutputChunk) -> NewOutputChunk
+): Generator<Input, Flow<NewOutputChunk>> = { input -> this(input).map { block(it) } }
 
 public inline fun <Input, NewInput, Output> Generator<Input, Output>.mapInput(crossinline block: suspend (NewInput) -> Input): Generator<NewInput, Output> =
     { input -> this(block(input)) }
@@ -14,6 +21,9 @@ public inline fun <Input, Output> Generator<Input, Output>.onInput(crossinline b
 
 public inline fun <Input, Output> Generator<Input, Output>.onOutput(crossinline block: suspend (Output) -> Unit): Generator<Input, Output> =
     mapOutput { block(it); it }
+
+public inline fun <Input, OutputChunk> Generator<Input, Flow<OutputChunk>>.onOutputFlow(crossinline block: suspend (OutputChunk) -> Unit): Generator<Input, Flow<OutputChunk>> =
+    mapOutput { it.map { block(it); it } }
 
 public fun <Input : Any, Output> Generator<Input?, Output>.notNullableInput(): Generator<Input, Output> = this
 

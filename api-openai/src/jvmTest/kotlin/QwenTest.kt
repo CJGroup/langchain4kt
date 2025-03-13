@@ -7,10 +7,10 @@ import com.aallam.openai.client.OpenAIHost
 import io.github.stream29.langchain4kt.api.openai.*
 import io.github.stream29.langchain4kt.core.configure
 import io.github.stream29.langchain4kt.core.mapOutput
+import io.github.stream29.langchain4kt.core.mapOutputFlow
 import io.github.stream29.langchain4kt.core.mapSingle
 import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
@@ -44,7 +44,7 @@ class QwenTest {
             .configure { model = ModelId("qwen-turbo") }
             .generateByMessages()
             .mapInputFromText()
-            .mapOutput { it.map { it.singleText() } }
+            .mapOutputFlow { it.singleText() }
         runBlocking {
             val response = generateStreaming("hello")
             response.collect { println(it) }
