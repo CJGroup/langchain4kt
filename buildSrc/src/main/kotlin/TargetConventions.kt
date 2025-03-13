@@ -1,12 +1,12 @@
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.konan.target.HostManager
 
 fun KotlinMultiplatformExtension.configureJvm(jdkVersion: Int) {
@@ -34,16 +34,16 @@ fun KotlinMultiplatformExtension.configureJs() {
     }
 }
 
+@OptIn(ExperimentalWasmDsl::class)
 fun KotlinMultiplatformExtension.configureWasm() {
     configureWasmForKtor()
-    @OptIn(ExperimentalWasmDsl::class)
     wasmWasi {
         nodejs()
     }
 }
 
+@OptIn(ExperimentalWasmDsl::class)
 fun KotlinMultiplatformExtension.configureWasmForKtor() {
-    @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         nodejs()
     }
