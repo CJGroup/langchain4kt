@@ -26,12 +26,15 @@ public fun ChatResponse.singleText() = aiMessage().singleText()
 
 public fun ChatResponse.singleTextOrNull(): String? = aiMessage().text()
 
+@JvmName("mapInputFromText_List_ChatMessage")
 public fun <Output> Generator<List<ChatMessage>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(UserMessage(it)) }
 
+@JvmName("mapInputFromText_List_TextSegment")
 public fun <Output> Generator<List<TextSegment>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(TextSegment.from(it)) }
 
+@JvmName("mapInputFromText_TextSegment")
 public fun <Output> Generator<TextSegment, Output>.mapInputFromText() =
     mapInput { it: String -> TextSegment.from(it) }
 
