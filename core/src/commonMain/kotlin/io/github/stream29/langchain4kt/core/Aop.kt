@@ -16,3 +16,18 @@ public inline fun <Input, Output> Generator<Input, Output>.onOutput(crossinline 
     mapOutput { block(it); it }
 
 public fun <Input : Any, Output> Generator<Input?, Output>.notNullableInput(): Generator<Input, Output> = this
+
+public fun <InputElement, OutputElement> Generator<List<InputElement>, List<OutputElement>>.mapSingle(): Generator<InputElement, OutputElement> =
+    { input -> this(listOf(input)).first() }
+
+public fun <InputElement, Output> Generator<List<InputElement>, Output>.mapInputFromSingle(): Generator<InputElement, Output> =
+    { input -> this(listOf(input)) }
+
+public fun <Input, OutputElement> Generator<Input, List<OutputElement>>.mapOutputFromSingle(): Generator<Input, OutputElement> =
+    { input -> this(input).first() }
+
+public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseList: List<InputElement>) =
+    mapInput { it: List<InputElement> -> baseList + it }
+
+public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseElement: InputElement) =
+    appendInputOn(listOf(baseElement))
