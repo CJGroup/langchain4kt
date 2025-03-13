@@ -1,12 +1,13 @@
 import dev.langchain4j.community.model.dashscope.QwenChatModel
 import dev.langchain4j.community.model.dashscope.QwenEmbeddingModel
 import dev.langchain4j.community.model.dashscope.QwenStreamingChatModel
+import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.data.segment.TextSegment
-import io.github.stream29.langchain4kt.api.langchain4j.toApiProvider
-import io.github.stream29.langchain4kt.api.langchain4j.toGenerator
-import io.github.stream29.langchain4kt.api.langchain4j.toStreamingApiProvider
-import io.github.stream29.union.SafeUnion5
+import io.github.stream29.langchain4kt.api.langchain4j.asGenerator
+import io.github.stream29.langchain4kt.core.generateBy
+import io.github.stream29.langchain4kt.core.mapInput
+import io.github.stream29.langchain4kt.core.mapOutput
 import io.github.stream29.union.consume0
 import io.github.stream29.union.consume1
 import kotlinx.coroutines.runBlocking
@@ -25,11 +26,14 @@ class Langchain4jQwenTest {
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-                .toApiProvider()
+                .asGenerator()
+                .generateBy { it: List<ChatMessage> -> messages(it) }
+                .mapInput { it: String -> listOf(UserMessage(it)) }
+                .mapOutput { it.aiMessage().text() }
         val response = runBlocking {
-            generate(listOf(SafeUnion5(UserMessage("hello, can you dance for me?"))))
+            generate("hello, can you dance for me?")
         }
-        println(response.content.text())
+        println(response)
     }
 
     @Test
@@ -39,9 +43,11 @@ class Langchain4jQwenTest {
                 .apiKey(apiKey)
                 .modelName("qwen-plus")
                 .build()
-                .toStreamingApiProvider()
+                .asGenerator()
+                .generateBy { it: List<ChatMessage> -> messages(it) }
+                .mapInput { it: String -> listOf(UserMessage(it)) }
         runBlocking {
-            generate(listOf(SafeUnion5(UserMessage("hello, who are you?")))).collect {
+            generate("hello, who are you?").collect {
                 it.consume0 { print(it.text()); System.out.flush() }
                     .consume1 { println(); println(it) }
             }
@@ -59,11 +65,13 @@ class Langchain4jQwenTest {
                 .apiKey(apiKey)
                 .modelName("text-embedding-v3")
                 .build()
-                .toGenerator()
+                .asGenerator()
+                .mapInput { it: String -> listOf(TextSegment.from(it)) }
+                .mapOutput { it.content().first().vector() }
         runBlocking {
-            val embedding1 = embed(listOf(TextSegment.from("hello? Is there anyone?"))).content.first().vector()
-            val embedding2 = embed(listOf(TextSegment.from("Excuse me, anybody here?"))).content.first().vector()
-            val embedding3 = embed(listOf(TextSegment.from("Let's go"))).content.first().vector()
+            val embedding1 = embed("hello? Is there anyone?")
+            val embedding2 = embed("Excuse me, anybody here?")
+            val embedding3 = embed("Let's go")
             println("embedding1 * embedding2 = ${embedding1 * embedding2}")
             println("embedding1 * embedding3 = ${embedding1 * embedding3}")
             assertTrue { embedding1 * embedding2 > embedding1 * embedding3 }
