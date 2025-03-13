@@ -6,10 +6,10 @@ import com.aallam.openai.api.embedding.EmbeddingRequestBuilder
 import io.github.stream29.langchain4kt.core.*
 
 public fun <Response> ConfiguredGenerator<ChatCompletionRequestBuilder, Response>.generateByMessages() =
-    generateBy(ChatCompletionRequestBuilder::messages)
+    generateByNotNullable(ChatCompletionRequestBuilder::messages)
 
 public fun <Response> ConfiguredGenerator<EmbeddingRequestBuilder, Response>.generateByInput() =
-    generateBy(EmbeddingRequestBuilder::input)
+    generateByNotNullable(EmbeddingRequestBuilder::input)
 
 public fun ChatMessage.textOrNull() = when (val content = messageContent) {
     is TextContent -> content.content
