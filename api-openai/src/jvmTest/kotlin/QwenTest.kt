@@ -27,11 +27,6 @@ class QwenTest {
 
     @Test
     fun `ChatApiProvider test`() {
-        val generateLangchain4kt = openAi.asGenerator()
-            .configure { model = ModelId("qwen-turbo") }
-            .generateByMessages()
-            .mapInputFromText()
-            .mapOutput { it.singleText() }
         val generate = openAi.asGenerator()
             .configure { model = ModelId("qwen-turbo") }
             .generateByMessages()
