@@ -1,7 +1,6 @@
 package io.github.stream29.langchain4kt.api.openai
 
 import com.aallam.openai.api.chat.*
-import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.embedding.EmbeddingRequestBuilder
 import io.github.stream29.langchain4kt.core.*
 
@@ -17,6 +16,10 @@ public fun ChatMessage.textOrNull() = when (val content = messageContent) {
 }
 
 public fun ChatMessage.text() = textOrNull() ?: error("Getting text from $this")
+
+public fun ChatCompletion.singleMessageOrNull() = choices.firstOrNull()?.message
+
+public fun ChatCompletion.singleMessage() = singleMessageOrNull() ?: error("No message in $this")
 
 public fun ChatCompletion.singleText() = singleTextOrNull() ?: error("No text in $this")
 

@@ -1,13 +1,14 @@
 package io.github.stream29.langchain4kt.core
 
-public inline fun <HistoryItem> buildHistory(block: MutableHistory<HistoryItem>.() -> Unit): History<HistoryItem> {
-    return mutableListOf<HistoryItem>().apply(block)
-}
 
-public fun <Content> MutableHistory<ChatMessage<Content>>.input(content: Content) {
-    add(ChatMessage(DataDirection.Input, content))
-}
+public fun TextMessage(direction: DataDirection, text: String): TextMessage =
+    when (direction) {
+        DataDirection.Input -> UserTextMessage(text)
+        DataDirection.Output -> ModelTextMessage(text)
+    }
 
-public fun <Content> MutableHistory<ChatMessage<Content>>.output(content: Content) {
-    add(ChatMessage(DataDirection.Output, content))
-}
+public fun UrlImageMessage(direction: DataDirection, url: String): UrlImageMessage =
+    when (direction) {
+        DataDirection.Input -> UserUrlImageMessage(url)
+        DataDirection.Output -> ModelUrlImageMessage(url)
+    }
