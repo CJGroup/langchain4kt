@@ -5,10 +5,12 @@ import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIConfig
 import com.aallam.openai.client.OpenAIHost
 import io.github.stream29.langchain4kt.api.openai.*
+import io.github.stream29.langchain4kt.core.ModelTextMessage
 import io.github.stream29.langchain4kt.core.configure
 import io.github.stream29.langchain4kt.core.mapOutput
 import io.github.stream29.langchain4kt.core.mapOutputFlow
 import io.github.stream29.langchain4kt.core.mapSingle
+import io.github.stream29.union.cast
 import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -29,9 +31,9 @@ class QwenTest {
     fun `ChatApiProvider test`() {
         val generate = openAi.asGenerator()
             .configure { model = ModelId("qwen-turbo") }
-            .generateByMessages()
+            .mapUnion()
             .mapInputFromText()
-            .mapOutput { it.singleText() }
+            .mapOutput { it.cast<ModelTextMessage>().text }
         runBlocking(Dispatchers.IO) {
             val response = generate("hello")
             println(response)
