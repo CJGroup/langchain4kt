@@ -1,6 +1,6 @@
 package io.github.stream29.langchain4kt.core
 
-@RequiresOptIn(message = "This is experimental and might be changed in future.")
+@RequiresOptIn(message = "This is experimental and might be changed in future.", level = RequiresOptIn.Level.WARNING)
 @Target(
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.PROPERTY_SETTER,
