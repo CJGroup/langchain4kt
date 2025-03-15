@@ -12,7 +12,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":langchain4kt-core"))
+                api(project(":langchain4kt2-core"))
                 api(libs.google.generative.ai)
                 api(libs.google.generative.ai.common)
             }
