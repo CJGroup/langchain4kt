@@ -9,21 +9,21 @@ import org.springframework.ai.chat.model.ChatResponse
 public fun <Response> ConfiguredGenerator<PromptBuilder, Response>.generateByMessages() =
     generateBy(PromptBuilder::messages)
 
-public fun Message.textOrNull(): String? = when (val type = messageType) {
+public fun SpringAiMessage.textOrNull(): String? = when (val type = messageType) {
     MessageType.ASSISTANT -> (this as? AssistantMessage)?.text
     MessageType.USER -> (this as? UserMessage)?.text
     MessageType.SYSTEM -> (this as? SystemMessage)?.text
     MessageType.TOOL -> (this as? ToolResponseMessage)?.text
 }
 
-public fun Message.text() = textOrNull() ?: error("Getting text from $this")
+public fun SpringAiMessage.text() = textOrNull() ?: error("Getting text from $this")
 
 public fun ChatResponse.singleText() = singleTextOrNull() ?: error("No text in $this")
 
 public fun ChatResponse.singleTextOrNull() = result?.output?.textOrNull()
 
-public fun <Output> Generator<List<Message>, Output>.mapInputFromText() =
+public fun <Output> Generator<List<SpringAiMessage>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(UserMessage(it)) }
 
-public fun <Output> Generator<List<Message>, Output>.addSystemMessage(text: String) =
+public fun <Output> Generator<List<SpringAiMessage>, Output>.addSystemMessage(text: String) =
     appendInputOn(SystemMessage(text))
