@@ -4,6 +4,7 @@ import com.aallam.openai.api.chat.*
 import com.aallam.openai.api.core.Role
 import io.github.stream29.langchain4kt.core.*
 import io.github.stream29.union.*
+import kotlin.jvm.JvmName
 
 public typealias OpenAiInputContentPartUnion = Union2<
         UserTextMessage,
@@ -96,12 +97,14 @@ public fun ChatCompletion.asUnionOfMessage(): OpenAiOutputMessageUnion =
     choices.firstOrNull()
         .let { it ?: error("no legal choice in $this") }.message.asUnionOfMessage() as OpenAiOutputMessageUnion
 
+@JvmName("asContentPart_OpenAiInputContentPartUnion")
 public fun OpenAiInputContentPartUnion.asContentPart(): ContentPart {
     consume0 { return TextPart(it.text) }
     consume1 { return ImagePart(it.url) }
     error("Invalid union value: ${this.value}")
 }
 
+@JvmName("asContentPart_OpenAiOutputContentPartUnion")
 public fun OpenAiOutputContentPartUnion.asContentPart(): ContentPart {
     consume0 { return TextPart(it.text) }
     consume1 { return ImagePart(it.url) }
