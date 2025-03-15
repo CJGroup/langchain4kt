@@ -41,3 +41,8 @@ public fun <Output> Generator<List<OpenAiHistoryMessageUnion>, Output>.mapInputF
 
 public fun <Output> Generator<List<ChatMessage>, Output>.addSystemMessage(text: String) =
     appendInputOn(ChatMessage.System(text))
+
+public fun ConfiguredGenerator<ChatCompletionRequestBuilder, ChatCompletion>.mapUnion() =
+    generateByMessages()
+        .mapInputHistory { it: OpenAiHistoryMessageUnion -> it.asChatMessage() }
+        .mapOutput { it.asUnionOfMessage() }

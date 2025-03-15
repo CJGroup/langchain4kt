@@ -17,8 +17,3 @@ public fun OpenAI.asStreamingGenerator() =
 
 public fun OpenAI.asEmbeddingGenerator() =
     ConfigurableGenerator(::EmbeddingRequestBuilder) { embeddings(it.build()) }
-
-public fun ConfiguredGenerator<ChatCompletionRequestBuilder, ChatCompletion>.mapUnion() =
-    generateByMessages()
-        .mapInputHistory { it: OpenAiHistoryMessageUnion -> it.asChatMessage() }
-        .mapOutput { it.asUnionOfMessage() }
