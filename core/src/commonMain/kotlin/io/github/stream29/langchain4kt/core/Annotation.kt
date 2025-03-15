@@ -1,0 +1,15 @@
+package io.github.stream29.langchain4kt.core
+
+@RequiresOptIn(message = "This is experimental and might be changed in future.")
+@Target(
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.FIELD,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.CONSTRUCTOR,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.TYPEALIAS
+)
+@Retention(AnnotationRetention.BINARY)
+public annotation class Langchain4ktExperimental
