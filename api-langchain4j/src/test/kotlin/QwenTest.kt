@@ -4,9 +4,14 @@ import dev.langchain4j.community.model.dashscope.QwenStreamingChatModel
 import io.github.stream29.langchain4kt.api.langchain4j.asGenerator
 import io.github.stream29.langchain4kt.api.langchain4j.generateByMessages
 import io.github.stream29.langchain4kt.api.langchain4j.mapInputFromText
+import io.github.stream29.langchain4kt.api.langchain4j.mapLangchain4jUnion
+import io.github.stream29.langchain4kt.api.langchain4j.mapLangchain4ktUnion
 import io.github.stream29.langchain4kt.api.langchain4j.singleText
+import io.github.stream29.langchain4kt.core.Langchain4ktExperimental
+import io.github.stream29.langchain4kt.core.ModelTextMessage
 import io.github.stream29.langchain4kt.core.mapOutput
 import io.github.stream29.langchain4kt.core.mapSingle
+import io.github.stream29.union.cast
 import io.github.stream29.union.consume0
 import io.github.stream29.union.consume1
 import kotlinx.coroutines.runBlocking
@@ -18,6 +23,7 @@ val apiKey = System.getenv("ALIBABA_QWEN_API_KEY")
 
 
 class Langchain4jQwenTest {
+    @OptIn(Langchain4ktExperimental::class)
     @Test
     fun `normal generation`() {
         val generate =
@@ -27,8 +33,11 @@ class Langchain4jQwenTest {
                 .build()
                 .asGenerator()
                 .generateByMessages()
+                .mapOutput { it.aiMessage() }
+                .mapLangchain4jUnion()
+                .mapLangchain4ktUnion()
                 .mapInputFromText()
-                .mapOutput { it.singleText() }
+                .mapOutput { it.cast<ModelTextMessage>().text }
         val response = runBlocking {
             generate("hello, can you dance for me?")
         }

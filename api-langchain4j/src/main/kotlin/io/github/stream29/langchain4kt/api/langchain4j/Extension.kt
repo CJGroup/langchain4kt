@@ -1,13 +1,11 @@
 package io.github.stream29.langchain4kt.api.langchain4j
 
 import dev.langchain4j.data.message.*
-import dev.langchain4j.data.message.ChatMessage
-import dev.langchain4j.data.message.SystemMessage
-import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.data.segment.TextSegment
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.response.ChatResponse
 import io.github.stream29.langchain4kt.core.*
+import io.github.stream29.union.UnsafeUnion
 
 public fun <Response> ConfiguredGenerator<ChatRequest.Builder, Response>.generateByMessages() =
     generateBy { it: List<ChatMessage> -> messages(it) }
@@ -30,6 +28,15 @@ public fun ChatResponse.singleTextOrNull(): String? = aiMessage().text()
 public fun <Output> Generator<List<ChatMessage>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(UserMessage(it)) }
 
+@JvmName("mapInputFromText_List_Langchain4jHistoryUnion")
+public fun <Output> Generator<List<Langchain4jHistoryUnion>, Output>.mapInputFromText() =
+    mapInput { it: String -> listOf(UnsafeUnion(UserMessage(it))) }
+
+@Langchain4ktExperimental
+@JvmName("mapInputFromText_List_Langchain4jHistoryLangchain4ktUnion")
+public fun <Output> Generator<List<Langchain4jHistoryLangchain4ktUnion>, Output>.mapInputFromText() =
+    mapInput { it: String -> listOf(UnsafeUnion(UserTextMessage(it))) }
+
 @JvmName("mapInputFromText_List_TextSegment")
 public fun <Output> Generator<List<TextSegment>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(TextSegment.from(it)) }
@@ -38,5 +45,25 @@ public fun <Output> Generator<List<TextSegment>, Output>.mapInputFromText() =
 public fun <Output> Generator<TextSegment, Output>.mapInputFromText() =
     mapInput { it: String -> TextSegment.from(it) }
 
+public fun <Output> Generator<ChatMessage, Output>.mapInputFromUnion() =
+    mapInput { it: Langchain4jHistoryUnion -> it.asChatMessage() }
+
+@Langchain4ktExperimental
+public fun <Output> Generator<Langchain4jHistoryUnion, Output>.mapInputFromLangchain4ktUnion() =
+    mapInput { it: Langchain4jHistoryLangchain4ktUnion -> it.asLangchain4jUnion() }
+
+@JvmName("mapInputFromMessage_List_ChatMessage")
 public fun <Output> Generator<List<ChatMessage>, Output>.addSystemMessage(text: String) =
     appendInputOn(SystemMessage(text))
+
+@JvmName("mapInputFromMessage_List_Langchain4jHistoryUnion")
+public fun <Output> Generator<List<Langchain4jHistoryUnion>, Output>.addSystemMessage(text: String) =
+    appendInputOn(UnsafeUnion(SystemTextMessage(text)))
+
+public fun Generator<List<ChatMessage>, AiMessage>.mapLangchain4jUnion() =
+    mapInputHistory { it: Langchain4jHistoryUnion -> it.asChatMessage() }
+
+@Langchain4ktExperimental
+public fun Generator<List<Langchain4jHistoryUnion>, AiMessage>.mapLangchain4ktUnion() =
+    mapInputHistory { it: Langchain4jHistoryLangchain4ktUnion -> it.asLangchain4jUnion() }
+        .mapOutput { it.asLangchain4ktUnion() }
