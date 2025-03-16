@@ -2,7 +2,7 @@ package io.github.stream29.langchain4kt.api.langchain4j
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.*
-import io.github.stream29.langchain4kt.core.Langchain4ktExperimental
+import io.github.stream29.langchain4kt.core.ExperimentalLangchain4ktApi
 import io.github.stream29.langchain4kt.core.ModelTextMessage
 import io.github.stream29.langchain4kt.core.SystemTextMessage
 import io.github.stream29.langchain4kt.core.UserTextMessage
@@ -18,7 +18,7 @@ public typealias Langchain4jHistoryUnion = Union5<
         CustomMessage
         >
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public typealias Langchain4jHistoryLangchain4ktUnion = Union5<
         SystemMessage,
         UserTextMessage,
@@ -27,7 +27,7 @@ public typealias Langchain4jHistoryLangchain4ktUnion = Union5<
         Langchain4jToolCallResultMessage
         >
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public typealias Langchain4jOutputLangchain4ktUnion = Union2<
         ModelTextMessage,
         Langchain4jToolCallRequestListMessage,
@@ -37,7 +37,7 @@ public fun ChatMessage.asUnion(): Langchain4jHistoryUnion = UnsafeUnion(this)
 
 public fun Langchain4jHistoryUnion.asChatMessage(): ChatMessage = value as ChatMessage
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public fun AiMessage.asLangchain4ktUnion(): Langchain4jOutputLangchain4ktUnion =
     UnsafeUnion(
         when {
@@ -57,7 +57,7 @@ public fun AiMessage.asLangchain4ktUnion(): Langchain4jOutputLangchain4ktUnion =
         }
     )
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public fun Langchain4jOutputLangchain4ktUnion.asAiMessage(): AiMessage =
     when (val value = value) {
         is ModelTextMessage -> AiMessage(value.text)
@@ -75,7 +75,7 @@ public fun Langchain4jOutputLangchain4ktUnion.asAiMessage(): AiMessage =
     }
 
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public fun Langchain4jHistoryUnion.asLangchain4ktUnion(): Langchain4jHistoryLangchain4ktUnion =
     UnsafeUnion(
         when (val value = value) {
@@ -93,7 +93,7 @@ public fun Langchain4jHistoryUnion.asLangchain4ktUnion(): Langchain4jHistoryLang
         }
     )
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public fun Langchain4jHistoryLangchain4ktUnion.asLangchain4jUnion(): Langchain4jHistoryUnion =
     UnsafeUnion(
         when (val value = value) {

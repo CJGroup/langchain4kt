@@ -32,7 +32,7 @@ public fun <Output> Generator<List<ChatMessage>, Output>.mapInputFromText() =
 public fun <Output> Generator<List<Langchain4jHistoryUnion>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(UnsafeUnion(UserMessage(it))) }
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 @JvmName("mapInputFromText_List_Langchain4jHistoryLangchain4ktUnion")
 public fun <Output> Generator<List<Langchain4jHistoryLangchain4ktUnion>, Output>.mapInputFromText() =
     mapInput { it: String -> listOf(UnsafeUnion(UserTextMessage(it))) }
@@ -48,7 +48,7 @@ public fun <Output> Generator<TextSegment, Output>.mapInputFromText() =
 public fun <Output> Generator<ChatMessage, Output>.mapInputFromUnion() =
     mapInput { it: Langchain4jHistoryUnion -> it.asChatMessage() }
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public fun <Output> Generator<Langchain4jHistoryUnion, Output>.mapInputFromLangchain4ktUnion() =
     mapInput { it: Langchain4jHistoryLangchain4ktUnion -> it.asLangchain4jUnion() }
 
@@ -63,7 +63,7 @@ public fun <Output> Generator<List<Langchain4jHistoryUnion>, Output>.addSystemMe
 public fun Generator<List<ChatMessage>, AiMessage>.mapLangchain4jUnion() =
     mapInputHistory { it: Langchain4jHistoryUnion -> it.asChatMessage() }
 
-@Langchain4ktExperimental
+@ExperimentalLangchain4ktApi
 public fun Generator<List<Langchain4jHistoryUnion>, AiMessage>.mapLangchain4ktUnion() =
     mapInputHistory { it: Langchain4jHistoryLangchain4ktUnion -> it.asLangchain4jUnion() }
         .mapOutput { it.asLangchain4ktUnion() }

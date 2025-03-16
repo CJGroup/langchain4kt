@@ -12,4 +12,4 @@ package io.github.stream29.langchain4kt.core
     AnnotationTarget.TYPEALIAS
 )
 @Retention(AnnotationRetention.BINARY)
-public annotation class Langchain4ktExperimental
+public annotation class ExperimentalLangchain4ktApi

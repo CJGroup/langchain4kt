@@ -6,8 +6,7 @@ import io.github.stream29.langchain4kt.api.langchain4j.generateByMessages
 import io.github.stream29.langchain4kt.api.langchain4j.mapInputFromText
 import io.github.stream29.langchain4kt.api.langchain4j.mapLangchain4jUnion
 import io.github.stream29.langchain4kt.api.langchain4j.mapLangchain4ktUnion
-import io.github.stream29.langchain4kt.api.langchain4j.singleText
-import io.github.stream29.langchain4kt.core.Langchain4ktExperimental
+import io.github.stream29.langchain4kt.core.ExperimentalLangchain4ktApi
 import io.github.stream29.langchain4kt.core.ModelTextMessage
 import io.github.stream29.langchain4kt.core.mapOutput
 import io.github.stream29.langchain4kt.core.mapSingle
@@ -23,7 +22,7 @@ val apiKey = System.getenv("ALIBABA_QWEN_API_KEY")
 
 
 class Langchain4jQwenTest {
-    @OptIn(Langchain4ktExperimental::class)
+    @OptIn(ExperimentalLangchain4ktApi::class)
     @Test
     fun `normal generation`() {
         val generate =
