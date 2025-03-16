@@ -55,6 +55,7 @@ public fun ChatMessage.asUnionOfMessage(): OpenAiHistoryMessageUnion {
                 Role.User -> UserTextMessage(content.content)
                 Role.System -> SystemTextMessage(content.content)
                 Role.Assistant -> ModelTextMessage(content.content)
+                Role.Tool, Role.Function -> OpenAiToolCallResultMessage(toolCallId!!.id, content.content)
                 else -> error("Illegal role for text message: $role")
             }
         )
