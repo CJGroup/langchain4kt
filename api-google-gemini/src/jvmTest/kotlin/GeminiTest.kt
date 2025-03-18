@@ -10,6 +10,7 @@ import io.github.stream29.langchain4kt2.api.googlegemini.setSystemInstruction
 import io.github.stream29.langchain4kt2.api.googlegemini.singleText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.test.Test
 
 class GeminiTest {
@@ -21,6 +22,7 @@ class GeminiTest {
         apiClient = "genai-android"
     )
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
     fun generationTest() {
         val generate = apiController.asGenerator()
@@ -34,6 +36,7 @@ class GeminiTest {
         println(response)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
     fun streamGenerationTest() {
         runBlocking(Dispatchers.IO) {

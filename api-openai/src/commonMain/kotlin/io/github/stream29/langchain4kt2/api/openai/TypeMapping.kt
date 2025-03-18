@@ -59,6 +59,7 @@ public fun ToolCall.asOpenAiToolCallRequestMessage(): OpenAiToolCallRequest = wh
 
 public fun OpenAiToolCallRequest.asUnionOfMessage() = ToolCallRequestMessage(name, param)
 
+@Suppress("deprecation")
 public fun ChatMessage.asUnionOfMessage(): OpenAiHistoryMessageUnion {
     val content = messageContent
     if (content is TextContent) {
