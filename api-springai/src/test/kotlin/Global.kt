@@ -1,7 +1,12 @@
-import io.github.stream29.langchain4kt.api.springai.*
-import io.github.stream29.langchain4kt.core.mapOutput
-import io.github.stream29.langchain4kt.core.mapOutputFlow
-import io.github.stream29.langchain4kt.core.mapSingle
+import io.github.stream29.langchain4kt2.core.mapOutput
+import io.github.stream29.langchain4kt2.core.mapOutputFlow
+import io.github.stream29.langchain4kt2.core.mapSingle
+import io.github.stream29.langchain4kt2.api.springai.asEmbeddingGenerator
+import io.github.stream29.langchain4kt2.api.springai.asGenerator
+import io.github.stream29.langchain4kt2.api.springai.asStreamingGenerator
+import io.github.stream29.langchain4kt2.api.springai.generateByMessages
+import io.github.stream29.langchain4kt2.api.springai.mapInputFromText
+import io.github.stream29.langchain4kt2.api.springai.singleText
 import org.springframework.ai.qianfan.QianFanChatModel
 import org.springframework.ai.qianfan.QianFanEmbeddingModel
 import org.springframework.ai.qianfan.api.QianFanApi

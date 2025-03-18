@@ -1,8 +1,13 @@
 import dev.shreyaspatil.ai.client.generativeai.common.APIController
 import dev.shreyaspatil.ai.client.generativeai.common.RequestOptions
-import io.github.stream29.langchain4kt.api.googlegemini.*
-import io.github.stream29.langchain4kt.core.mapOutput
-import io.github.stream29.langchain4kt.core.mapOutputFlow
+import io.github.stream29.langchain4kt2.core.mapOutput
+import io.github.stream29.langchain4kt2.core.mapOutputFlow
+import io.github.stream29.langchain4kt2.api.googlegemini.asGenerator
+import io.github.stream29.langchain4kt2.api.googlegemini.asStreamingGenerator
+import io.github.stream29.langchain4kt2.api.googlegemini.generateByMessages
+import io.github.stream29.langchain4kt2.api.googlegemini.mapInputFromText
+import io.github.stream29.langchain4kt2.api.googlegemini.setSystemInstruction
+import io.github.stream29.langchain4kt2.api.googlegemini.singleText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
