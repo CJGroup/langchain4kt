@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.sync.Semaphore
 
 public inline fun <Input, Output, NewInput, NewOutput> Generator<Input, Output>.wrapped(crossinline block: (Generator<Input, Output>) -> Generator<NewInput, NewOutput>): Generator<NewInput, NewOutput> =
     block(this)
@@ -67,3 +68,10 @@ public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendIn
 
 public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseElement: InputElement) =
     appendInputOn(listOf(baseElement))
+
+public fun <Input, Output> Generator<Input, Output>.limitedParallelism(max: Int): Generator<Input, Output> {
+    require(max > 0) { "max should be greater than 0" }
+    val semaphore = Semaphore(max)
+    return onInputSuspend { semaphore.acquire() }
+        .onOutputSuspend { semaphore.release() }
+}
