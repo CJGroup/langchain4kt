@@ -68,10 +68,3 @@ public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendIn
 
 public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseElement: InputElement) =
     appendInputOn(listOf(baseElement))
-
-public fun <Input, Output> Generator<Input, Output>.limitedParallelism(max: Int): Generator<Input, Output> {
-    require(max > 0) { "max should be greater than 0" }
-    val semaphore = Semaphore(max)
-    return onInputSuspend { semaphore.acquire() }
-        .onOutputSuspend { semaphore.release() }
-}
