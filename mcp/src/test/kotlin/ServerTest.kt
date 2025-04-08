@@ -8,14 +8,16 @@ import io.modelcontextprotocol.kotlin.sdk.client.ClientOptions
 import io.modelcontextprotocol.kotlin.sdk.server.Server
 import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
 import io.modelcontextprotocol.kotlin.sdk.shared.Transport
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
-import kotlinx.serialization.json.Json
+import kotlin.concurrent.Volatile
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class ServerTest {
     private val server = Server(
@@ -37,6 +39,7 @@ class ServerTest {
 
     private val fromClientToServer = Channel<JSONRPCMessage>()
     private val fromServerToClient = Channel<JSONRPCMessage>()
+    private var string: String? = null
 
     @BeforeTest
     fun init() = runBlocking {
@@ -52,20 +55,14 @@ class ServerTest {
                 outputChannel = fromClientToServer
             )
         )
+        server.addTool("putString", "show text") { it: String -> string = it }
     }
 
     @Test
     fun testServer() = runBlocking {
-        println("Test started")
-        server.addTool("println", "print to stdout and \\n", ::println)
-        val listTools = client.listTools()
-        println(Json.encodeToString(listTools))
-        client.callTool("println", mapOf("value" to "Hello world!"))
-        Unit
-    }
-
-    fun println(message: String) {
-        kotlin.io.println(message)
+        assertTrue { client.listTools()!!.tools.asSequence().map { it.name }.contains("putString") }
+        client.callTool("putString", mapOf("value" to "Hello world!"))
+        assertEquals("Hello world!", string)
     }
 
     @AfterTest
