@@ -6,6 +6,7 @@ import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.Tool
 import io.modelcontextprotocol.kotlin.sdk.server.Server
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 
 public inline fun <reified ParamType : Any, reified ReturnType> Server.addTool(
@@ -13,7 +14,12 @@ public inline fun <reified ParamType : Any, reified ReturnType> Server.addTool(
     description: String,
     noinline from: (ParamType) -> ReturnType
 ) {
-    val inputSchema = SchemaGenerator.default.schemaOf<ParamType>().jsonObject
+    val rawSchema = SchemaGenerator.default.schemaOf<ParamType>().jsonObject
+    val noBox = rawSchema.contains("properties") && rawSchema.contains("required")
+
+    val inputSchema =
+        if (noBox) rawSchema
+        else SchemaGenerator.default.schemaOf<Box<ParamType>>().jsonObject
     this.addTool(
         name = name,
         description = description,
@@ -22,7 +28,10 @@ public inline fun <reified ParamType : Any, reified ReturnType> Server.addTool(
             required = inputSchema["required"]!!.jsonArray.map { it.jsonPrimitive.content },
         )
     ) handler@{ (name, arguments, _) ->
-        val param = runCatching { Json.decodeFromJsonElement<ParamType>(arguments) }.getOrNull()
+        val param = runCatching {
+            if (noBox) Json.decodeFromJsonElement<ParamType>(arguments)
+            else Json.decodeFromJsonElement<Box<ParamType>>(arguments).value
+        }.getOrNull()
             ?: return@handler CallToolResult(content = emptyList(), isError = true)
         val returnValue = runCatching { from(param) }.getOrNull()
             ?: return@handler CallToolResult(content = emptyList(), isError = true)
@@ -34,3 +43,9 @@ public inline fun <reified ParamType : Any, reified ReturnType> Server.addTool(
         )
     }
 }
+
+@Serializable
+@PublishedApi
+internal data class Box<T>(
+    val value: T,
+)
