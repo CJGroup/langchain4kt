@@ -13,12 +13,14 @@ vanniktech = "0.29.0"
 spring-ai = "1.0.0-SNAPSHOT"
 openai-client = "4.0.1"
 google-generative-ai = "0.9.0-1.0.1-wasm"
+json-schema-generator = "1.0.2"
 
 [libraries]
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
 kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
 kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 
+json-schema-generator = { module = "io.github.stream29:json-schema-generator", version.ref = "json-schema-generator" }
 langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
 langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-community-dashscope", version.ref = "langchain4j" }
 streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
