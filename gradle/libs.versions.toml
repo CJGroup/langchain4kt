@@ -6,6 +6,7 @@ ktor = "3.0.0"
 kotlinx-coroutines = "1.9.0"
 kunion = "0.0.3"
 json-schema-generator = "1.0.2"
+mcp-sdk = "0.4.0"
 langchain4j = "1.0.0-beta1"
 spring-ai = "1.0.0-SNAPSHOT"
 openai-client = "4.0.1"
@@ -30,6 +31,8 @@ ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutine-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
+
+mcp-sdk = { module = "io.modelcontextprotocol:kotlin-sdk", version.ref = "mcp-sdk" }
 
 langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
 langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-community-dashscope", version.ref = "langchain4j" }
