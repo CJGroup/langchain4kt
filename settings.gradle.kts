@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "langchain4kt-root"
 prefixedModule("core")
+prefixedModule("mcp")
 prefixedModule("api-google-gemini")
 prefixedModule("api-langchain4j")
 prefixedModule("api-springai")
