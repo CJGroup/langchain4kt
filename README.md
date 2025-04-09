@@ -1,90 +1,142 @@
-# langchain4kt
+# Langchain4kt2
 
-This library provides an easy way to develop LLM-powered applications with
-Kotlin Multiplatform.
+This library is reimplemented to provide support for the future of LLM.
 
-## startup
+## Why to remake?
 
-This library is already published onto Github packages and maven central.
-So you can add `langchain4kt-core` dependency directly.
+It's a hard decision to remake langchain4kt.
 
-To start up, you can refer to [kotlin notebook example](example-kotlin-notebook/BasicUsage.ipynb)
-or [chain-of-thought example](example-chain-of-thought/src/jvmTest) [file agent example](example-function-calling/src/jvmTest).
+The original idea is to provide a universal and KMP way to use the text-central functionality of LLM. And It faced several issues:
 
-## for development
+### The difference between LLMs
 
-The core of langchain4kt is consisted by three interfaces.
+Different LLMs have very different APIs that sometimes there is no way to unify them. For example, multimodal LLMs from OpenAI and Google Gemini have very different ways to structure the input and output of the model.
+
+### More complexity of the LLMs' input/output types
+
+With the rapid development of LLM technology, the input and output types of LLMs are becoming more and more complex. 
+
+Text, document in certain format, image, audio, video, tool calling, and even more types such as reasoning process, action, parallel tool calling and composed tool calling are involved in the context of LLMs.
+
+Facing this issue, we need a type-safe and easy-to-use way to handle these types. The solution is **union type**. Langchain4kt2 is reimplemented with [KUnion](https://github.com/Stream29/KUnion) to handle these types.
+
+### Need for abstraction and composability
+
+The old OOP style of the original library lacks conciseness and expressiveness of Kotlin, making it more similar to old plain Java code.
+
+The new functional style of Langchain4kt2 allows you to easily compose functionalities and abstract them into reusable components with type-safe and concise code.
+
+## Principles of Langchain4kt2
+
+### Functional style
+
+Functional style make the functionalities more composable with better discoverability and readability.
+
+The core concepts of langchain4kt2 is completely a function:
 
 ```kotlin
-/**
- * An LLM api provider that generates a text response based on the given context.
- *
- * It should be stateless and concurrency-safe.
- *
- * @param MetaInfo The type of the meta info that the api provider generates.
- */
-public interface ChatApiProvider<MetaInfo> {
-    /**
-     * Generates a text response with meta info based on the given context.
-     */
-    public suspend fun generate(context: Context): Response<MetaInfo>
+public typealias Generator<Request, Response> = suspend (Request) -> Response
+```
+
+And we have a bunch of extension function to compose the functionalities. 
+They are too many to list here. (some are provided in 2 version for suspend and normal function)
+
+### Provide a very similar type-safe API to every model provider, but keep the differences
+
+We have common items for chat history. But the type can be different for some models.
+
+For example, the `OpenAiToolCallRequest` data class is with a `id` field to support the `ChatCompletion` API:
+
+```kotlin
+public data class OpenAiToolCallRequest(
+    val id: String,
+    val name: String,
+    val param: String,
+)
+```
+
+With this, the input/output type of OpenAI API models can be expressed into a union type:
+
+```kotlin
+public typealias OpenAiInputContentPartUnion = Union2<
+        UserTextMessage,
+        UserUrlImageMessage
+        >
+
+public typealias OpenAiOutputContentPartUnion = Union2<
+        ModelTextMessage,
+        ModelUrlImageMessage
+        >
+
+public typealias OpenAiHistoryMessageUnion = Union8<
+        UserTextMessage,
+        SystemTextMessage,
+        ModelTextMessage,
+        ListInputMessage<OpenAiInputContentPartUnion>,
+        ListOutputMessage<OpenAiOutputContentPartUnion>,
+        OpenAiToolCallRequest,
+        OpenAiToolCallRequestListMessage,
+        OpenAiToolCallResultMessage
+        >
+
+public typealias OpenAiOutputMessageUnion = Union4<
+        ModelTextMessage,
+        ListOutputMessage<OpenAiOutputContentPartUnion>,
+        OpenAiToolCallRequest,
+        OpenAiToolCallRequestListMessage
+        >
+```
+
+It's up to you to use `ChatCompletion` or `Union`. (See example below)
+
+### Support `kotlinx.serialization` and `kotlinx.coroutine` at best effort
+
+We all need to serialize and deserialize the chat history in some use cases. Langchain4kt2 provide a `Serializable` chat history for every LLM that you can serialize it without information lost.
+
+All the generation API are `suspend fun`, and cooperative with `kotlinx.coroutine`.
+
+The `Union` type is also serializable with `kotlinx.serialization`.
+
+### Reuse existing libraries to make it more usable for now
+
+It's not a good idea to reinvent the wheel. Also, before the support from the community, we need to make the library more usable for more models.
+
+Langchain4kts has bridged APIs from [langchain4j](https://github.com/langchain4j/langchain4j), [openai-kotlin](https://github.com/aallam/openai-kotlin), [Spring AI](https://github.com/spring-projects/spring-ai) and [google-generative-ai-KMP](https://github.com/PatilShreyas/generative-ai-kmp). Thanks for the contributors of these libraries. Developers can use `langchain4kt2` with these libraries to use the models more more simply and typesafe.
+
+Langchain4kt is not going to be only a bridge library. Providing KMP implementations for models is a meaningful thing for the KMP community. But for now, to be realistic, we need to bridge existing libraries first, and implement other model providers' KMP APIs in the future.
+
+## Example
+
+You can use the raw input/output type of the model:
+
+```kotlin
+val generate = openAi.asGenerator()
+    .configure { model = ModelId("qwen-turbo") }
+    .generateByMessages()
+    .mapInputFromText()
+    .mapOutput { it.singleTextOrNull()!! } // assuming model should return a single text
+runBlocking(Dispatchers.IO) {
+    val response = generate("hello")
+    println(response)
 }
 ```
 
-```kotlin
-/**
- * A respondent that generate a single response for a single message.
- *
- * It should be stateless and concurrency-safe.
- */
-public interface Respondent {
-    /**
-     * Generate a response for the given message.
-     */
-    public suspend fun chat(message: String): String
-}
-```
+Or you can use the `mapUnion` to make the type in a serializable union form:
 
 ```kotlin
-/**
- * A chat model that records its own historical [context].
- *
- * You can simply chat with [String] message. Every message will produce a response in [String].
- *
- * It should provide **strong exception safety guarantee** that when [chat] throws a exception, the state of itself **should not** change
- *
- * It is **not** concurrency safe.
- */
-public interface ChatModel {
-    public val context: Context
-    public suspend fun chat(message: String): String
-}
+val generateSingle = openAi.asGenerator()
+    .configure { model = ModelId("qwen-turbo") }
+    .mapUnion()
+    .mapInputFromSingle()
+val response = generateSingle(SafeUnion8(UserTextMessage("hello")))
+response // handling the possible output types of model type-safely
+    .consume0 { modelTextMessage -> println("Model: ${modelTextMessage.text}") }
+    .consume1 { listOutputMessage -> 
+        println("Model:")
+        listOutputMessage.list.forEach { item ->
+            item.consume0 { modelTextMessage -> println(modelTextMessage.text) }
+                .consume1 { modelUrlImageMessage -> println("[image](${modelUrlImageMessage.url})") }
+        }
+    }.consume2 { toolCallRequest -> println("Model requests to call tool: ${toolCallRequest.name}") }
+    .consume3 { toolCallRequestList -> println("Model requests to call tool: ${toolCallRequestList.list.joinToString{ it.name }}") }
 ```
-
-You can implement the interface to develop an AI-agent, or something more.
-See into examples in the repository.
-
-Streaming version of the interfaces are also provided in `langchain4kt-streaming` module.
-
-Convenient tools are provided to build a context or a model with given context.
-
-```kotlin
-apiProvider.asChatModel {
-    systemInstruction("you are a lovely cat, you should act as if you are a cat.")
-    MessageSender.User.chat("Hello")
-}
-```
-
-`buildString` is recommended to build a context from code.
-
-## Future Plan
-
-multimodal I/O, tool calling, structured output are planned to be supported in the future.
-
-priority from high to low:
-
-structured output -> I'm working on it at [JsonSchemaGenerator](https://github.com/Stream29/JsonSchemaGenerator)
-
-tool calling
-
-multimodal I/O

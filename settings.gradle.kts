@@ -18,17 +18,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "langchain4kt-root"
 prefixedModule("core")
-prefixedModule("streaming")
-prefixedModule("embedding")
-prefixedModule("utils")
 prefixedModule("api-google-gemini")
-prefixedModule("api-baidu-qianfan")
 prefixedModule("api-langchain4j")
 prefixedModule("api-springai")
 prefixedModule("api-openai")
 
 fun prefixedModule(name: String) {
-    val modulePrefix = "langchain4kt-"
+    val modulePrefix = "langchain4kt2-"
     val prefixedName = modulePrefix + name
     include(":$prefixedName")
     project(":$prefixedName").projectDir = file("./$name")

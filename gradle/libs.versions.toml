@@ -1,16 +1,17 @@
 [versions]
 agp = "8.5.0"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 kotlinx-coroutines = "1.9.0"
 kotlinx-serialization = "1.7.3"
 ktor = "3.0.0"
 logback = "1.5.6"
 streamlin = "2.5.0"
-langchain4j = "0.35.0"
+kunion = "0.0.3"
+langchain4j = "1.0.0-beta1"
 coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
 spring-ai = "1.0.0-SNAPSHOT"
-openai-client = "4.0.0-beta01"
+openai-client = "4.0.1"
 google-generative-ai = "0.9.0-1.0.1-wasm"
 
 [libraries]
@@ -19,8 +20,9 @@ kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbra
 kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 
 langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
-langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-dashscope", version.ref = "langchain4j" }
+langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-community-dashscope", version.ref = "langchain4j" }
 streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
+kunion = { module = "io.github.stream29:kunion", version.ref = "kunion" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
@@ -33,6 +35,7 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 
 kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutine-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
 coroutines-run-blocking-all = { module = "com.javiersc.kotlinx:coroutines-run-blocking-all", version.ref = "coroutinesRunBlockingAll" }
 
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai-client" }

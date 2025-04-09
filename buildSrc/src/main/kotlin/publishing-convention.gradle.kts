@@ -13,7 +13,7 @@ mavenPublishing {
     coordinates((group as String), name, version.toString())
     pom {
         name.set("Langchain4kt")
-        description.set("KMP library for generic LLM application")
+        description.set("KMP library for functional stylr LLM application")
         url.set("https://github.com/CJGroup/langchain4kt")
 
         licenses {
