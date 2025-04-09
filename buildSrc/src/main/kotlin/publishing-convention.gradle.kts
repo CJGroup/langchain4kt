@@ -40,8 +40,8 @@ publishing {
             name = "GitHubPackages"
             url = URI("https://maven.pkg.github.com/CJGroup/langchain4kt")
             credentials {
-                username = System.getenv("GITHUB_ACTOR")!!
-                password = System.getenv("GITHUB_TOKEN")!!
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
