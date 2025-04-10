@@ -1,5 +1,6 @@
 [versions]
 kotlin = "2.1.0"
+ksp = "2.1.20-1.0.32"
 kotlinx-serialization = "1.7.3"
 vanniktech = "0.29.0"
 ktor = "3.0.0"
@@ -17,6 +18,7 @@ vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.mav
 kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
 kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 
 json-schema-generator = { module = "io.github.stream29:json-schema-generator", version.ref = "json-schema-generator" }
 kunion = { module = "io.github.stream29:kunion", version.ref = "kunion" }
@@ -49,3 +51,4 @@ spring-ai-qianfan = { module = "org.springframework.ai:spring-ai-qianfan", versi
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

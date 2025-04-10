@@ -13,7 +13,3 @@ dependencies {
     api(libs.kotlinx.serialization.core)
     testImplementation(libs.kotlin.test)
 }
-
-kotlin {
-
-}
