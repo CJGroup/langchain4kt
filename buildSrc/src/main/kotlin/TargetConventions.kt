@@ -10,9 +10,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.konan.target.HostManager
 
 fun KotlinMultiplatformExtension.configureJvm(jdkVersion: Int) {
-    jvm {
-        withJava()
-    }
+    jvm()
     jvmToolchain(jdkVersion)
 }
 
