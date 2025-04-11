@@ -6,39 +6,45 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.ksp.toClassName
+import com.squareup.kotlinpoet.ksp.writeTo
 import io.github.stream29.langchain4kt2.mcp.McpServerComponent
 import io.github.stream29.langchain4kt2.mcp.McpTool
+import io.github.stream29.langchain4kt2.mcp.ServerAdapter
+import io.modelcontextprotocol.kotlin.sdk.server.RegisteredTool
 
 public class McpSymbolProcessor(private val environment: SymbolProcessorEnvironment) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         resolver.getSymbolsWithAnnotation(McpServerComponent::class.qualifiedName!!)
             .filterIsInstance<KSClassDeclaration>().forEach { ksClassDeclaration ->
-                environment.codeGenerator.createNewFile(
-                    dependencies = Dependencies(false),
-                    packageName = ksClassDeclaration.packageName.asString(),
-                    fileName = "Generated\$${ksClassDeclaration.simpleName.asString()}",
-                    extensionName = "kt"
-                ).bufferedWriter().use { file ->
-                    val toolFuncNameList = ksClassDeclaration.getAllFunctions()
-                        .filter { func -> func.annotations.any { it.annotationType.qualifiedName() == McpTool::class.qualifiedName } }
-                        .map { func -> func.simpleName.asString() }
-                    file.write(
-                        buildString {
-                            appendLine("package ${ksClassDeclaration.packageName.asString()}\n")
-                            appendLine("// This is a generated file. Do not edit it directly.")
-                            appendLine("import io.github.stream29.langchain4kt2.mcp.ServerAdapter")
-                            appendLine("import io.modelcontextprotocol.kotlin.sdk.server.RegisteredTool")
-                            appendLine("import io.github.stream29.langchain4kt2.mcp.makeTool")
-                            appendLine("public fun ${ksClassDeclaration.simpleName.asString()}.tools(adapter: ServerAdapter = ServerAdapter.default): List<RegisteredTool> {")
-                            appendLine("    return listOf(")
-                            toolFuncNameList.forEach { funcName ->
-                                appendLine("        adapter.makeTool(\"$funcName\", null, this::$funcName),")
-                            }
-                            appendLine("    )")
-                            appendLine("}")
+                val toolFuncNameList = ksClassDeclaration.getAllFunctions()
+                    .filter { func -> func.annotations.any { it.annotationType.qualifiedName() == McpTool::class.qualifiedName } }
+                    .map { func -> func.simpleName.asString() }
+                val function = FunSpec.builder("tools")
+                    .receiver(ksClassDeclaration.toClassName())
+                    .returns(List::class.asClassName().parameterizedBy(RegisteredTool::class.asClassName()))
+                    .addParameter("adapter", ServerAdapter::class)
+                    .run {
+                        addStatement("return listOf(")
+                        toolFuncNameList.forEach { funcName ->
+                            addStatement("adapter.makeTool(\"$funcName\", null, this::$funcName),")
                         }
-                    )
-                }
+                        addStatement(")")
+                    }.build()
+                val fileSpec = FileSpec.builder(
+                    ksClassDeclaration.packageName.asString(),
+                    "Generated\$${ksClassDeclaration.simpleName.asString()}"
+                )
+                    .addImport("io.github.stream29.langchain4kt2.mcp", "ServerAdapter")
+                    .addImport("io.modelcontextprotocol.kotlin.sdk.server", "RegisteredTool")
+                    .addImport("io.github.stream29.langchain4kt2.mcp", "makeTool")
+                    .addFunction(function)
+                    .build()
+                fileSpec.writeTo(environment.codeGenerator, Dependencies(false))
             }
         return emptyList()
     }
