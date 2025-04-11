@@ -12,6 +12,7 @@ langchain4j = "1.0.0-beta1"
 spring-ai = "1.0.0-SNAPSHOT"
 openai-client = "4.0.1"
 google-generative-ai = "0.9.0-1.0.1-wasm"
+kotlinpoet = "2.1.0"
 
 [libraries]
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
@@ -46,6 +47,8 @@ google-generative-ai-common = { module = "dev.shreyaspatil.generativeai:common",
 
 spring-ai-core = { module = "org.springframework.ai:spring-ai-core", version.ref = "spring-ai" }
 spring-ai-qianfan = { module = "org.springframework.ai:spring-ai-qianfan", version.ref = "spring-ai" }
+
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
