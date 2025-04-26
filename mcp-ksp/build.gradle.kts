@@ -7,6 +7,6 @@ plugins {
 dependencies {
     api(project(":langchain4kt2-mcp"))
     implementation(libs.ksp)
-    implementation(libs.kotlinpoet)
-    implementation(libs.kotlinpoet.ksp)
+    implementation(libs.kotlin.poet)
+    implementation(libs.kotlin.poet.ksp)
 }
