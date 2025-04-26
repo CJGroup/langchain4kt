@@ -8,8 +8,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":langchain4kt2-core"))
-    implementation(libs.langchain4j.core)
+    api(project(":langchain4kt2-core"))
+    api(libs.langchain4j.core)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.langchain4j.dashscope)
 }

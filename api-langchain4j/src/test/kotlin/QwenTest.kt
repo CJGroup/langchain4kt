@@ -55,7 +55,7 @@ class Langchain4jQwenTest {
                 .mapInputFromText()
         runBlocking {
             generate("hello, who are you?").collect {
-                it.consume0 { print(it.text()); System.out.flush() }
+                it.consume0 { print(it); System.out.flush() }
                     .consume1 { println(); println(it) }
             }
         }

@@ -28,7 +28,7 @@ public fun ChatLanguageModel.asGenerator() = ConfigurableGenerator({ ChatRequest
 
 public fun StreamingChatLanguageModel.asGenerator() =
     ConfigurableGenerator({ ChatRequest.builder() }) { chatRequestBuilder ->
-        val channel = Channel<Union2<AiMessage, ChatResponseMetadata>>()
+        val channel = Channel<Union2<String, ChatResponse>>()
         val handler = object : StreamingChatResponseHandler {
             override fun onPartialResponse(partialResponse: String) {
                 runBlocking {
@@ -38,8 +38,7 @@ public fun StreamingChatLanguageModel.asGenerator() =
 
             override fun onCompleteResponse(completeResponse: ChatResponse) {
                 runBlocking {
-                    channel.send(UnsafeUnion(completeResponse.aiMessage()!!))
-                    channel.send(UnsafeUnion(completeResponse.metadata()!!))
+                    channel.send(UnsafeUnion(completeResponse))
                     channel.close()
                 }
             }

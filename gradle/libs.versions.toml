@@ -1,27 +1,27 @@
 [versions]
-agp = "8.5.0"
-kotlin = "2.1.0"
-kotlinx-coroutines = "1.9.0"
+kotlin = "2.1.20"
+ksp = "2.1.20-1.0.32"
 kotlinx-serialization = "1.7.3"
-ktor = "3.0.0"
-logback = "1.5.6"
-streamlin = "2.5.0"
-kunion = "0.0.3"
-langchain4j = "1.0.0-beta1"
-coroutinesRunBlockingAll = "0.1.0-rc.1"
 vanniktech = "0.29.0"
+ktor = "3.0.0"
+kotlinx-coroutines = "1.9.0"
+kunion = "0.0.3"
+json-schema-generator = "1.0.2"
+mcp-sdk = "0.4.0"
+langchain4j = "1.0.0-beta1"
 spring-ai = "1.0.0-SNAPSHOT"
 openai-client = "4.0.1"
 google-generative-ai = "0.9.0-1.0.1-wasm"
+kotlin-poet = "2.1.0"
 
 [libraries]
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
 kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
 kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 
-langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
-langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-community-dashscope", version.ref = "langchain4j" }
-streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
+json-schema-generator = { module = "io.github.stream29:json-schema-generator", version.ref = "json-schema-generator" }
 kunion = { module = "io.github.stream29:kunion", version.ref = "kunion" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -30,13 +30,15 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
-
 kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutine-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
-coroutines-run-blocking-all = { module = "com.javiersc.kotlinx:coroutines-run-blocking-all", version.ref = "coroutinesRunBlockingAll" }
+
+mcp-sdk = { module = "io.modelcontextprotocol:kotlin-sdk", version.ref = "mcp-sdk" }
+
+langchain4j-core = { module = "dev.langchain4j:langchain4j-core", version.ref = "langchain4j" }
+langchain4j-dashscope = { module = "dev.langchain4j:langchain4j-community-dashscope", version.ref = "langchain4j" }
 
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai-client" }
 
@@ -46,13 +48,11 @@ google-generative-ai-common = { module = "dev.shreyaspatil.generativeai:common",
 spring-ai-core = { module = "org.springframework.ai:spring-ai-core", version.ref = "spring-ai" }
 spring-ai-qianfan = { module = "org.springframework.ai:spring-ai-qianfan", version.ref = "spring-ai" }
 
-kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlin" }
-
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-poet = { module = "com.squareup:kotlinpoet", version.ref = "kotlin-poet" }
+kotlin-poet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlin-poet" }
 
 [plugins]
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlinxAtomicFu = { id = "org.jetbrains.kotlinx.atomicfu", version = "0.27.0" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
