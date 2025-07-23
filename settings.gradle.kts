@@ -19,6 +19,7 @@ dependencyResolutionManagement {
 rootProject.name = "langchain4kt-root"
 
 prefixedModule("core")
+prefixedModule("ktor")
 prefixedModule("api-google-gemini")
 prefixedModule("api-openai")
 

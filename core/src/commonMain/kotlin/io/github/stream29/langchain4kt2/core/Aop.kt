@@ -50,7 +50,7 @@ public inline fun <Input, Output> Generator<Input, Output>.onOutputSuspend(cross
     mapOutputSuspend { block(it); it }
 
 public inline fun <Input, OutputChunk> Generator<Input, Flow<OutputChunk>>.onOutputFlow(crossinline block: suspend (OutputChunk) -> Unit): Generator<Input, Flow<OutputChunk>> =
-    mapOutput { it.map { block(it); it } }
+    mapOutput { flow -> flow.map { block(it); it } }
 
 public fun <Input : Any, Output> Generator<Input?, Output>.notNullableInput(): Generator<Input, Output> = this
 
@@ -63,8 +63,15 @@ public fun <InputElement, Output> Generator<List<InputElement>, Output>.mapInput
 public fun <Input, OutputElement> Generator<Input, List<OutputElement>>.mapOutputFromSingle(): Generator<Input, OutputElement> =
     { input -> this(input).first() }
 
-public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseList: List<InputElement>) =
+public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseList: List<InputElement>): Generator<List<InputElement>, Output> =
     mapInputSuspend { it: List<InputElement> -> baseList + it }
 
-public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseElement: InputElement) =
+public fun <InputElement, Output> Generator<List<InputElement>, Output>.appendInputOn(baseElement: InputElement): Generator<List<InputElement>, Output> =
     appendInputOn(listOf(baseElement))
+
+public fun <Input, Output> Generator<Input, Output>.limitedParallelism(max: Int): Generator<Input, Output> {
+    require(max > 0) { "max should be greater than 0" }
+    val semaphore = Semaphore(max)
+    return onInputSuspend { semaphore.acquire() }
+        .onOutputSuspend { semaphore.release() }
+}

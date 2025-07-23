@@ -23,8 +23,8 @@ public fun <Request, Input, Response> ConfiguredGenerator<Request, Response>.gen
 
 public fun <Request, Input, Response> ConfiguredGenerator<Request, Response>.generateBy(
     property: KMutableProperty1<Request, Input>
-) = generateBy { input: Input -> property.set(this, input) }
+): Generator<Input, Response> = generateBy { input: Input -> property.set(this, input) }
 
 public fun <Request, Input: Any, Response> ConfiguredGenerator<Request, Response>.generateByNotNullable(
     property: KMutableProperty1<Request, Input?>
-) = generateBy { input: Input -> property.set(this, input) }
+): Generator<Input, Response> = generateBy { input: Input -> property.set(this, input) }

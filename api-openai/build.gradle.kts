@@ -5,7 +5,7 @@ plugins {
 
 kotlin {
     sourceSets {
-        commonMain{
+        commonMain {
             dependencies {
                 api(project(":langchain4kt2-core"))
             }
