@@ -4,7 +4,7 @@ import java.net.URI
 plugins {
     `maven-publish`
     signing
-    id("com.vanniktech.maven.publish")
+    alias(libs.plugins.vanniktech.publish)
 }
 
 mavenPublishing {
