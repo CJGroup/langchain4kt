@@ -7,13 +7,10 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.konan.target.HostManager
 
 fun KotlinMultiplatformExtension.configureJvm(jdkVersion: Int) {
-    jvm {
-        withJava()
-    }
     jvmToolchain(jdkVersion)
+    jvm()
 }
 
 fun KotlinMultiplatformExtension.configureJs() {
@@ -36,52 +33,41 @@ fun KotlinMultiplatformExtension.configureJs() {
 
 @OptIn(ExperimentalWasmDsl::class)
 fun KotlinMultiplatformExtension.configureWasm() {
-    configureWasmForKtor()
+    wasmJs {
+        nodejs()
+    }
     wasmWasi {
         nodejs()
     }
 }
 
-@OptIn(ExperimentalWasmDsl::class)
-fun KotlinMultiplatformExtension.configureWasmForKtor() {
-    wasmJs {
-        nodejs()
-    }
-}
-
 fun KotlinMultiplatformExtension.configureNative() {
-    linuxArm64()
-    configureNativeForOpenAi()
-}
-
-fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
-    if (HostManager.hostIsMac) {
-        configureIosForGemini()
-        // According to https://kotlinlang.org/docs/native-target-support.html
-        // Tier 1
-        macosX64()
-        macosArm64()
-        // Tier 2
-        watchosSimulatorArm64()
-        watchosX64()
-        watchosArm32()
-        watchosArm64()
-        tvosSimulatorArm64()
-        tvosX64()
-        tvosArm64()
-        // Tier 3
-        watchosDeviceArm64()
-    }
+    // According to https://kotlinlang.org/docs/native-target-support.html
+    // Tier 1
+    macosX64()
+    macosArm64()
+    iosSimulatorArm64()
+    iosX64()
 
     // Tier 2
     linuxX64()
+    linuxArm64()
+    watchosSimulatorArm64()
+    watchosX64()
+    watchosArm32()
+    watchosArm64()
+    tvosSimulatorArm64()
+    tvosX64()
+    tvosArm64()
+    iosArm64()
 
     // Tier 3
     mingwX64()
-//    androidNativeArm32()
-//    androidNativeArm64()
-//    androidNativeX86()
-//    androidNativeX64()
+    watchosDeviceArm64()
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX86()
+    androidNativeX64()
 
     // setup tests running in RELEASE mode
     targets.withType<KotlinNativeTarget>().configureEach {
@@ -91,13 +77,5 @@ fun KotlinMultiplatformExtension.configureNativeForOpenAi() {
         testRuns.create("releaseTest") {
             setExecutionSourceFrom(binaries.getTest(NativeBuildType.RELEASE))
         }
-    }
-}
-
-fun KotlinMultiplatformExtension.configureIosForGemini() {
-    if (HostManager.hostIsMac) {
-        iosX64()
-        iosArm64()
-        iosSimulatorArm64()
     }
 }
